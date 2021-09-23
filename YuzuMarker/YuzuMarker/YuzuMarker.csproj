@@ -8,7 +8,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\YuzuMarker.Files\YuzuMarker.Files.csproj" />
-    <ProjectReference Include="..\YuzuMarker.Photoshop\YuzuMarker.Photoshop.csproj" />
+    <ProjectReference Include="..\YuzuMarker.PSBridge.COM\YuzuMarker.PSBridge.COM.csproj" />
+    <ProjectReference Include="..\YuzuMarker.PSBridge.Extension\YuzuMarker.PSBridge.Extension.csproj" />
   </ItemGroup>
 
 </Project>
