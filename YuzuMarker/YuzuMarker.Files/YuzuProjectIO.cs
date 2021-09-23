@@ -8,12 +8,12 @@ namespace YuzuMarker.Files
     {
         public static YuzuProject CreateProject(string path)
         {
-
+            return null;
         }
 
         public static YuzuProject LoadProject(string path)
         {
-
+            return null;
         }
 
         public static void SaveProject(YuzuProject project)
