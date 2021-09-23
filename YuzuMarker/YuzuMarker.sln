@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YuzuMarker", "YuzuMarker\Yu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YuzuMarker.Files", "YuzuMarker.Files\YuzuMarker.Files.csproj", "{780A8AA0-2547-44F4-AB94-179297486A4C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YuzuMarker.PhotoshopCOM", "YuzuMarker.PhotoshopCOM\YuzuMarker.PhotoshopCOM.csproj", "{68164CF2-6CE3-469C-B61C-AA0F7D1E96E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{780A8AA0-2547-44F4-AB94-179297486A4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{780A8AA0-2547-44F4-AB94-179297486A4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{780A8AA0-2547-44F4-AB94-179297486A4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68164CF2-6CE3-469C-B61C-AA0F7D1E96E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68164CF2-6CE3-469C-B61C-AA0F7D1E96E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68164CF2-6CE3-469C-B61C-AA0F7D1E96E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68164CF2-6CE3-469C-B61C-AA0F7D1E96E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
