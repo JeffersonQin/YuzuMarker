@@ -6,4 +6,9 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\YuzuMarker.Files\YuzuMarker.Files.csproj" />
+    <ProjectReference Include="..\YuzuMarker.Photoshop\YuzuMarker.Photoshop.csproj" />
+  </ItemGroup>
+
 </Project>
