@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YuzuMarker.PSBridge.Extensi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YuzuMarker.PSBridge.COM", "YuzuMarker.PSBridge.COM\YuzuMarker.PSBridge.COM.csproj", "{50A1CD54-3F36-43ED-802E-18D251BDB99C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YuzuMarker.Properties", "YuzuMarker.Properties\YuzuMarker.Properties.csproj", "{38638FE2-4AE8-4A31-8AA5-04001577861B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{50A1CD54-3F36-43ED-802E-18D251BDB99C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50A1CD54-3F36-43ED-802E-18D251BDB99C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50A1CD54-3F36-43ED-802E-18D251BDB99C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38638FE2-4AE8-4A31-8AA5-04001577861B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38638FE2-4AE8-4A31-8AA5-04001577861B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38638FE2-4AE8-4A31-8AA5-04001577861B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38638FE2-4AE8-4A31-8AA5-04001577861B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
