@@ -72,7 +72,7 @@ namespace YuzuMarker.PSBridge.COM
             return null;
         }
 
-        public static Photoshop.LayerSet AddNewLayerSet(string layerSetName)
+        public static Photoshop.LayerSet AddLayerSet(string layerSetName)
         {
             Photoshop.Application app = new Photoshop.Application();
             Photoshop.LayerSet layerSet = app.ActiveDocument.LayerSets.Add();
@@ -80,7 +80,7 @@ namespace YuzuMarker.PSBridge.COM
             return layerSet;
         }
 
-        public static Photoshop.ArtLayer AddNewArtLayer(string layerSetName, string artLayerName)
+        public static Photoshop.ArtLayer AddArtLayer(string layerSetName, string artLayerName)
         {
             Photoshop.ArtLayer artLayer = GetLayerSet(layerSetName).ArtLayers.Add();
             artLayer.Name = artLayerName;
@@ -99,7 +99,7 @@ namespace YuzuMarker.PSBridge.COM
 
         public static Photoshop.ArtLayer AddTextLayer(string layerSetName, string textLayerName)
         {
-            Photoshop.ArtLayer textLayer = AddNewArtLayer(layerSetName, textLayerName);
+            Photoshop.ArtLayer textLayer = AddArtLayer(layerSetName, textLayerName);
             textLayer.Kind = Photoshop.PsLayerKind.psTextLayer;
             return textLayer;
         }
