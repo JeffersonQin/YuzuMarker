@@ -6,6 +6,7 @@ namespace YuzuMarker.PSBridge.COM
 {
     public static class Invoker
     {
+        #region real private section
         private static Photoshop.LayerSet GetLayerSet(string layerSetName)
         {
             Photoshop.Application app = new Photoshop.Application();
@@ -32,7 +33,9 @@ namespace YuzuMarker.PSBridge.COM
             }
             throw new Exception("PSBridge COM Exception: ArtLayer Not Found");
         }
+        #endregion
 
+        #region judging exist
         public static bool ExistLayerSet(string layerSetName)
         {
             try
@@ -58,21 +61,23 @@ namespace YuzuMarker.PSBridge.COM
                 return false;
             }
         }
+        #endregion
 
-        public static Photoshop.Document OpenFile(string path)
+        #region functions
+        private static Photoshop.Document _OpenFile(string path)
         {
             Photoshop.Application app = new Photoshop.Application();
             return app.Open(path);
         }
 
-        public static Photoshop.Document CreateFile(string path)
+        private static Photoshop.Document _CreateFile(string path)
         {
             Photoshop.Application app = new Photoshop.Application();
             // TODO
             return null;
         }
 
-        public static Photoshop.LayerSet AddLayerSet(string layerSetName)
+        private static Photoshop.LayerSet _AddLayerSet(string layerSetName)
         {
             Photoshop.Application app = new Photoshop.Application();
             Photoshop.LayerSet layerSet = app.ActiveDocument.LayerSets.Add();
@@ -80,33 +85,45 @@ namespace YuzuMarker.PSBridge.COM
             return layerSet;
         }
 
-        public static Photoshop.ArtLayer AddArtLayer(string layerSetName, string artLayerName)
+        private static Photoshop.ArtLayer _AddArtLayer(string layerSetName, string artLayerName)
         {
             Photoshop.ArtLayer artLayer = GetLayerSet(layerSetName).ArtLayers.Add();
             artLayer.Name = artLayerName;
             return artLayer;
         }
 
-        public static void RemoveLayerSet(string layerSetName)
+        private static void _RemoveLayerSet(string layerSetName)
         {
             GetLayerSet(layerSetName).Delete();
         }
 
-        public static void RemoveArtLayer(string layerSetName, string artLayerName)
+        private static void _RemoveArtLayer(string layerSetName, string artLayerName)
         {
             GetArtLayer(layerSetName, artLayerName).Delete();
         }
 
-        public static Photoshop.ArtLayer AddTextLayer(string layerSetName, string textLayerName)
+        private static Photoshop.ArtLayer _AddTextLayer(string layerSetName, string artLayerName)
         {
-            Photoshop.ArtLayer textLayer = AddArtLayer(layerSetName, textLayerName);
+            Photoshop.ArtLayer textLayer = _AddArtLayer(layerSetName, artLayerName);
             textLayer.Kind = Photoshop.PsLayerKind.psTextLayer;
             return textLayer;
         }
 
-        public static void SetTextLayer(string layerSetName, string textLayerName)
+        private static void _SetTextLayer(string layerSetName, string artLayerName)
         {
-            GetArtLayer(layerSetName, textLayerName).Kind = Photoshop.PsLayerKind.psTextLayer;
+            GetArtLayer(layerSetName, artLayerName).Kind = Photoshop.PsLayerKind.psTextLayer;
         }
+        #endregion
+
+        #region wrapping
+        public static void OpenFile(string path) { _OpenFile(path); }
+        public static void CreateFile(string path) { _CreateFile(path); }
+        public static void AddLayerSet(string layerSetName) { _AddLayerSet(layerSetName); }
+        public static void AddArtLayer(string layerSetName, string artLayerName) { _AddArtLayer(layerSetName, artLayerName); }
+        public static void RemoveLayerSet(string layerSetName) { _RemoveLayerSet(layerSetName); }
+        public static void RemoveArtLayer(string layerSetName, string artLayerName) { _RemoveArtLayer(layerSetName, artLayerName); }
+        public static void AddTextLayer(string layerSetName, string artLayerName) { _AddTextLayer(layerSetName, artLayerName); }
+        public static void SetTextLayer(string layerSetName, string artLayerName) { _SetTextLayer(layerSetName, artLayerName); }
+        #endregion
     }
 }
