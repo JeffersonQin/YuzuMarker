@@ -2,6 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\YuzuMarker.Properties\YuzuMarker.Properties.csproj" />
+    <ProjectReference Include="..\YuzuMarker.PSBridge.COM\YuzuMarker.PSBridge.COM.csproj" />
+    <ProjectReference Include="..\YuzuMarker.PSBridge.Extension\YuzuMarker.PSBridge.Extension.csproj" />
+  </ItemGroup>
 
 </Project>

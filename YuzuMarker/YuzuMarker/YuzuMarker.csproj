@@ -4,12 +4,13 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\YuzuMarker.Files\YuzuMarker.Files.csproj" />
-    <ProjectReference Include="..\YuzuMarker.PSBridge.COM\YuzuMarker.PSBridge.COM.csproj" />
-    <ProjectReference Include="..\YuzuMarker.PSBridge.Extension\YuzuMarker.PSBridge.Extension.csproj" />
+    <ProjectReference Include="..\YuzuMarker.Properties\YuzuMarker.Properties.csproj" />
+    <ProjectReference Include="..\YuzuMarker.PSBridge\YuzuMarker.PSBridge.csproj" />
   </ItemGroup>
 
 </Project>
