@@ -13,6 +13,6 @@ namespace YuzuMarker.Properties
         // TODO: when wpf starts up, load settings
         public static int PhotoshopExtensionHTTPServerPort = 4016;
 
-        public static PSBridgeType PhotoshopBridgeType = PSBridgeType.COM;
+        public static PSBridgeType PhotoshopBridgeType = PSBridgeType.Extension;
     }
 }
