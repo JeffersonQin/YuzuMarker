@@ -35,7 +35,7 @@
 |   ├── <image-file-2>.psd      # 图片 2 对应的 .psd
 |   ├── ...
 |   └── <image-file-n>.psd      # 图片 n 对应的 .psd
-└── Notations                   # 标注文件夹
+└── SimpleNotations             # 简单文本标注文件夹
     ├── <image-file-1>          # 图片 1 对应的标注文件夹
     |   ├── <timestamp-1>.json  # 图片 1 的 第1个标注
     |   ├── <timestamp-2>.json  # 图片 1 的 第2个标注
