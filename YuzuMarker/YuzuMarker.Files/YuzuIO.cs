@@ -18,7 +18,7 @@ namespace YuzuMarker.Files
                 throw new Exception("YuzuProjectIO Error: Create path does not exist. Path: " + path);
             }
             string projectFolderPath = Path.Combine(path, fileName);
-            if (Directory.Exists(projectFolderPath) || new FileInfo(projectFolderPath).Exists)
+            if (Directory.Exists(projectFolderPath) || File.Exists(projectFolderPath))
             {
                 throw new Exception("YuzuProjectIO Error: file / directory already exist. Path: " + projectFolderPath);
             }

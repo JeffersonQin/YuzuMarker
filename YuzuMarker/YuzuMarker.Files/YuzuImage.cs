@@ -15,7 +15,7 @@ namespace YuzuMarker.Files
 
         public YuzuImage(YuzuProject parent, string ImageName)
         {
-            if (!new FileInfo(Path.Combine(parent.path, "./Images/", ImageName)).Exists)
+            if (!File.Exists(Path.Combine(parent.path, "./Images/", ImageName)))
                 throw new Exception("YuzuImage Init Error: file does not exist. Name: " + ImageName);
             this.parent = parent;
             this.ImageName = ImageName;

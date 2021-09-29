@@ -70,7 +70,7 @@ namespace YuzuMarker.Files
 
         public void RemoveImageAt(int index)
         {
-            new FileInfo(Path.Combine(path, Images[index].ImageName)).Delete();
+            File.Delete(Path.Combine(path, Images[index].ImageName));
             Images.RemoveAt(index);
         }
 
@@ -97,7 +97,7 @@ namespace YuzuMarker.Files
             }
 
             string targetImagePath = Path.Combine(path, "./Images/", imageFileName);
-            new FileInfo(imagePath).CopyTo(targetImagePath);
+            File.Copy(imagePath, targetImagePath);
 
             return imageFileName;
         }
