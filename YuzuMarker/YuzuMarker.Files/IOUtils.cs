@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace YuzuMarker.Files
@@ -20,6 +21,14 @@ namespace YuzuMarker.Files
                 name.Contains('\\') || name.Contains('<') || name.Contains('>') || name.Contains('*'))
                 return false;
             return true;
+        }
+
+        public static void EnsureDirectoryExist(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
         }
     }
 }

@@ -11,36 +11,36 @@ namespace YuzuMarker.Files
 
         public string ImageName;
 
-        public Dictionary<long, YuzuSimpleNotation> Notations = new Dictionary<long, YuzuSimpleNotation>();
+        public Dictionary<long, YuzuSimpleNotation> SimpleNotations = new Dictionary<long, YuzuSimpleNotation>();
 
         public YuzuImage(YuzuProject parent, string ImageName)
         {
-            if (!new FileInfo(Path.Combine(parent.GetPath(), ImageName)).Exists)
+            if (!new FileInfo(Path.Combine(parent.path, "./Images/", ImageName)).Exists)
                 throw new Exception("YuzuImage Init Error: file does not exist. Name: " + ImageName);
             this.parent = parent;
             this.ImageName = ImageName;
         }
 
-        public void AddNotation(int x, int y, string text)
+        public void AddSimpleNotation(int x, int y, string text)
         {
-            Notations.Add(new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds(), new YuzuSimpleNotation(x, y, text));
+            SimpleNotations.Add(new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds(), new YuzuSimpleNotation(x, y, text));
         }
 
         public void RemoveNotation(long timestamp)
         {
-            Notations.Remove(timestamp);
+            SimpleNotations.Remove(timestamp);
         }
 
         public string GetImageFilePath()
         {
             parent.EnsureImageFolderExist();
-            return Path.Combine(parent.GetPath(), "./Images/", ImageName);
+            return Path.Combine(parent.path, "./Images/", ImageName);
         }
 
         public string GetImagePSDPath()
         {
             parent.EnsurePSDFolderExist();
-            return Path.Combine(parent.GetPath(), "./PSD/" + ImageName + ".psd");
+            return Path.Combine(parent.path, "./PSD/" + ImageName + ".psd");
         }
     }
 }

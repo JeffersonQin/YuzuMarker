@@ -6,54 +6,71 @@ namespace YuzuMarker.Files
 {
     public class YuzuProject
     {
-        private string path;
+        private string _path;
 
-        public string name;
+        public string path
+        {
+            get
+            {
+                return _path;
+            }
+            set
+            {
+                if (!IOUtils.JudgeFilePath(value))
+                    throw new Exception("Invalid Yuzu Project Path");
+                _path = value;
+            }
+        }
 
-        private List<YuzuImage> Images;
+        public string projectName;
+
+        private string _fileName;
+
+        public string fileName
+        {
+            get
+            {
+                return _fileName;
+            }
+            set
+            {
+                if (!IOUtils.JudgeFileName(value))
+                    throw new Exception("Invalid Yuzu Project file name");
+                _fileName = value;
+            }
+        }
+
+        public List<YuzuImage> Images;
 
         public void EnsureImageFolderExist()
         {
-            if (!Directory.Exists(Path.Combine(path, "./Images")))
-                Directory.CreateDirectory(Path.Combine(path, "./Images"));
+            IOUtils.EnsureDirectoryExist(Path.Combine(path, "./Images"));
         }
 
         public void EnsurePSDFolderExist()
         {
-            if (!Directory.Exists(Path.Combine(path, "./PSD")))
-                Directory.CreateDirectory(Path.Combine(path, "./PSD"));
+            IOUtils.EnsureDirectoryExist(Path.Combine(path, "./PSD"));
         }
 
-        public YuzuProject(string name, string path)
+        public YuzuProject(string path, string fileName, string projectName)
         {
-            SetPath(path);
-            this.name = name;
+            this.path = path;
+            this.fileName = fileName;
+            this.projectName = projectName;
             Images = new List<YuzuImage>();
         }
 
-        public YuzuProject(string name, string path, List<YuzuImage> Images)
+        public YuzuProject(string path, string fileName, string projectName, List<YuzuImage> Images)
         {
-            SetPath(path);
-            this.name = name;
+            this.path = path;
+            this.fileName = fileName;
+            this.projectName = projectName;
             this.Images = Images;
         }
 
-        public string GetPath()
+        public void RemoveImageAt(int index)
         {
-            return path;
-        }
-
-        public void SetPath(string path)
-        {
-            if (!IOUtils.JudgeFilePath(path))
-                throw new Exception("Invalid Yuzu Project Path");
-            this.path = path;
-        }
-
-        public void RemoveImageAt(int index, bool deleteFile)
-        {
-            if (deleteFile)
-                new FileInfo(Path.Combine(path, Images[index].ImageName)).Delete();
+            new FileInfo(Path.Combine(path, Images[index].ImageName)).Delete();
             Images.RemoveAt(index);
         }
 
@@ -79,7 +96,7 @@ namespace YuzuMarker.Files
                 }
             }
 
-            string targetImagePath = Path.Combine(path, imageFileName);
+            string targetImagePath = Path.Combine(path, "./Images/", imageFileName);
             new FileInfo(imagePath).CopyTo(targetImagePath);
 
             return imageFileName;
