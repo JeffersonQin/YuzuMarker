@@ -19,6 +19,9 @@
 * 🚧 文字块自动识别
 * 🚧 [字体自动识别](https://github.com/JeffersonQin/YuzuMarker.FontDetection)
 * 🚧 [字体布局半自动化](https://github.com/JeffersonQin/YuzuMarker.TextAutoLayout)
+* 🚧 翻译标注部分
+* 🚧 校对部分
+* 🚧 嵌字部分
 
 # 关于文件格式的设计
 
