@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:YuzuMarker.View"
         xmlns:vm="clr-namespace:YuzuMarker.ViewModel"
         mc:Ignorable="d"
-        Title="创建项目" Height="248" Width="453" Closed="Window_Closed">
+        Title="创建项目" Height="264" Width="453" Closed="Window_Closed">
     <Window.DataContext>
         <vm:YuzuCreateProjectViewModel></vm:YuzuCreateProjectViewModel>
     </Window.DataContext>
