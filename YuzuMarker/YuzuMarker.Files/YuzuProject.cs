@@ -102,7 +102,7 @@ namespace YuzuMarker.Files
             return imageFileName;
         }
 
-        public string InsertImageAt(int index, string imagePath)
+        public string CreateNewImageAt(int index, string imagePath)
         {
             string imageFileName = CopyImage(imagePath);
 
@@ -110,7 +110,7 @@ namespace YuzuMarker.Files
             return imageFileName;
         }
 
-        public string AddImage(string imagePath)
+        public string CreateNewImage(string imagePath)
         {
             string imageFileName = CopyImage(imagePath);
 
@@ -121,6 +121,7 @@ namespace YuzuMarker.Files
         public void MoveImage(int fromIndex, int toIndex)
         {
             YuzuImage moveItem = Images[fromIndex];
+            Images.RemoveAt(fromIndex);
             Images.Insert(toIndex, moveItem);
         }
     }

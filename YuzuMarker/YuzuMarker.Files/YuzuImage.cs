@@ -11,7 +11,7 @@ namespace YuzuMarker.Files
 
         public string ImageName { get; set; }
 
-        public Dictionary<long, YuzuSimpleNotation> SimpleNotations { get; set; }
+        public List<YuzuNotationGroup> NotationGroups { get; set; }
 
         public YuzuImage(YuzuProject parent, string ImageName)
         {
@@ -19,17 +19,29 @@ namespace YuzuMarker.Files
                 throw new Exception("YuzuImage Init Error: file does not exist. Name: " + ImageName);
             this.parent = parent;
             this.ImageName = ImageName;
-            SimpleNotations = new Dictionary<long, YuzuSimpleNotation>();
+            NotationGroups = new List<YuzuNotationGroup>();
         }
 
-        public void AddSimpleNotation(int x, int y, string text)
+        public void CreateNewNotation(int x, int y, string text)
         {
-            SimpleNotations.Add(new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds(), new YuzuSimpleNotation(x, y, text));
+            NotationGroups.Add(new YuzuNotationGroup(x, y, text));
         }
 
-        public void RemoveNotation(long timestamp)
+        public void RemoveNotationGroupAt(int index)
         {
-            SimpleNotations.Remove(timestamp);
+            NotationGroups.RemoveAt(index);
+        }
+
+        public void CreateNewNotationAt(int index, int x, int y, string text)
+        {
+            NotationGroups.Insert(index, new YuzuNotationGroup(x, y, text));
+        }
+        
+        public void MoveNotationGroup(int fromIndex, int toIndex)
+        {
+            YuzuNotationGroup notation = NotationGroups[fromIndex];
+            NotationGroups.RemoveAt(fromIndex);
+            NotationGroups.Insert(toIndex, notation);
         }
 
         public string GetImageFilePath()

@@ -26,35 +26,53 @@
 # 关于文件格式的设计
 
 ```
-<project-name>                  # 项目文件夹
-├── <project-name>.yuzu         # 项目文件
-├── Images                      # 图片文件夹
-|   ├── <image-file-1>          # 图片 1
-|   ├── <image-file-2>          # 图片 2
+<project-name>                            # 项目文件夹
+├── <project-name>.yuzu                   # 项目文件
+├── Images                                # 图片文件夹
+|   ├── <image-file-1>                    # 图片 1
+|   ├── <image-file-2>                    # 图片 2
 |   ├── ...
-|   └── <image-file-n>          # 图片 n
-├── PSD                         # PS 文件夹
-|   ├── <image-file-1>.psd      # 图片 1 对应的 .psd
-|   ├── <image-file-2>.psd      # 图片 2 对应的 .psd
+|   └── <image-file-n>                    # 图片 n
+├── PSD                                   # PS 文件夹
+|   ├── <image-file-1>.psd                # 图片 1 对应的 .psd
+|   ├── <image-file-2>.psd                # 图片 2 对应的 .psd
 |   ├── ...
-|   └── <image-file-n>.psd      # 图片 n 对应的 .psd
-└── SimpleNotations             # 简单文本标注文件夹
-    ├── <image-file-1>          # 图片 1 对应的标注文件夹
-    |   ├── <timestamp-1>.json  # 图片 1 的 第1个标注
-    |   ├── <timestamp-2>.json  # 图片 1 的 第2个标注
+|   └── <image-file-n>.psd                # 图片 n 对应的 .psd
+└── Notations                             # 简单文本标注文件夹
+    ├── <image-file-1>                    # 图片 1 对应的标注文件夹
+    |   ├── index.json                    # 图片 1 标注时间戳索引
+    |   ├── <timestamp-1>-simple.json     # 图片 1 的 第1个普通标注
+    |   ├── <timestamp-1>-<type>.json     # 图片 1 的 第1个其他种类的标注
     |   ├── ...
-    |   └── <timestamp-m>.json  # 图片 1 的 第m个标注
-    ├── <image-file-2>          # 下同
-    |   ├── <timestamp-1>.json
-    |   ├── <timestamp-2>.json
+    |   ├── <timestamp-2>-simple.json     # 图片 1 的 第2个普通标注
+    |   ├── <timestamp-2>-<type>.json     # 图片 1 的 第2个其他种类的标注
     |   ├── ...
-    |   └── <timestamp-m>.json
+    |   ├── <timestamp-m>-simple.json     # 图片 1 的 第m个普通标注
+    |   ├── <timestamp-m>-<type>.json     # 图片 1 的 第m个其他种类的标注
+    |   └── ...
+    ├── <image-file-2>                    # 下同
+    |   ├── index.json                    # 图片 2 标注时间戳索引
+    |   ├── <timestamp-1>-simple.json
+    |   ├── <timestamp-1>-<type>.json
+    |   ├── ...
+    |   ├── <timestamp-2>-simple.json
+    |   ├── <timestamp-2>-<type>.json
+    |   ├── ...
+    |   ├── <timestamp-m>-simple.json
+    |   ├── <timestamp-m>-<type>.json
+    |   └── ...
     ├── ...
     └── <image-file-n>
-        ├── <timestamp-1>.json
-        ├── <timestamp-2>.json
+        ├── index.json
+        ├── <timestamp-1>-simple.json
+        ├── <timestamp-1>-<type>.json
         ├── ...
-        └── <timestamp-m>.json
+        ├── <timestamp-2>-simple.json
+        ├── <timestamp-2>-<type>.json
+        ├── ...
+        ├── <timestamp-m>-simple.json
+        ├── <timestamp-m>-<type>.json
+        └── ...
 ```
 
 # 关于多人协同设计
