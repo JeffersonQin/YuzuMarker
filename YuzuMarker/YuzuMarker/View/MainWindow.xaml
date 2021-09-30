@@ -1,0 +1,49 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:YuzuMarker.View"
+        xmlns:vm="clr-namespace:YuzuMarker.ViewModel"
+        x:Class="YuzuMarker.View.MainWindow"
+        mc:Ignorable="d"
+        Title="YuzuMarker by gyro永不抽风" Height="600" Width="1000">
+    <Window.DataContext>
+        <vm:YuzuProjectViewModel/>
+    </Window.DataContext>
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding CreateProject}" Modifiers="Ctrl" Key="N"/>
+        <KeyBinding Command="{Binding LoadProject}" Modifiers="Ctrl" Key="O"/>
+        <KeyBinding Command="{Binding SaveProject}" Modifiers="Ctrl" Key="S"/>
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="50" Width="1*"/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition MinWidth="50" Width="2*"/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition MinWidth="50" Width="1.5*"/>
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Row="0" Grid.ColumnSpan="5">
+            <MenuItem Header="文件">
+                <MenuItem Command="{Binding CreateProject}" Header="新建项目" InputGestureText="Ctrl+N"/>
+                <MenuItem Command="{Binding LoadProject}" Header="打开项目" InputGestureText="Ctrl+O"/>
+                <MenuItem Command="{Binding SaveProject}" Header="保存项目" InputGestureText="Ctrl+S"/>
+            </MenuItem>
+            <MenuItem Header="编辑"/>
+        </Menu>
+        <GridSplitter HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1"/>
+        <GridSplitter HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="3"/>
+        <ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Images}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="图片列表" DisplayMemberBinding="{Binding ImageName}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>
