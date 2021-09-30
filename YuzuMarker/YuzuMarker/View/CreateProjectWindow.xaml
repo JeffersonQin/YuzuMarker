@@ -1,0 +1,38 @@
+﻿<Window x:Class="YuzuMarker.View.CreateProjectWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:YuzuMarker.View"
+        xmlns:vm="clr-namespace:YuzuMarker.ViewModel"
+        mc:Ignorable="d"
+        Title="创建项目" Height="248" Width="453" Closed="Window_Closed">
+    <Window.DataContext>
+        <vm:YuzuCreateProjectViewModel></vm:YuzuCreateProjectViewModel>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" VerticalAlignment="Center" FontSize="20">项目名称</Label>
+        <TextBox Grid.Row="1" Margin="2" VerticalAlignment="Center" FontSize="20" Text="{Binding ProjectName, Mode=TwoWay}"/>
+        <Label Grid.Row="2" VerticalAlignment="Center" FontSize="20">项目文件名</Label>
+        <TextBox Grid.Row="3" Margin="2" VerticalAlignment="Center" FontSize="20" Text="{Binding FileName, Mode=TwoWay}"/>
+        <Label Grid.Row="4" VerticalAlignment="Center" FontSize="20">路径</Label>
+        <Grid Grid.Row="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" Margin="2" VerticalAlignment="Center" FontSize="20" Text="{Binding Path, Mode=TwoWay}"/>
+            <Button Grid.Column="1" Margin="2 0 2 0" VerticalAlignment="Center" FontSize="20" Command="{Binding ChooseDirectoryCommand}">· · ·</Button>
+        </Grid>
+        <Button Grid.Row="6" Margin="2" FontSize="16" Click="Button_Click">确定</Button>
+    </Grid>
+</Window>
