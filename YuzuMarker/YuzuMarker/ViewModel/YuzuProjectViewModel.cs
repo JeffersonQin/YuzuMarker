@@ -32,7 +32,7 @@ namespace YuzuMarker.ViewModel
                         {
                             try
                             {
-                                Manager.YuzuMarkerManager.Project.AddImage(path);
+                                Manager.YuzuMarkerManager.Project.CreateNewImage(path);
                                 RaisePropertyChanged("Images");
                             } catch (Exception e)
                             {
