@@ -13,4 +13,8 @@
     <ProjectReference Include="..\YuzuMarker.PSBridge\YuzuMarker.PSBridge.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Git\" />
+  </ItemGroup>
+
 </Project>
