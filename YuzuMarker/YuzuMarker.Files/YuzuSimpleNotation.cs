@@ -6,11 +6,11 @@ namespace YuzuMarker.Files
 {
     public class YuzuSimpleNotation
     {
-        public int x;
+        public int x { get; set; }
 
-        public int y;
+        public int y { get; set; }
 
-        public string text;
+        public string text { get; set; }
 
         public YuzuSimpleNotation(int x, int y, string text)
         {

@@ -7,11 +7,11 @@ namespace YuzuMarker.Files
 {
     public class YuzuImage
     {
-        public YuzuProject parent;
+        public YuzuProject parent { get; set; }
 
-        public string ImageName;
+        public string ImageName { get; set; }
 
-        public Dictionary<long, YuzuSimpleNotation> SimpleNotations = new Dictionary<long, YuzuSimpleNotation>();
+        public Dictionary<long, YuzuSimpleNotation> SimpleNotations { get; set; }
 
         public YuzuImage(YuzuProject parent, string ImageName)
         {
@@ -19,6 +19,7 @@ namespace YuzuMarker.Files
                 throw new Exception("YuzuImage Init Error: file does not exist. Name: " + ImageName);
             this.parent = parent;
             this.ImageName = ImageName;
+            SimpleNotations = new Dictionary<long, YuzuSimpleNotation>();
         }
 
         public void AddSimpleNotation(int x, int y, string text)
