@@ -79,11 +79,19 @@ Images => Images-Encrypted
 PSD    => PSD-Encrypted
 ```
 
+此外，我们还会添加配置文件：
+
+```
+.yuzugitsettings  # 记录加密设置
+.password         # 记录密码
+```
+
 并添加如下的 `.gitignore`:
 
 ```
 Images/
 PSD/
+.password
 ```
 
 # 感谢
