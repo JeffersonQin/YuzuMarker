@@ -53,5 +53,30 @@ namespace YuzuMarker.Control
             InitializeComponent();
             DataContext = this;
         }
+
+        public double Scale = 1;
+
+        private void MouseWheelHandler(object sender, MouseWheelEventArgs e)
+        {
+            if (ContentWidth == 0 || ContentHeight == 0)
+                return;
+            //if (scale < 0.15 && e.Delta < 0)
+            //    return;
+            //if (scale > 16 && e.Delta > 0)
+            //    return;
+            Scale *= (e.Delta > 0 ? 1.2 : 1 / 1.2);
+            SetScale();
+        }
+
+        public void SetScale()
+        {
+            ContentControlInstance.LayoutTransform = new ScaleTransform(Scale, Scale);
+        }
+
+        public void SetScale(double Scale)
+        {
+            this.Scale = Scale;
+            SetScale();
+        }
     }
 }

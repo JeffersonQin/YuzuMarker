@@ -6,10 +6,15 @@
              xmlns:local="clr-namespace:YuzuMarker.Control"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <ScrollViewer HorizontalScrollBarVisibility="Hidden"
-                  VerticalScrollBarVisibility="Hidden">
-        <ContentControl Width="{Binding ContentWidth}" Height="{Binding ContentHeight}">
+    <UserControl.Resources>
+        <local:BindingProxy x:Key="BindingProxy" Data="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}},Path=DataContext}" />
+    </UserControl.Resources>
+    <local:NoScrollScrollViewer HorizontalScrollBarVisibility="Hidden"
+                VerticalScrollBarVisibility="Hidden"
+                MouseWheel="MouseWheelHandler"
+                Background="#FFDAD5D5">
+        <ContentControl x:Name="ContentControlInstance" Width="{Binding ContentWidth}" Height="{Binding ContentHeight}">
             <ContentPresenter Content="{Binding ContainerContent}"></ContentPresenter>
         </ContentControl>
-    </ScrollViewer>
+    </local:NoScrollScrollViewer>
 </UserControl>
