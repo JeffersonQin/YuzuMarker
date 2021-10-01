@@ -1,10 +1,25 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 
 namespace YuzuMarker.Files
 {
     public class YuzuProject
+    {
+        public static void EnsureImageFolderExist(string parentPath)
+        {
+            IOUtils.EnsureDirectoryExist(Path.Combine(parentPath, "./Images"));
+        }
+
+        public static void EnsurePSDFolderExist(string parentPath)
+        {
+            IOUtils.EnsureDirectoryExist(Path.Combine(parentPath, "./PSD"));
+        }
+    }
+
+    public class YuzuProject<LP, LI> where LP : IList<YuzuImage<LI>>, new() where LI : IList<YuzuNotationGroup>, new()
     {
         private string _path;
 
@@ -40,7 +55,7 @@ namespace YuzuMarker.Files
             }
         }
 
-        public List<YuzuImage> Images;
+        public LP Images;
 
         public void EnsureImageFolderExist()
         {
@@ -57,10 +72,10 @@ namespace YuzuMarker.Files
             this.path = path;
             this.fileName = fileName;
             this.projectName = projectName;
-            Images = new List<YuzuImage>();
+            this.Images = new LP();
         }
 
-        public YuzuProject(string path, string fileName, string projectName, List<YuzuImage> Images)
+        public YuzuProject(string path, string fileName, string projectName, LP Images)
         {
             this.path = path;
             this.fileName = fileName;
@@ -85,7 +100,7 @@ namespace YuzuMarker.Files
             while (exist)
             {
                 exist = false;
-                foreach (YuzuImage yuzuImage in Images)
+                foreach (YuzuImage<LI> yuzuImage in Images)
                 {
                     if (yuzuImage.ImageName == imageFileName)
                     {
@@ -106,7 +121,7 @@ namespace YuzuMarker.Files
         {
             string imageFileName = CopyImage(imagePath);
 
-            Images.Insert(index, new YuzuImage(this, imageFileName));
+            Images.Insert(index, new YuzuImage<LI>(this.path, imageFileName));
             return imageFileName;
         }
 
@@ -114,15 +129,8 @@ namespace YuzuMarker.Files
         {
             string imageFileName = CopyImage(imagePath);
 
-            Images.Add(new YuzuImage(this, imageFileName));
+            Images.Add(new YuzuImage<LI>(this.path, imageFileName));
             return imageFileName;
-        }
-
-        public void MoveImage(int fromIndex, int toIndex)
-        {
-            YuzuImage moveItem = Images[fromIndex];
-            Images.RemoveAt(fromIndex);
-            Images.Insert(toIndex, moveItem);
         }
     }
 }

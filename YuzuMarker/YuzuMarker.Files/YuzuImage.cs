@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 
 namespace YuzuMarker.Files
 {
-    public class YuzuImage
+    public class YuzuImage<LI> where LI : IList<YuzuNotationGroup>, new()
     {
-        public YuzuProject parent { get; set; }
+        public string ParentPath { get; set; }
 
         public string ImageName { get; set; }
 
-        public List<YuzuNotationGroup> NotationGroups { get; set; }
+        public LI NotationGroups { get; set; }
 
-        public YuzuImage(YuzuProject parent, string ImageName)
+        public YuzuImage(string ParentPath, string ImageName)
         {
-            if (!File.Exists(Path.Combine(parent.path, "./Images/", ImageName)))
+            if (!File.Exists(Path.Combine(ParentPath, "./Images/", ImageName)))
                 throw new Exception("YuzuImage Init Error: file does not exist. Name: " + ImageName);
-            this.parent = parent;
+            this.ParentPath = ParentPath;
             this.ImageName = ImageName;
-            NotationGroups = new List<YuzuNotationGroup>();
+            NotationGroups = new LI();
         }
 
         public void CreateNewNotation(int x, int y, string text)
@@ -46,14 +47,14 @@ namespace YuzuMarker.Files
 
         public string GetImageFilePath()
         {
-            parent.EnsureImageFolderExist();
-            return Path.Combine(parent.path, "./Images/", ImageName);
+            YuzuProject.EnsureImageFolderExist(ParentPath);
+            return Path.Combine(ParentPath, "./Images/", ImageName);
         }
 
         public string GetImagePSDPath()
         {
-            parent.EnsurePSDFolderExist();
-            return Path.Combine(parent.path, "./PSD/" + ImageName + ".psd");
+            YuzuProject.EnsurePSDFolderExist(ParentPath);
+            return Path.Combine(ParentPath, "./PSD/" + ImageName + ".psd");
         }
     }
 }

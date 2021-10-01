@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -11,7 +12,8 @@ namespace YuzuMarker.Files
 {
     public static class YuzuIO
     {
-        public static YuzuProject CreateProject(string path, string fileName, string projectName)
+        public static YuzuProject<LP, LI> CreateProject<LP, LI>(string path, string fileName, string projectName)
+            where LP : IList<YuzuImage<LI>>, new() where LI : IList<YuzuNotationGroup>, new()
         {
             if (!Directory.Exists(path))
             {
@@ -24,13 +26,14 @@ namespace YuzuMarker.Files
             }
             Directory.CreateDirectory(projectFolderPath);
 
-            YuzuProject project = new YuzuProject(projectFolderPath, fileName, projectName);
+            YuzuProject<LP, LI> project = new YuzuProject<LP, LI>(projectFolderPath, fileName, projectName);
             SaveProject(project);
 
             return project;
         }
 
-        public static YuzuProject LoadProject(string path)
+        public static YuzuProject<LP, LI> LoadProject<LP, LI>(string path)
+            where LP : IList<YuzuImage<LI>>, new() where LI : IList<YuzuNotationGroup>, new()
         {
             string fileName = Path.GetFileNameWithoutExtension(path);
             XDocument doc = XDocument.Load(path);
@@ -42,13 +45,13 @@ namespace YuzuMarker.Files
             IOUtils.EnsureDirectoryExist(simpleNotationFolderPath);
             
             XElement imagesElement = projectElement.Element("Images");
-            List<YuzuImage> yuzuImages = new List<YuzuImage>();
-            YuzuProject yuzuProject = new YuzuProject(Path.GetDirectoryName(path), fileName, projectName, yuzuImages);
+            LP yuzuImages = new LP();
+            YuzuProject<LP, LI> yuzuProject = new YuzuProject<LP, LI>(Path.GetDirectoryName(path), fileName, projectName, yuzuImages);
 
             foreach (XElement imageElement in imagesElement.Elements("Image"))
             {
                 string imageName = imageElement.Value;
-                YuzuImage yuzuImage = new YuzuImage(yuzuProject, imageName);
+                YuzuImage<LI> yuzuImage = new YuzuImage<LI>(yuzuProject.path, imageName);
                 yuzuProject.Images.Add(yuzuImage);
 
                 string simpleNotationImagePath = Path.Combine(simpleNotationFolderPath, "./" + imageName + "/");
@@ -72,7 +75,8 @@ namespace YuzuMarker.Files
             return yuzuProject;
         }
 
-        public static void SaveProject(YuzuProject project)
+        public static void SaveProject<LP, LI>(YuzuProject<LP, LI> project) 
+            where LP : IList<YuzuImage<LI>>, new() where LI : IList<YuzuNotationGroup>, new()
         {
             XDocument doc = new XDocument();
             doc.Declaration = new XDeclaration("1.0", "utf-8", "no");
@@ -85,7 +89,7 @@ namespace YuzuMarker.Files
 
             string simpleNotationFolderPath = Path.Combine(project.path, "./Notations/");
             IOUtils.EnsureDirectoryExist(simpleNotationFolderPath);
-            foreach (YuzuImage yuzuImage in project.Images)
+            foreach (YuzuImage<LI> yuzuImage in project.Images)
             {
                 xImages.Add(new XElement("Image", yuzuImage.ImageName));
 
