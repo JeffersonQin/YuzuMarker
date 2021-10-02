@@ -51,17 +51,19 @@
             <StackPanel Grid.Row="0" 
                         Orientation="Horizontal">
                 <Button Margin="2" Command="{Binding AddImages}"
-                        IsEnabled="{Binding Project, Mode=OneWay, Converter={StaticResource BoolVC}}">导入</Button>
-                <Button Margin="2" IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}">删除</Button>
+                        IsEnabled="{Binding Project, Mode=OneWay, Converter={StaticResource BoolVC}}"> + </Button>
+                <Button Margin="2" IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> - </Button>
                 <Button Margin="2" IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↑ </Button>
                 <Button Margin="2" IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↓ </Button>
+                <Button Margin="2"> √ </Button>
             </StackPanel>
-            <ListView Grid.Row="1" 
+            <ListView Grid.Row="1" x:Name="FileListView"
                       ItemsSource="{Binding Images, Mode=OneWay}" 
                       SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="图片列表" DisplayMemberBinding="{Binding ImageName}"/>
+                        <GridViewColumn Header="图片列表" DisplayMemberBinding="{Binding ImageName}" 
+                                        Width="{Binding ElementName=FileListView, Path=ActualWidth}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -74,5 +76,47 @@
                 <Image Source="{Binding Data.ImageSource, Mode=OneWay, Source={StaticResource BindingProxy}}"></Image>
             </uc:ZoomView.ContainerContent>
         </uc:ZoomView>
+        <Grid Grid.Row="1" Grid.Column="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="2"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Row="0">
+                    <Button Margin="2"> + </Button>
+                    <Button Margin="2"> - </Button>
+                    <Button Margin="2"> ↑ </Button>
+                    <Button Margin="2"> ↓ </Button>
+                    <Button Margin="2"> √ </Button>
+                </StackPanel>
+                <ListView Grid.Row="1">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="编号"/>
+                            <GridViewColumn Header="标注列表"/>
+                            <GridViewColumn Header="涂白状态"/>
+                            <GridViewColumn Header="嵌字状态"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+            <GridSplitter HorizontalAlignment="Stretch" Grid.Row="1"/>
+            <TabControl Grid.Row="2">
+                <TabItem Header="录入">
+                    
+                </TabItem>
+                <TabItem Header="涂白">
+                    
+                </TabItem>
+                <TabItem Header="嵌字">
+                    
+                </TabItem>
+            </TabControl>
+        </Grid>
     </Grid>
 </Window>
