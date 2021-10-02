@@ -8,24 +8,26 @@ namespace YuzuMarker.Files
     {
         public long Timestamp { get; set; }
 
-        public YuzuSimpleNotation SimpleNotation { get; set; }
+        public int x { get; set; }
+
+        public int y { get; set; }
+
+        public string text { get; set; }
 
         public YuzuNotationGroup(int x, int y, string text)
         {
             Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-            SimpleNotation = new YuzuSimpleNotation(x, y, text);
+            this.x = x;
+            this.y = y;
+            this.text = text;
         }
 
         public YuzuNotationGroup(long Timestamp, int x, int y, string text)
         {
             this.Timestamp = Timestamp;
-            SimpleNotation = new YuzuSimpleNotation(x, y, text);
-        }
-
-        public YuzuNotationGroup(long Timestamp, YuzuSimpleNotation SimpleNotation)
-        {
-            this.Timestamp = Timestamp;
-            this.SimpleNotation = SimpleNotation;
+            this.x = x;
+            this.y = y;
+            this.text = text;
         }
 
         // Other kinds of notations

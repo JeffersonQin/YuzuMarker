@@ -41,8 +41,8 @@ namespace YuzuMarker.Files
             XElement projectElement = doc.Element("YuzuProject");
             string projectName = projectElement.Element("Name").Value;
 
-            string simpleNotationFolderPath = Path.Combine(Path.GetDirectoryName(path), "./Notations/");
-            IOUtils.EnsureDirectoryExist(simpleNotationFolderPath);
+            string notationFolderPath = Path.Combine(Path.GetDirectoryName(path), "./Notations/");
+            IOUtils.EnsureDirectoryExist(notationFolderPath);
             
             XElement imagesElement = projectElement.Element("Images");
             LP yuzuImages = new LP();
@@ -54,17 +54,17 @@ namespace YuzuMarker.Files
                 YuzuImage<LI> yuzuImage = new YuzuImage<LI>(yuzuProject.path, imageName);
                 yuzuProject.Images.Add(yuzuImage);
 
-                string simpleNotationImagePath = Path.Combine(simpleNotationFolderPath, "./" + imageName + "/");
-                IOUtils.EnsureDirectoryExist(simpleNotationImagePath);
+                string notationImagePath = Path.Combine(notationFolderPath, "./" + imageName + "/");
+                IOUtils.EnsureDirectoryExist(notationImagePath);
 
-                string indexFileContent = File.ReadAllText(Path.Combine(simpleNotationImagePath, "./index.json"));
+                string indexFileContent = File.ReadAllText(Path.Combine(notationImagePath, "./index.json"));
                 JArray notationFiles = JArray.Parse(indexFileContent);
                 foreach (string notationTimestamp in notationFiles)
                 {
                     long timestamp = long.Parse(notationTimestamp);
 
-                    JObject simpleNotation = JObject.Parse(File.ReadAllText(Path.Combine(simpleNotationImagePath, "./" + timestamp + "-simple.json")));
-                    YuzuNotationGroup notationGroup = new YuzuNotationGroup(timestamp, (int)simpleNotation["x"], (int)simpleNotation["y"], (string)simpleNotation["text"]);
+                    JObject markNotation = JObject.Parse(File.ReadAllText(Path.Combine(notationImagePath, "./" + timestamp + "-mark.json")));
+                    YuzuNotationGroup notationGroup = new YuzuNotationGroup(timestamp, (int)markNotation["x"], (int)markNotation["y"], (string)markNotation["text"]);
 
                     // Other Notations
 
@@ -87,14 +87,14 @@ namespace YuzuMarker.Files
             
             XElement xImages = new XElement("Images");
 
-            string simpleNotationFolderPath = Path.Combine(project.path, "./Notations/");
-            IOUtils.EnsureDirectoryExist(simpleNotationFolderPath);
+            string notationFolderPath = Path.Combine(project.path, "./Notations/");
+            IOUtils.EnsureDirectoryExist(notationFolderPath);
             foreach (YuzuImage<LI> yuzuImage in project.Images)
             {
                 xImages.Add(new XElement("Image", yuzuImage.ImageName));
 
-                string simpleNotationImagePath = Path.Combine(simpleNotationFolderPath, "./" + yuzuImage.ImageName + "/");
-                IOUtils.EnsureDirectoryExist(simpleNotationImagePath);
+                string notationImagePath = Path.Combine(notationFolderPath, "./" + yuzuImage.ImageName + "/");
+                IOUtils.EnsureDirectoryExist(notationImagePath);
 
                 JArray timestamps = new JArray();
 
@@ -103,16 +103,15 @@ namespace YuzuMarker.Files
                     long timestamp = notationGroup.Timestamp;
                     timestamps.Add(timestamp + "");
 
-                    YuzuSimpleNotation simpleNotation = notationGroup.SimpleNotation;
-                    JObject simpleNotationObject = new JObject();
-                    simpleNotationObject.Add("x", simpleNotation.x);
-                    simpleNotationObject.Add("y", simpleNotation.y);
-                    simpleNotationObject.Add("text", simpleNotation.text);
-                    File.WriteAllText(Path.Combine(simpleNotationImagePath, timestamp + "-simple.json"), simpleNotationObject.ToString(), Encoding.UTF8);
+                    JObject markNotationObject = new JObject();
+                    markNotationObject.Add("x", notationGroup.x);
+                    markNotationObject.Add("y", notationGroup.y);
+                    markNotationObject.Add("text", notationGroup.text);
+                    File.WriteAllText(Path.Combine(notationImagePath, timestamp + "-mark.json"), markNotationObject.ToString(), Encoding.UTF8);
 
                     // Other Notations
                 }
-                File.WriteAllText(Path.Combine(simpleNotationImagePath, "./index.json"), timestamps.ToString(), Encoding.UTF8);
+                File.WriteAllText(Path.Combine(notationImagePath, "./index.json"), timestamps.ToString(), Encoding.UTF8);
             }
 
             xProject.Add(xImages);
