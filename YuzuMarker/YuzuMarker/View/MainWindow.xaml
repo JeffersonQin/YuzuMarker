@@ -71,6 +71,7 @@
         <!--这里的数据绑定的DataContext是ZoomView, 所以定义了一个BindingProxy来将DataContext换为祖先-->
         <uc:ZoomView ContentHeight="{Binding Data.ImageSource.Height, Source={StaticResource BindingProxy}}" 
                      ContentWidth="{Binding Data.ImageSource.Width, Source={StaticResource BindingProxy}}" 
+                     ContentBackground="#FFDAD5D5"
                      Grid.Row="1" Grid.Column="2">
             <uc:ZoomView.ContainerContent>
                 <Image Source="{Binding Data.ImageSource, Mode=OneWay, Source={StaticResource BindingProxy}}"></Image>

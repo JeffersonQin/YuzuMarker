@@ -48,6 +48,17 @@ namespace YuzuMarker.Control
         public static readonly DependencyProperty ContainerContentProperty =
             DependencyProperty.Register("ContainerContent", typeof(UIElement), typeof(ZoomView), new PropertyMetadata(null));
 
+        public Brush ContentBackground
+        {
+            get { return (Brush)GetValue(ContentBackgroundProperty); }
+            set { SetValue(ContentBackgroundProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ContentBackground.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ContentBackgroundProperty =
+            DependencyProperty.Register("ContentBackground", typeof(Brush), typeof(ZoomView), new PropertyMetadata(null));
+
+
         public ZoomView()
         {
             InitializeComponent();
