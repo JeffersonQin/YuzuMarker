@@ -8,7 +8,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace YuzuMarker.Files
+namespace YuzuMarker.DataFormat
 {
     public static class YuzuIO
     {

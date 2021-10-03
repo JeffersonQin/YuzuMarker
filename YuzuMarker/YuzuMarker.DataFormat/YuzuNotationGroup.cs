@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace YuzuMarker.Files
+namespace YuzuMarker.DataFormat
 {
     public class YuzuNotationGroup
     {

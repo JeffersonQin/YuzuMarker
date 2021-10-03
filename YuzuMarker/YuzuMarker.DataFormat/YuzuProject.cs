@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 
-namespace YuzuMarker.Files
+namespace YuzuMarker.DataFormat
 {
     public class YuzuProject
     {

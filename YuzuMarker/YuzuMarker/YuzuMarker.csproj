@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\YuzuMarker.Files\YuzuMarker.Files.csproj" />
+    <ProjectReference Include="..\YuzuMarker.DataFormat\YuzuMarker.DataFormat.csproj" />
     <ProjectReference Include="..\YuzuMarker.Properties\YuzuMarker.Properties.csproj" />
     <ProjectReference Include="..\YuzuMarker.PSBridge\YuzuMarker.PSBridge.csproj" />
   </ItemGroup>

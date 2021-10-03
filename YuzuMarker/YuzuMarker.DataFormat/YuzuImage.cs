@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 
-namespace YuzuMarker.Files
+namespace YuzuMarker.DataFormat
 {
     public class YuzuImage<LI> where LI : IList<YuzuNotationGroup>, new()
     {

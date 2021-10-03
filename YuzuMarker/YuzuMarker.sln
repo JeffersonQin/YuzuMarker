@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YuzuMarker", "YuzuMarker\YuzuMarker.csproj", "{A55463BE-78C5-4201-BB54-A9529B787001}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YuzuMarker.Files", "YuzuMarker.Files\YuzuMarker.Files.csproj", "{780A8AA0-2547-44F4-AB94-179297486A4C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YuzuMarker.PSBridge.Extension", "YuzuMarker.PSBridge.Extension\YuzuMarker.PSBridge.Extension.csproj", "{82FC5C3B-939E-45A2-A2C4-3CB878EA96F7}"
 	ProjectSection(ProjectDependencies) = postProject
 		{38638FE2-4AE8-4A31-8AA5-04001577861B} = {38638FE2-4AE8-4A31-8AA5-04001577861B}
@@ -18,7 +16,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YuzuMarker.Properties", "Yu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YuzuMarker.PSBridge", "YuzuMarker.PSBridge\YuzuMarker.PSBridge.csproj", "{321140BA-921D-473E-AAE5-9431C1D60D5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YuzuMarker.Git", "YuzuMarker.Git\YuzuMarker.Git.csproj", "{CB575B9D-7794-447F-B952-5E06D9E8EC4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YuzuMarker.Git", "YuzuMarker.Git\YuzuMarker.Git.csproj", "{CB575B9D-7794-447F-B952-5E06D9E8EC4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YuzuMarker.DataFormat", "YuzuMarker.DataFormat\YuzuMarker.DataFormat.csproj", "{6876E81F-3FC6-4C1C-9180-6BE9C0A82C31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,14 +36,6 @@ Global
 		{A55463BE-78C5-4201-BB54-A9529B787001}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A55463BE-78C5-4201-BB54-A9529B787001}.Release|x86.ActiveCfg = Release|x86
 		{A55463BE-78C5-4201-BB54-A9529B787001}.Release|x86.Build.0 = Release|x86
-		{780A8AA0-2547-44F4-AB94-179297486A4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{780A8AA0-2547-44F4-AB94-179297486A4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{780A8AA0-2547-44F4-AB94-179297486A4C}.Debug|x86.ActiveCfg = Debug|x86
-		{780A8AA0-2547-44F4-AB94-179297486A4C}.Debug|x86.Build.0 = Debug|x86
-		{780A8AA0-2547-44F4-AB94-179297486A4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{780A8AA0-2547-44F4-AB94-179297486A4C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{780A8AA0-2547-44F4-AB94-179297486A4C}.Release|x86.ActiveCfg = Release|x86
-		{780A8AA0-2547-44F4-AB94-179297486A4C}.Release|x86.Build.0 = Release|x86
 		{82FC5C3B-939E-45A2-A2C4-3CB878EA96F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{82FC5C3B-939E-45A2-A2C4-3CB878EA96F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82FC5C3B-939E-45A2-A2C4-3CB878EA96F7}.Debug|x86.ActiveCfg = Debug|x86
@@ -84,6 +76,14 @@ Global
 		{CB575B9D-7794-447F-B952-5E06D9E8EC4C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CB575B9D-7794-447F-B952-5E06D9E8EC4C}.Release|x86.ActiveCfg = Release|Any CPU
 		{CB575B9D-7794-447F-B952-5E06D9E8EC4C}.Release|x86.Build.0 = Release|Any CPU
+		{6876E81F-3FC6-4C1C-9180-6BE9C0A82C31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6876E81F-3FC6-4C1C-9180-6BE9C0A82C31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6876E81F-3FC6-4C1C-9180-6BE9C0A82C31}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6876E81F-3FC6-4C1C-9180-6BE9C0A82C31}.Debug|x86.Build.0 = Debug|Any CPU
+		{6876E81F-3FC6-4C1C-9180-6BE9C0A82C31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6876E81F-3FC6-4C1C-9180-6BE9C0A82C31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6876E81F-3FC6-4C1C-9180-6BE9C0A82C31}.Release|x86.ActiveCfg = Release|Any CPU
+		{6876E81F-3FC6-4C1C-9180-6BE9C0A82C31}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

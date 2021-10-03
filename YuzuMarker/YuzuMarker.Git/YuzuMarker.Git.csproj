@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\YuzuMarker.Files\YuzuMarker.Files.csproj" />
+    <ProjectReference Include="..\YuzuMarker.DataFormat\YuzuMarker.DataFormat.csproj" />
   </ItemGroup>
 
 </Project>
