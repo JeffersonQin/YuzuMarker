@@ -2,6 +2,12 @@
 
 [WIP] 次世代漫画汉化工具。本项目主要想要实现漫画汉化过程中多人协作，让工作流程简单化、系统化。
 
+# 架构
+
+<div align="center">
+	<img src="./assets/framework.svg" width=400>
+</div>
+
 # 功能
 
 预期实现功能：
