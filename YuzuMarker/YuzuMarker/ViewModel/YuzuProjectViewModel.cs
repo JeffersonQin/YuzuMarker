@@ -14,6 +14,7 @@ namespace YuzuMarker.ViewModel
 {
     public class YuzuProjectViewModel : NotifyObject
     {
+        #region Property: Project
         public YuzuProject<ObservableCollection<YuzuImage<ObservableCollection<YuzuNotationGroup>>>,
             ObservableCollection<YuzuNotationGroup>> Project
         {
@@ -22,7 +23,9 @@ namespace YuzuMarker.ViewModel
                 return Manager.YuzuMarkerManager.Project;
             }
         }
+        #endregion
 
+        #region Property: Images
         public ObservableCollection<YuzuImage<ObservableCollection<YuzuNotationGroup>>> Images
         {
             get
@@ -31,7 +34,9 @@ namespace YuzuMarker.ViewModel
                 return Manager.YuzuMarkerManager.Project.Images;
             }
         }
+        #endregion
 
+        #region Property: ImageSource
         public ImageSource ImageSource
         {
             get
@@ -52,7 +57,9 @@ namespace YuzuMarker.ViewModel
                 return null;
             }
         }
+        #endregion
 
+        #region Property: SelectedItem
         private YuzuImage<ObservableCollection<YuzuNotationGroup>> selectedItem = null;
 
         public YuzuImage<ObservableCollection<YuzuNotationGroup>> SelectedItem
@@ -72,8 +79,9 @@ namespace YuzuMarker.ViewModel
                 RaisePropertyChanged("SelectedItem");
             }
         }
+        #endregion
 
-        #region Add Image Command
+        #region Command: Add Image Command
         private DelegateCommand _AddImages;
 
         public DelegateCommand AddImages
@@ -87,19 +95,24 @@ namespace YuzuMarker.ViewModel
                         {
                             try
                             {
-                                OpenFileDialog openFileDialog = new OpenFileDialog
+                                if (MessageBox.Show("工程文件将被自动保存。确定继续？", "导入图片", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                                 {
-                                    Filter = "(*.jpg;*.png;*.jpeg)|*.jpg;*.png;*.jpeg",
-                                    Multiselect = true,
-                                    Title = "选择打开的项目",
-                                    CheckFileExists = true
-                                };
-                                if (openFileDialog.ShowDialog() == true)
-                                {
-                                    foreach (string filePath in openFileDialog.FileNames)
+                                    YuzuIO.SaveProject(Project);
+                                    OpenFileDialog openFileDialog = new OpenFileDialog
                                     {
-                                        Manager.YuzuMarkerManager.Project.CreateNewImage(filePath);
+                                        Filter = "(*.jpg;*.png;*.jpeg)|*.jpg;*.png;*.jpeg",
+                                        Multiselect = true,
+                                        Title = "选择打开的项目",
+                                        CheckFileExists = true
+                                    };
+                                    if (openFileDialog.ShowDialog() == true)
+                                    {
+                                        foreach (string filePath in openFileDialog.FileNames)
+                                        {
+                                            Manager.YuzuMarkerManager.Project.CreateNewImage(filePath);
+                                        }
                                     }
+                                    YuzuIO.SaveProject(Project);
                                 }
                             } catch (Exception e)
                             {
@@ -112,7 +125,41 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
-        #region Load Project Command
+        #region Command: Delete Image
+        private DelegateCommand _DeleteImage;
+
+        public DelegateCommand DeleteImage
+        {
+            get
+            {
+                if (_DeleteImage == null)
+                    _DeleteImage = new DelegateCommand
+                    {
+                        CommandAction = () =>
+                        {
+                            try
+                            {
+                                if (MessageBox.Show("此操作不可撤回，并且工程文件将被自动保存。确定继续？", "删除图片", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                                {
+                                    YuzuIO.SaveProject(Project);
+                                    Project.RemoveImage(SelectedItem);
+                                    RaisePropertyChanged("Project");
+                                    RaisePropertyChanged("Images");
+                                    YuzuIO.SaveProject(Project);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Utils.ExceptionHandler.ShowExceptionMessage(e);
+                            }
+                        }
+                    };
+                return _DeleteImage;
+            }
+        }
+        #endregion
+
+        #region Command: Load Project
         private DelegateCommand _LoadProject;
 
         public DelegateCommand LoadProject
@@ -156,7 +203,7 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
-        #region Save Project Command
+        #region Command: Save Project
         private DelegateCommand _SaveProject;
 
         public DelegateCommand SaveProject
@@ -183,7 +230,7 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
-        #region Create Project Command
+        #region Command: Create Project
         private DelegateCommand _CreateProject;
 
         public DelegateCommand CreateProject

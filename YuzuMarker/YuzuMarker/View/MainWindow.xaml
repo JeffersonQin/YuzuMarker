@@ -52,7 +52,8 @@
                         Orientation="Horizontal">
                 <Button Margin="2" Command="{Binding AddImages}"
                         IsEnabled="{Binding Project, Mode=OneWay, Converter={StaticResource BoolVC}}"> + </Button>
-                <Button Margin="2" IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> - </Button>
+                <Button Margin="2" Command="{Binding DeleteImage}"
+                        IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> - </Button>
                 <Button Margin="2" IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↑ </Button>
                 <Button Margin="2" IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↓ </Button>
                 <Button Margin="2"> √ </Button>
