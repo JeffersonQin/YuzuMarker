@@ -5,7 +5,7 @@
 # 架构
 
 <div align="center">
-	<img src="./assets/framework.svg" width=400>
+	<img src="./assets/framework.png" width=400>
 </div>
 
 # 功能
