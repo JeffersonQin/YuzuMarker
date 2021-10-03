@@ -89,6 +89,12 @@ namespace YuzuMarker.Files
             Images.RemoveAt(index);
         }
 
+        public void RemoveImage(YuzuImage<LI> image)
+        {
+            File.Delete(Path.Combine(path, image.ImageName));
+            Images.Remove(image);
+        }
+
         private string CopyImage(string imagePath)
         {
             EnsureImageFolderExist();
