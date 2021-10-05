@@ -34,6 +34,7 @@ namespace YuzuMarker.View
             YuzuCreateProjectViewModel vm = DataContext as YuzuCreateProjectViewModel;
             CreateProjectEvent(this, vm.FileName, vm.ProjectName, vm.Path);
             ButtonClicked = true;
+            Close();
         }
 
         private void Window_Closed(object sender, EventArgs e)
