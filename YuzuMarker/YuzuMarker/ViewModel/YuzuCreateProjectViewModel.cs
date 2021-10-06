@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using YuzuMarker.Common;
 
 namespace YuzuMarker.ViewModel
 {

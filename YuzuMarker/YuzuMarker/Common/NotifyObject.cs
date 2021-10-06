@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-namespace YuzuMarker.ViewModel
+namespace YuzuMarker.Common
 {
     public class NotifyObject : INotifyPropertyChanged
     {

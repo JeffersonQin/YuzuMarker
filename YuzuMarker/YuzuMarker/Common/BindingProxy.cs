@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 
-namespace YuzuMarker.Control
+namespace YuzuMarker.Common
 {
     /// <summary>
     /// Add Proxy &lt;ut:BindingProxy x:Key="Proxy" Data="{Binding}" /&gt; to Resources <br/>
