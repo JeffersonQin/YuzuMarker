@@ -16,9 +16,14 @@
 
 * 🚧 专用文件格式
   * 🚧 一般格式
+    * ✅ 图片资源
+    * 🚧 PSD 资源
+    * ✅ 录入文本
+    * 🚧 嵌字设置
+    * ✅ IO 框架
   * 🚧 资源文件加密支持
 * 🚧 Photoshop 自动导出
-  * 🚧 兼容层
+  * ✅ 兼容层
   * ❌  COM 方案 [Deprecated, 停止开发]
   * 🚧 [CEP 方案](https://github.com/JeffersonQin/YuzuMarker.Photoshop)
   * 🕒 UXP 方案 (等待这个方案成熟后再开工)
