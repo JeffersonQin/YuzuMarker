@@ -60,24 +60,54 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
-        #region Property: SelectedItem
-        private YuzuImage<ObservableCollection<YuzuNotationGroup>> selectedItem = null;
+        #region Property: SelectedImageItem
+        private YuzuImage<ObservableCollection<YuzuNotationGroup>> _SelectedImageItem = null;
 
-        public YuzuImage<ObservableCollection<YuzuNotationGroup>> SelectedItem
+        public YuzuImage<ObservableCollection<YuzuNotationGroup>> SelectedImageItem
         {
             get
             {
-                return selectedItem;
+                return _SelectedImageItem;
             }
             set
             {
-                selectedItem = value;
+                _SelectedImageItem = value;
                 if (Manager.YuzuMarkerManager.Project == null)
                     Manager.YuzuMarkerManager.Image = null;
                 else
-                    Manager.YuzuMarkerManager.Image = selectedItem;
+                    Manager.YuzuMarkerManager.Image = _SelectedImageItem;
                 RaisePropertyChanged("ImageSource");
-                RaisePropertyChanged("SelectedItem");
+                RaisePropertyChanged("SelectedImageItem");
+                RaisePropertyChanged("NotationGroups");
+                RaisePropertyChanged("SelectedNotationGroupItem");
+            }
+        }
+        #endregion
+
+        #region Property: NotationGroups
+        public ObservableCollection<YuzuNotationGroup> NotationGroups
+        {
+            get
+            {
+                if (SelectedImageItem == null) return null;
+                return SelectedImageItem.NotationGroups;
+            }
+        }
+        #endregion
+
+        #region Property: SelectedNotationGroupItem
+        private YuzuNotationGroup _SelectedNotationGroupItem = null;
+
+        public YuzuNotationGroup SelectedNotationGroupItem
+        {
+            get
+            {
+                return _SelectedNotationGroupItem;
+            }
+            set
+            {
+                _SelectedNotationGroupItem = value;
+                RaisePropertyChanged("SelectedNotationGroupItem");
             }
         }
         #endregion
@@ -143,7 +173,7 @@ namespace YuzuMarker.ViewModel
                                 if (MessageBox.Show("此操作不可撤回，并且工程文件将被自动保存。确定继续？", "删除图片", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                                 {
                                     YuzuIO.SaveProject(Project);
-                                    Project.RemoveImage(SelectedItem);
+                                    Project.RemoveImage(SelectedImageItem);
                                     RaisePropertyChanged("Project");
                                     RaisePropertyChanged("Images");
                                     YuzuIO.SaveProject(Project);
@@ -156,6 +186,27 @@ namespace YuzuMarker.ViewModel
                         }
                     };
                 return _DeleteImage;
+            }
+        }
+        #endregion
+
+        #region Command: Set Image Finish Status
+        private DelegateCommand _SetImageFinishStatus;
+
+        public DelegateCommand SetImageFinishStatus
+        {
+            get
+            {
+                if (_SetImageFinishStatus == null)
+                    _SetImageFinishStatus = new DelegateCommand
+                    {
+                        CommandAction = () =>
+                        {
+                            SelectedImageItem.IsFinished = !SelectedImageItem.IsFinished;
+                            RefreshImageList();
+                        }
+                    };
+                return _SetImageFinishStatus;
             }
         }
         #endregion
@@ -190,7 +241,7 @@ namespace YuzuMarker.ViewModel
                                     RaisePropertyChanged("Project");
                                     RaisePropertyChanged("Images");
                                     RaisePropertyChanged("ImageSource");
-                                    SelectedItem = null;
+                                    SelectedImageItem = null;
                                 }
                             }
                             catch (Exception e)
@@ -270,12 +321,34 @@ namespace YuzuMarker.ViewModel
                 RaisePropertyChanged("Project");
                 RaisePropertyChanged("Images");
                 RaisePropertyChanged("ImageSource");
-                SelectedItem = null;
+                SelectedImageItem = null;
             }
             catch (Exception e)
             {
                 Utils.ExceptionHandler.ShowExceptionMessage(e);
             }
+        }
+        #endregion
+
+        #region Refresh children attributes (which are not notify objects)
+        public void RefreshImageList()
+        {
+            // Backup properties
+            var project = Project;
+            var selectedImageItem = SelectedImageItem;
+            var selectedNotationGroupItem = SelectedNotationGroupItem;
+            // set project to null
+            Manager.YuzuMarkerManager.Project = null;
+            // clear properties manually
+            RaisePropertyChanged("Images");
+            RaisePropertyChanged("NotationGroups");
+            // set back properties
+            Manager.YuzuMarkerManager.Project = project;
+            SelectedImageItem = selectedImageItem;
+            SelectedNotationGroupItem = selectedNotationGroupItem;
+            // refresh properties again
+            RaisePropertyChanged("Images");
+            RaisePropertyChanged("NotationGroups");
         }
         #endregion
     }
