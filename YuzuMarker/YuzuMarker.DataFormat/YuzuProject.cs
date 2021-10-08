@@ -127,7 +127,7 @@ namespace YuzuMarker.DataFormat
         {
             string imageFileName = CopyImage(imagePath);
 
-            Images.Insert(index, new YuzuImage<LI>(this.path, imageFileName));
+            Images.Insert(index, new YuzuImage<LI>(this.path, imageFileName, false));
             return imageFileName;
         }
 
@@ -135,7 +135,7 @@ namespace YuzuMarker.DataFormat
         {
             string imageFileName = CopyImage(imagePath);
 
-            Images.Add(new YuzuImage<LI>(this.path, imageFileName));
+            Images.Add(new YuzuImage<LI>(this.path, imageFileName, false));
             return imageFileName;
         }
     }

@@ -14,20 +14,24 @@ namespace YuzuMarker.DataFormat
 
         public string text { get; set; }
 
-        public YuzuNotationGroup(int x, int y, string text)
+        public bool IsFinished { get; set; }
+
+        public YuzuNotationGroup(int x, int y, string text, bool finished)
         {
             Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             this.x = x;
             this.y = y;
             this.text = text;
+            IsFinished = finished;
         }
 
-        public YuzuNotationGroup(long Timestamp, int x, int y, string text)
+        public YuzuNotationGroup(long Timestamp, int x, int y, string text, bool finished)
         {
             this.Timestamp = Timestamp;
             this.x = x;
             this.y = y;
             this.text = text;
+            IsFinished = finished;
         }
 
         // Other kinds of notations

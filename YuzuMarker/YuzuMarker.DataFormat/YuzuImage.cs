@@ -14,18 +14,21 @@ namespace YuzuMarker.DataFormat
 
         public LI NotationGroups { get; set; }
 
-        public YuzuImage(string ParentPath, string ImageName)
+        public bool IsFinished { get; set; }
+
+        public YuzuImage(string ParentPath, string ImageName, bool finished)
         {
             if (!File.Exists(Path.Combine(ParentPath, "./Images/", ImageName)))
                 throw new Exception("YuzuImage Init Error: file does not exist. Name: " + ImageName);
             this.ParentPath = ParentPath;
             this.ImageName = ImageName;
             NotationGroups = new LI();
+            IsFinished = finished;
         }
 
-        public void CreateNewNotation(int x, int y, string text)
+        public void CreateNewNotation(int x, int y, string text, bool finished)
         {
-            NotationGroups.Add(new YuzuNotationGroup(x, y, text));
+            NotationGroups.Add(new YuzuNotationGroup(x, y, text, finished));
         }
 
         public void RemoveNotationGroupAt(int index)
@@ -33,9 +36,9 @@ namespace YuzuMarker.DataFormat
             NotationGroups.RemoveAt(index);
         }
 
-        public void CreateNewNotationAt(int index, int x, int y, string text)
+        public void CreateNewNotationAt(int index, int x, int y, string text, bool finished)
         {
-            NotationGroups.Insert(index, new YuzuNotationGroup(x, y, text));
+            NotationGroups.Insert(index, new YuzuNotationGroup(x, y, text, finished));
         }
         
         public void MoveNotationGroup(int fromIndex, int toIndex)
