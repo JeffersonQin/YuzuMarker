@@ -10,9 +10,9 @@
     <UserControl.Resources>
         <c:BindingProxy x:Key="BindingProxy" Data="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}},Path=DataContext}" />
     </UserControl.Resources>
-    <local:NoScrollScrollViewer HorizontalScrollBarVisibility="Hidden"
-                VerticalScrollBarVisibility="Hidden"
-                MouseWheel="MouseWheelHandler"
+    <local:NoScrollScrollViewer x:Name="ZoomScrollViewer"
+                HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
+                MouseWheel="MouseWheelHandler" MouseMove="MouseMoveHandler" 
                 Background="{Binding ContentBackground}">
         <ContentControl x:Name="ContentControlInstance" Width="{Binding ContentWidth}" Height="{Binding ContentHeight}">
             <ContentPresenter Content="{Binding ContainerContent}"></ContentPresenter>

@@ -75,8 +75,19 @@ namespace YuzuMarker.Control
             //    return;
             //if (scale > 16 && e.Delta > 0)
             //    return;
+
+            double lastScale = Scale;
+
             Scale *= (e.Delta > 0 ? 1.2 : 1 / 1.2);
             SetScale();
+
+            Point mousePosition = e.GetPosition(ContentControlInstance);
+            double deltaX = mousePosition.X * (Scale - lastScale);
+            double deltaY = mousePosition.Y * (Scale - lastScale);
+            if (deltaX != 0)
+                ZoomScrollViewer.ScrollToHorizontalOffset(ZoomScrollViewer.HorizontalOffset + deltaX);
+            if (deltaY != 0)
+                ZoomScrollViewer.ScrollToVerticalOffset(ZoomScrollViewer.VerticalOffset + deltaY);
         }
 
         public void SetScale()
@@ -88,6 +99,35 @@ namespace YuzuMarker.Control
         {
             this.Scale = Scale;
             SetScale();
+        }
+
+        private Point LastPoint = new Point(0, 0);
+
+        private void MouseMoveHandler(object sender, MouseEventArgs e)
+        {
+            if (ContentWidth == 0 || ContentHeight == 0)
+                return;
+
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                Point newPoint = e.GetPosition((ScrollViewer)sender);
+                if (LastPoint.X == 0 && LastPoint.Y == 0)
+                {
+                    LastPoint = newPoint;
+                    return;
+                }
+                double deltaX = LastPoint.X - newPoint.X;
+                double deltaY = LastPoint.Y - newPoint.Y;
+                if (deltaX != 0)
+                    ZoomScrollViewer.ScrollToHorizontalOffset(ZoomScrollViewer.HorizontalOffset + deltaX);
+                if (deltaY != 0)
+                    ZoomScrollViewer.ScrollToVerticalOffset(ZoomScrollViewer.VerticalOffset + deltaY);
+                LastPoint = newPoint;
+            } else
+            {
+                LastPoint.X = 0;
+                LastPoint.Y = 0;
+            }
         }
     }
 }
