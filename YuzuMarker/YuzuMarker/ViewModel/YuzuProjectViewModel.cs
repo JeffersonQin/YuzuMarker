@@ -211,6 +211,56 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
+        #region Command: Move image up
+        private DelegateCommand _MoveSelectedImageUp;
+
+        public DelegateCommand MoveSelectedImageUp
+        {
+            get
+            {
+                if (_MoveSelectedImageUp == null)
+                    _MoveSelectedImageUp = new DelegateCommand
+                    {
+                        CommandAction = () =>
+                        {
+                            int index = Project.Images.IndexOf(SelectedImageItem);
+                            if (index > 0)
+                            {
+                                Project.Images.Move(index, index - 1);
+                                RaisePropertyChanged("Images");
+                            }
+                        }
+                    };
+                return _MoveSelectedImageUp;
+            }
+        }
+        #endregion
+
+        #region Command: Move image down
+        private DelegateCommand _MoveSelectedImageDown;
+
+        public DelegateCommand MoveSelectedImageDown
+        {
+            get
+            {
+                if (_MoveSelectedImageDown == null)
+                    _MoveSelectedImageDown = new DelegateCommand
+                    {
+                        CommandAction = () =>
+                        {
+                            int index = Project.Images.IndexOf(SelectedImageItem);
+                            if (index < Project.Images.Count - 1)
+                            {
+                                Project.Images.Move(index, index + 1);
+                                RaisePropertyChanged("Images");
+                            }
+                        }
+                    };
+                return _MoveSelectedImageDown;
+            }
+        }
+        #endregion
+
         #region Command: Load Project
         private DelegateCommand _LoadProject;
 

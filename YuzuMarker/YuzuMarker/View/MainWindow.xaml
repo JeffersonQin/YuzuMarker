@@ -57,8 +57,10 @@
                         IsEnabled="{Binding Project, Mode=OneWay, Converter={StaticResource BoolVC}}"> + </Button>
                 <Button Margin="2" Command="{Binding DeleteImage}"
                         IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> - </Button>
-                <Button Margin="2" IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↑ </Button>
-                <Button Margin="2" IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↓ </Button>
+                <Button Margin="2" Command="{Binding MoveSelectedImageUp}"
+                        IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↑ </Button>
+                <Button Margin="2" Command="{Binding MoveSelectedImageDown}"
+                        IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↓ </Button>
                 <Button Margin="2" Command="{Binding SetImageFinishStatus}"
                         IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"
                         Background="{Binding SelectedImageItem.IsFinished, Mode=OneWay, Converter={StaticResource ColorStatus}}"> √ </Button>
