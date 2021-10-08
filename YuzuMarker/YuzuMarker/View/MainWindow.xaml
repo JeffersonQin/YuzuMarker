@@ -15,8 +15,11 @@
     </Window.DataContext>
     <Window.Resources>
         <vc:Object2Boolean x:Key="BoolVC"/>
-        <vc:NumValuePlus1 x:Key="+1"/>
         <vc:Boolean2ColorBrush x:Key="ColorStatus"/>
+        <vc:ValueConverterGroup x:Key="ListViewItem2Index">
+            <vc:IndexConverter/>
+            <vc:NumValuePlus1/>
+        </vc:ValueConverterGroup>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Command="{Binding CreateProject}" Modifiers="Ctrl" Key="N"/>
@@ -111,13 +114,39 @@
                     <Button Margin="2"> ↓ </Button>
                     <Button Margin="2"> √ </Button>
                 </StackPanel>
-                <ListView Grid.Row="1">
+                <ListView Grid.Row="1" ItemsSource="{Binding NotationGroups, Mode=OneWay}"
+                          SelectedItem="{Binding SelectedNotationGroupItem, Mode=TwoWay}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="编号"/>
-                            <GridViewColumn Header="标注列表"/>
-                            <GridViewColumn Header="涂白状态"/>
-                            <GridViewColumn Header="嵌字状态"/>
+                            <GridViewColumn Header="编号" 
+                                DisplayMemberBinding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, 
+                                                                Converter={StaticResource ListViewItem2Index}}">
+                            </GridViewColumn>
+                            <GridViewColumn Header="标注列表">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <TextBlock/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="涂白状态">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <TextBlock/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="嵌字状态">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                         </GridView>
                     </ListView.View>
                 </ListView>
