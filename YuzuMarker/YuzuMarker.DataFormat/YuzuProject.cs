@@ -37,7 +37,7 @@ namespace YuzuMarker.DataFormat
             }
         }
 
-        public string projectName;
+        public string projectName { get; set; }
 
         private string _fileName;
 
@@ -55,7 +55,7 @@ namespace YuzuMarker.DataFormat
             }
         }
 
-        public LP Images;
+        public LP Images { get; set; }
 
         public void EnsureImageFolderExist()
         {
