@@ -17,4 +17,8 @@
     <Folder Include="Git\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
+  </ItemGroup>
+
 </Project>
