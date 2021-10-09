@@ -113,6 +113,23 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
+        #region Property: LabelMode
+        private bool _LabelMode = false;
+
+        public bool LabelMode
+        {
+            get
+            {
+                return _LabelMode;
+            }
+            set
+            {
+                _LabelMode = value;
+                RaisePropertyChanged("LabelMode");
+            }
+        }
+        #endregion
+
         #region Command: Add Image Command
         private DelegateCommand _AddImages;
 

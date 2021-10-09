@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:YuzuMarker.View"
         xmlns:vm="clr-namespace:YuzuMarker.ViewModel"
         xmlns:uc="clr-namespace:YuzuMarker.Control"
@@ -20,6 +21,7 @@
             <vc:IndexConverter/>
             <vc:NumValuePlus1/>
         </vc:ValueConverterGroup>
+        <vc:NotationGroup2Index x:Key="NotationGroup2Index"/>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Command="{Binding CreateProject}" Modifiers="Ctrl" Key="N"/>
@@ -93,7 +95,39 @@
                      ContentBackground="#FFDAD5D5"
                      Grid.Row="1" Grid.Column="2">
             <uc:ZoomView.ContainerContent>
-                <Image Source="{Binding Data.ImageSource, Mode=OneWay, Source={StaticResource BindingProxy}}"></Image>
+                <Grid ClipToBounds="True" MouseDown="ImageAreaMouseDown" MouseUp="ImageAreaMouseUp">
+                    <Image Source="{Binding Data.ImageSource, Mode=OneWay, Source={StaticResource BindingProxy}}"></Image>
+                    <ItemsControl ItemsSource="{Binding Data.NotationGroups, Mode=OneWay, Source={StaticResource BindingProxy}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ContentPresenter Content=""/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ItemsControl ItemsSource="{Binding Data.NotationGroups, Mode=OneWay, Source={StaticResource BindingProxy}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style>
+                                <Setter Property="Canvas.Left" Value="{Binding x, Mode=OneWay}"/>
+                                <Setter Property="Canvas.Top" Value="{Binding y, Mode=OneWay}"/>
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding Converter={StaticResource NotationGroup2Index}}" Width="20"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
             </uc:ZoomView.ContainerContent>
         </uc:ZoomView>
         <Grid Grid.Row="1" Grid.Column="4">
@@ -108,11 +142,17 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.Row="0">
-                    <Button Margin="2"> + </Button>
-                    <Button Margin="2"> - </Button>
-                    <Button Margin="2"> ↑ </Button>
-                    <Button Margin="2"> ↓ </Button>
-                    <Button Margin="2"> √ </Button>
+                    <ToggleButton Margin="2"
+                            IsChecked="{Binding LabelMode, Mode=TwoWay}"
+                            IsEnabled="{Binding SelectedImageItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> + </ToggleButton>
+                    <Button Margin="2"
+                            IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> - </Button>
+                    <Button Margin="2"
+                            IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↑ </Button>
+                    <Button Margin="2"
+                            IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↓ </Button>
+                    <Button Margin="2"
+                            IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> √ </Button>
                 </StackPanel>
                 <ListView Grid.Row="1" ItemsSource="{Binding NotationGroups, Mode=OneWay}"
                           SelectedItem="{Binding SelectedNotationGroupItem, Mode=TwoWay}">
@@ -126,7 +166,7 @@
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid>
-                                            <TextBlock/>
+                                            <TextBlock Text="{Binding text}" Foreground="{Binding IsFinished, Converter={StaticResource ColorStatus}}"/>
                                         </Grid>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
