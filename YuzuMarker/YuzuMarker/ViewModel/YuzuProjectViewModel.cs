@@ -141,6 +141,33 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
+        #region Command: Select NotationGroup
+        private DelegateCommand<int> _SelectNotationGroup;
+
+        public DelegateCommand<int> SelectNotationGroup
+        {
+            get
+            {
+                if (_SelectNotationGroup == null)
+                    _SelectNotationGroup = new DelegateCommand<int>()
+                    {
+                        CommandAction = (index) =>
+                        {
+                            try
+                            {
+                                SelectedNotationGroupItem = NotationGroups[index - 1];
+                            }
+                            catch (Exception e)
+                            {
+                                Utils.ExceptionHandler.ShowExceptionMessage(e);
+                            }
+                        }
+                    };
+                return _SelectNotationGroup;
+            }
+        }
+        #endregion
+
         #region Command: Delete NotationGroup
         private DelegateCommand _DeleteNotationGroup;
 

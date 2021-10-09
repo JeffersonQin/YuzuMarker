@@ -123,7 +123,9 @@
                         </ItemsControl.ItemContainerStyle>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button Content="{Binding Converter={StaticResource NotationGroup2Index}}" Width="20"/>
+                                <Button Command="{Binding Data.SelectNotationGroup, Source={StaticResource BindingProxy}}"
+                                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"
+                                        Content="{Binding Converter={StaticResource NotationGroup2Index}}" Width="20"/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
