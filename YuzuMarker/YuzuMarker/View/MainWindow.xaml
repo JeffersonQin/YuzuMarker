@@ -155,7 +155,8 @@
                             Background="{Binding SelectedNotationGroupItem.IsFinished, Converter={StaticResource ColorStatus}}"
                             IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> √ </Button>
                 </StackPanel>
-                <ListView Grid.Row="1" ItemsSource="{Binding NotationGroups, Mode=OneWay}"
+                <ListView Grid.Row="1" x:Name="NotationGroupListView"
+                          ItemsSource="{Binding NotationGroups, Mode=OneWay}"
                           SelectedItem="{Binding SelectedNotationGroupItem, Mode=TwoWay}">
                     <ListView.View>
                         <GridView>
@@ -195,7 +196,39 @@
             <GridSplitter HorizontalAlignment="Stretch" Grid.Row="1"/>
             <TabControl Grid.Row="2">
                 <TabItem Header="录入">
-                    
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0">
+                            
+                        </StackPanel>
+                        <TextBox Grid.Row="1" LostFocus="TextAreaOnLostFocus" KeyDown="TextAreaOnKeyDown"
+                                 IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"
+                                 Text="{Binding SelectedNotationGroupText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox.Style>
+                                <Style TargetType="{x:Type TextBox}">
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <VisualBrush Stretch="None" AlignmentX="Left" AlignmentY="Top">
+                                                        <VisualBrush.Visual>
+                                                            <StackPanel>
+                                                                <TextBlock Foreground="Gray">Ctrl + Enter: 下一个标记</TextBlock>
+                                                                <TextBlock Foreground="Gray">Shift + Ctrl + Enter: 上一个标记</TextBlock>
+                                                            </StackPanel>
+                                                        </VisualBrush.Visual>
+                                                    </VisualBrush>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="涂白">
                     

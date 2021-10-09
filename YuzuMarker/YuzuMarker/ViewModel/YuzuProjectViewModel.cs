@@ -61,21 +61,18 @@ namespace YuzuMarker.ViewModel
         #endregion
 
         #region Property: SelectedImageItem
-        private YuzuImage<ObservableCollection<YuzuNotationGroup>> _SelectedImageItem = null;
-
         public YuzuImage<ObservableCollection<YuzuNotationGroup>> SelectedImageItem
         {
             get
             {
-                return _SelectedImageItem;
+                return Manager.YuzuMarkerManager.Image;
             }
             set
             {
-                _SelectedImageItem = value;
                 if (Manager.YuzuMarkerManager.Project == null)
                     Manager.YuzuMarkerManager.Image = null;
                 else
-                    Manager.YuzuMarkerManager.Image = _SelectedImageItem;
+                    Manager.YuzuMarkerManager.Image = value;
                 RaisePropertyChanged("ImageSource");
                 RaisePropertyChanged("SelectedImageItem");
                 RaisePropertyChanged("NotationGroups");
@@ -96,19 +93,17 @@ namespace YuzuMarker.ViewModel
         #endregion
 
         #region Property: SelectedNotationGroupItem
-        private YuzuNotationGroup _SelectedNotationGroupItem = null;
-
         public YuzuNotationGroup SelectedNotationGroupItem
         {
             get
             {
-                return _SelectedNotationGroupItem;
+                return Manager.YuzuMarkerManager.Group;
             }
             set
             {
-                _SelectedNotationGroupItem = value;
-                Manager.YuzuMarkerManager.Group = _SelectedNotationGroupItem;
+                Manager.YuzuMarkerManager.Group = value;
                 RaisePropertyChanged("SelectedNotationGroupItem");
+                RaisePropertyChanged("SelectedNotationGroupText");
             }
         }
         #endregion
@@ -126,6 +121,22 @@ namespace YuzuMarker.ViewModel
             {
                 _LabelMode = value;
                 RaisePropertyChanged("LabelMode");
+            }
+        }
+        #endregion
+
+        #region Property: SelectedNotationGroupText
+        public string SelectedNotationGroupText
+        {
+            get
+            {
+                if (SelectedNotationGroupItem == null) return null;
+                return SelectedNotationGroupItem.text;
+            }
+            set
+            {
+                SelectedNotationGroupItem.text = value;
+                RaisePropertyChanged("SelectedNotationGroupText");
             }
         }
         #endregion
@@ -504,8 +515,9 @@ namespace YuzuMarker.ViewModel
             var project = Project;
             var selectedImageItem = SelectedImageItem;
             var selectedNotationGroupItem = SelectedNotationGroupItem;
-            // set project to null
+            // set certain fields to null to reset value in UI
             Manager.YuzuMarkerManager.Project = null;
+            SelectedImageItem = null;
             // clear properties manually
             RaisePropertyChanged("Images");
             RaisePropertyChanged("NotationGroups");

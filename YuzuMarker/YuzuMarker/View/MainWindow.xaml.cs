@@ -55,5 +55,30 @@ namespace YuzuMarker.View
             ClickPoint.Y = 0;
             ClickTimestamp = 0;
         }
+
+        private void TextAreaOnLostFocus(object sender, RoutedEventArgs e)
+        {
+            ViewModel.RefreshImageList();
+        }
+
+        private void TextAreaOnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter) return;
+            if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.Right))) return;
+            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+            {
+                if (NotationGroupListView.SelectedIndex == 0) goto Finish;
+                NotationGroupListView.SelectedIndex -= 1;
+            }
+            else
+            {
+                if (Manager.YuzuMarkerManager.Image.NotationGroups.IndexOf(Manager.YuzuMarkerManager.Group) ==
+                    Manager.YuzuMarkerManager.Image.NotationGroups.Count - 1)
+                    goto Finish;
+                NotationGroupListView.SelectedIndex += 1;
+            }
+            Finish:
+            ViewModel.RefreshImageList();
+        }
     }
 }
