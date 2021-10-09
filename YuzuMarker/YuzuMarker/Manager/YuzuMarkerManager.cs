@@ -36,5 +36,19 @@ namespace YuzuMarker.Manager
                 _Image = value;
             }
         }
+
+        private static YuzuNotationGroup _Group = null;
+
+        public static YuzuNotationGroup Group
+        {
+            get
+            {
+                return _Group;
+            }
+            set
+            {
+                _Group = value;
+            }
+        }
     }
 }

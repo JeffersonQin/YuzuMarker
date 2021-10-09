@@ -107,6 +107,7 @@ namespace YuzuMarker.ViewModel
             set
             {
                 _SelectedNotationGroupItem = value;
+                Manager.YuzuMarkerManager.Group = _SelectedNotationGroupItem;
                 RaisePropertyChanged("SelectedNotationGroupItem");
             }
         }
