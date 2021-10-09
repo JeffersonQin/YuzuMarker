@@ -22,18 +22,20 @@
     * 🚧 涂白设置
     * 🚧 嵌字设置
     * ✅ IO 框架
+      * 🚧 文件清理
   * 🚧 资源文件加密支持
 * 🚧 Photoshop 自动导出
   * ✅ 兼容层
   * ❌  COM 方案 [Deprecated, 停止开发]
   * 🚧 [CEP 方案](https://github.com/JeffersonQin/YuzuMarker.Photoshop)
   * 🕒 UXP 方案 (等待这个方案成熟后再开工)
-* 🚧 文字块自动识别
-* 🚧 [字体自动识别](https://github.com/JeffersonQin/YuzuMarker.FontDetection)
-* 🚧 [字体布局半自动化](https://github.com/JeffersonQin/YuzuMarker.TextAutoLayout)
-* 🚧 翻译标注部分
-* 🚧 校对部分
+* ✅ 翻译标注部分
+* 🚧 文字录入部分
+* 🚧 涂白部分
+  * 🚧 文字块自动识别
 * 🚧 嵌字部分
+  * 🚧 [字体自动识别](https://github.com/JeffersonQin/YuzuMarker.FontDetection)
+  * 🚧 [字体布局半自动化](https://github.com/JeffersonQin/YuzuMarker.TextAutoLayout)
 
 # 关于文件格式的设计
 
