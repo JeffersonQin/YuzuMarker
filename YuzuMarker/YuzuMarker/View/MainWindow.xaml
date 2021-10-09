@@ -145,13 +145,14 @@
                     <ToggleButton Margin="2"
                             IsChecked="{Binding LabelMode, Mode=TwoWay}"
                             IsEnabled="{Binding SelectedImageItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> + </ToggleButton>
-                    <Button Margin="2"
+                    <Button Margin="2" Command="{Binding DeleteNotationGroup}"
                             IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> - </Button>
-                    <Button Margin="2"
+                    <Button Margin="2" Command="{Binding MoveNotationGroupUp}"
                             IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↑ </Button>
-                    <Button Margin="2"
+                    <Button Margin="2" Command="{Binding MoveNotationGroupDown}"
                             IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↓ </Button>
-                    <Button Margin="2"
+                    <Button Margin="2" Command="{Binding SetNotationGroupFinishStatus}"
+                            Background="{Binding SelectedNotationGroupItem.IsFinished, Converter={StaticResource ColorStatus}}"
                             IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> √ </Button>
                 </StackPanel>
                 <ListView Grid.Row="1" ItemsSource="{Binding NotationGroups, Mode=OneWay}"

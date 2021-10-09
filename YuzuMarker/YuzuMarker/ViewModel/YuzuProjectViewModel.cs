@@ -130,6 +130,105 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
+        #region Command: Delete NotationGroup
+        private DelegateCommand _DeleteNotationGroup;
+
+        public DelegateCommand DeleteNotationGroup
+        {
+            get
+            {
+                if (_DeleteNotationGroup == null)
+                    _DeleteNotationGroup = new DelegateCommand
+                    {
+                        CommandAction = () =>
+                        {
+                            try
+                            {
+                                NotationGroups.Remove(SelectedNotationGroupItem);
+                                RefreshImageList();
+                            }
+                            catch (Exception e)
+                            {
+                                Utils.ExceptionHandler.ShowExceptionMessage(e);
+                            }
+                        }
+                    };
+                return _DeleteNotationGroup;
+            }
+        }
+        #endregion
+
+        #region Command: Move NotationGroup up
+        private DelegateCommand _MoveNotationGroupUp;
+
+        public DelegateCommand MoveNotationGroupUp
+        {
+            get
+            {
+                if (_MoveNotationGroupUp == null)
+                    _MoveNotationGroupUp = new DelegateCommand
+                    {
+                        CommandAction = () =>
+                        {
+                            int index = NotationGroups.IndexOf(SelectedNotationGroupItem);
+                            if (index > 0)
+                            {
+                                NotationGroups.Move(index, index - 1);
+                                RefreshImageList();
+                            }
+                        }
+                    };
+                return _MoveNotationGroupUp;
+            }
+        }
+        #endregion
+
+        #region Command: Move NotationGroup Down
+        private DelegateCommand _MoveNotationGroupDown;
+
+        public DelegateCommand MoveNotationGroupDown
+        {
+            get
+            {
+                if (_MoveNotationGroupDown == null)
+                    _MoveNotationGroupDown = new DelegateCommand
+                    {
+                        CommandAction = () =>
+                        {
+                            int index = NotationGroups.IndexOf(SelectedNotationGroupItem);
+                            if (index < NotationGroups.Count - 1)
+                            {
+                                NotationGroups.Move(index, index + 1);
+                                RefreshImageList();
+                            }
+                        }
+                    };
+                return _MoveNotationGroupDown;
+            }
+        }
+        #endregion
+
+        #region Command: Set NotationGroup Finish Status
+        private DelegateCommand _SetNotationGroupFinishStatus;
+
+        public DelegateCommand SetNotationGroupFinishStatus
+        {
+            get
+            {
+                if (_SetNotationGroupFinishStatus == null)
+                    _SetNotationGroupFinishStatus = new DelegateCommand
+                    {
+                        CommandAction = () =>
+                        {
+                            SelectedNotationGroupItem.IsFinished = !SelectedNotationGroupItem.IsFinished;
+                            RefreshImageList();
+                        }
+                    };
+                return _SetNotationGroupFinishStatus;
+            }
+        }
+        #endregion
+
         #region Command: Add Image Command
         private DelegateCommand _AddImages;
 
