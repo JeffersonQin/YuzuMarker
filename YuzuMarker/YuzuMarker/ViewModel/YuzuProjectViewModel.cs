@@ -135,6 +135,40 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
+        #region Property: LassoMode
+        private bool _LassoMode = false;
+
+        public bool LassoMode
+        {
+            get
+            {
+                return _LassoMode;
+            }
+            set
+            {
+                _LassoMode = value;
+                RaisePropertyChanged("LassoMode");
+            }
+        }
+        #endregion
+
+        #region Property: LassoPoints (Used for Lasso Polygon)
+        private PointCollection _LassoPoints = new PointCollection();
+
+        public PointCollection LassoPoints
+        {
+            get
+            {
+                return _LassoPoints;
+            }
+            set
+            {
+                _LassoPoints = value;
+                RaisePropertyChanged("LassoPoints");
+            }
+        }
+        #endregion
+
         #region Property: SelectedNotationGroupText
         public string SelectedNotationGroupText
         {

@@ -1,4 +1,4 @@
-<Window
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,12 +10,14 @@
         xmlns:vc="clr-namespace:YuzuMarker.Converter"
         x:Class="YuzuMarker.View.MainWindow"
         mc:Ignorable="d"
+        KeyDown="Window_KeyDown"
         Title="YuzuMarker by gyro永不抽风" Height="600" Width="1000">
     <Window.DataContext>
         <vm:YuzuProjectViewModel/>
     </Window.DataContext>
     <Window.Resources>
         <vc:Object2Boolean x:Key="BoolVC"/>
+        <vc:Boolean2Visibility x:Key="Boolean2Visibility"/>
         <vc:Boolean2ColorBrush x:Key="ColorStatus"/>
         <vc:ValueConverterGroup x:Key="ListViewItem2Index">
             <vc:IndexConverter/>
@@ -51,49 +53,52 @@
         </Menu>
         <GridSplitter HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1"/>
         <GridSplitter HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="3"/>
-        <Grid Grid.Row="1" Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" 
+        <Grid Grid.Row="1" Grid.Column="0" ClipToBounds="True">
+            <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" 
                         Orientation="Horizontal">
-                <Button Margin="2" Command="{Binding AddImages}"
+                        <Button Margin="2" Command="{Binding AddImages}"
                         IsEnabled="{Binding Project, Mode=OneWay, Converter={StaticResource BoolVC}}"> + </Button>
-                <Button Margin="2" Command="{Binding DeleteImage}"
+                        <Button Margin="2" Command="{Binding DeleteImage}"
                         IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> - </Button>
-                <Button Margin="2" Command="{Binding MoveSelectedImageUp}"
+                        <Button Margin="2" Command="{Binding MoveSelectedImageUp}"
                         IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↑ </Button>
-                <Button Margin="2" Command="{Binding MoveSelectedImageDown}"
+                        <Button Margin="2" Command="{Binding MoveSelectedImageDown}"
                         IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↓ </Button>
-                <Button Margin="2" Command="{Binding SetImageFinishStatus}"
+                        <Button Margin="2" Command="{Binding SetImageFinishStatus}"
                         IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"
                         Background="{Binding SelectedImageItem.IsFinished, Mode=OneWay, Converter={StaticResource ColorStatus}}"> √ </Button>
-            </StackPanel>
-            <ListView Grid.Row="1" x:Name="FileListView"
+                    </StackPanel>
+                    <ListView Grid.Row="1" x:Name="FileListView"
                       ItemsSource="{Binding Images, Mode=OneWay}" 
                       SelectedItem="{Binding SelectedImageItem, Mode=TwoWay}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="图片列表">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <TextBlock Text="{Binding ImageName}" 
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="图片列表">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock Text="{Binding ImageName}" 
                                                    Foreground="{Binding IsFinished, Converter={StaticResource ColorStatus}}"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+            </Grid>
+            <Rectangle Fill="#7F000000" Visibility="{Binding LassoMode, Converter={StaticResource Boolean2Visibility}}" MouseDown="ShadeMouseDown"/>
         </Grid>
         <!--这里的数据绑定的DataContext是ZoomView, 所以定义了一个BindingProxy来将DataContext换为祖先-->
-        <uc:ZoomView ContentHeight="{Binding Data.ImageSource.Height, Source={StaticResource BindingProxy}}" 
-                     ContentWidth="{Binding Data.ImageSource.Width, Source={StaticResource BindingProxy}}" 
-                     ContentBackground="#FFDAD5D5"
-                     Grid.Row="1" Grid.Column="2">
+        <uc:ZoomView CanDefaultMouseMoveEvent="CanDefaultMouseMoveEventHappen"
+            ContentHeight="{Binding Data.ImageSource.Height, Source={StaticResource BindingProxy}}" 
+            ContentWidth="{Binding Data.ImageSource.Width, Source={StaticResource BindingProxy}}" 
+            ContentBackground="#FFDAD5D5" Grid.Row="1" Grid.Column="2">
             <uc:ZoomView.ContainerContent>
                 <Grid ClipToBounds="True" MouseDown="ImageAreaMouseDown" MouseUp="ImageAreaMouseUp">
                     <Image Source="{Binding Data.ImageSource, Mode=OneWay, Source={StaticResource BindingProxy}}"></Image>
@@ -129,117 +134,134 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+                    <Rectangle MouseDown="LassoMouseDownEvent" Fill="#7FE9B2FF" MouseMove="CustomMouseMoveEvent"
+                        Visibility="{Binding Data.LassoMode, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
+                    <Polygon Points="{Binding Data.LassoPoints, Source={StaticResource BindingProxy}}" Fill="#7FB2F0FF" Stroke="#FFB2F0FF"
+                        Visibility="{Binding Data.LassoMode, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
                 </Grid>
             </uc:ZoomView.ContainerContent>
         </uc:ZoomView>
-        <Grid Grid.Row="1" Grid.Column="4">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="2"/>
-                <RowDefinition Height="1*"/>
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
+        <Grid Grid.Row="1" Grid.Column="4" ClipToBounds="True">
+            <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="2"/>
+                    <RowDefinition Height="1*"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <StackPanel Orientation="Horizontal" Grid.Row="0">
-                    <ToggleButton Margin="2"
-                            IsChecked="{Binding LabelMode, Mode=TwoWay}"
-                            IsEnabled="{Binding SelectedImageItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> + </ToggleButton>
-                    <Button Margin="2" Command="{Binding DeleteNotationGroup}"
-                            IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> - </Button>
-                    <Button Margin="2" Command="{Binding MoveNotationGroupUp}"
-                            IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↑ </Button>
-                    <Button Margin="2" Command="{Binding MoveNotationGroupDown}"
-                            IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↓ </Button>
-                    <Button Margin="2" Command="{Binding SetNotationGroupFinishStatus}"
-                            Background="{Binding SelectedNotationGroupItem.IsFinished, Converter={StaticResource ColorStatus}}"
-                            IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> √ </Button>
-                </StackPanel>
-                <ListView Grid.Row="1" x:Name="NotationGroupListView"
-                          ItemsSource="{Binding NotationGroups, Mode=OneWay}"
-                          SelectedItem="{Binding SelectedNotationGroupItem, Mode=TwoWay}">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="编号" 
-                                DisplayMemberBinding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, 
-                                                                Converter={StaticResource ListViewItem2Index}, ConverterParameter=1}">
-                            </GridViewColumn>
-                            <GridViewColumn Header="标注列表">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Grid>
-                                            <TextBlock Text="{Binding text}" Foreground="{Binding IsFinished, Converter={StaticResource ColorStatus}}"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Header="涂白状态">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Grid>
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0">
+                        <ToggleButton Margin="2"
+                                IsChecked="{Binding LabelMode, Mode=TwoWay}"
+                                IsEnabled="{Binding SelectedImageItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> + </ToggleButton>
+                        <Button Margin="2" Command="{Binding DeleteNotationGroup}"
+                                IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> - </Button>
+                        <Button Margin="2" Command="{Binding MoveNotationGroupUp}"
+                                IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↑ </Button>
+                        <Button Margin="2" Command="{Binding MoveNotationGroupDown}"
+                                IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↓ </Button>
+                        <Button Margin="2" Command="{Binding SetNotationGroupFinishStatus}"
+                                Background="{Binding SelectedNotationGroupItem.IsFinished, Converter={StaticResource ColorStatus}}"
+                                IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> √ </Button>
+                    </StackPanel>
+                    <ListView Grid.Row="1" x:Name="NotationGroupListView"
+                              ItemsSource="{Binding NotationGroups, Mode=OneWay}"
+                              SelectedItem="{Binding SelectedNotationGroupItem, Mode=TwoWay}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="编号" 
+                                    DisplayMemberBinding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, 
+                                                                    Converter={StaticResource ListViewItem2Index}, ConverterParameter=1}">
+                                </GridViewColumn>
+                                <GridViewColumn Header="标注列表">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock Text="{Binding text}" Foreground="{Binding IsFinished, Converter={StaticResource ColorStatus}}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="涂白状态">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="嵌字状态">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
                                             <TextBlock/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Header="嵌字状态">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+                <GridSplitter HorizontalAlignment="Stretch" Grid.Row="1"/>
+                <TabControl Grid.Row="2">
+                    <TabItem Header="录入">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0">
+
+                            </StackPanel>
+                            <TextBox Grid.Row="1" LostFocus="TextAreaOnLostFocus" KeyDown="TextAreaOnKeyDown"
+                                     AcceptsTab="True" AcceptsReturn="True"
+                                     IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"
+                                     Text="{Binding SelectedNotationGroupText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter Property="Background">
+                                                    <Setter.Value>
+                                                        <VisualBrush Stretch="None" AlignmentX="Left" AlignmentY="Top">
+                                                            <VisualBrush.Visual>
+                                                                <StackPanel>
+                                                                    <TextBlock Foreground="Gray">Ctrl + Enter: 下一个标记</TextBlock>
+                                                                    <TextBlock Foreground="Gray">Shift + Ctrl + Enter: 上一个标记</TextBlock>
+                                                                </StackPanel>
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="涂白">
+                        <GroupBox Header="选项" Grid.Row="0">
+                            <StackPanel>
+                                <!--IsChecked 以后改成 DataBinding，写一个 enum -> bool 的 Converter-->
+                                <RadioButton Content="不涂白" IsChecked="True" GroupName="CleaningGroup" Margin="5"/>
+                                <RadioButton Content="Photoshop 自定义" GroupName="CleaningGroup" Margin="5" Checked="CleaningCustomChecked"/>
+                            </StackPanel>
+                        </GroupBox>
+                    </TabItem>
+                    <TabItem Header="嵌字">
+
+                    </TabItem>
+                </TabControl>
+                <StatusBar Grid.Row="3">
+                    <TextBlock x:Name="GlobalStatusInformationLabel" TextWrapping="Wrap" Text="{Binding TopMessage}"/>
+                </StatusBar>
             </Grid>
-            <GridSplitter HorizontalAlignment="Stretch" Grid.Row="1"/>
-            <TabControl Grid.Row="2">
-                <TabItem Header="录入">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0">
-                            
-                        </StackPanel>
-                        <TextBox Grid.Row="1" LostFocus="TextAreaOnLostFocus" KeyDown="TextAreaOnKeyDown"
-                                 AcceptsTab="True" AcceptsReturn="True"
-                                 IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"
-                                 Text="{Binding SelectedNotationGroupText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            <TextBox.Style>
-                                <Style TargetType="{x:Type TextBox}">
-                                    <Style.Triggers>
-                                        <Trigger Property="Text" Value="">
-                                            <Setter Property="Background">
-                                                <Setter.Value>
-                                                    <VisualBrush Stretch="None" AlignmentX="Left" AlignmentY="Top">
-                                                        <VisualBrush.Visual>
-                                                            <StackPanel>
-                                                                <TextBlock Foreground="Gray">Ctrl + Enter: 下一个标记</TextBlock>
-                                                                <TextBlock Foreground="Gray">Shift + Ctrl + Enter: 上一个标记</TextBlock>
-                                                            </StackPanel>
-                                                        </VisualBrush.Visual>
-                                                    </VisualBrush>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBox.Style>
-                        </TextBox>
-                    </Grid>
-                </TabItem>
-                <TabItem Header="涂白">
-                    
-                </TabItem>
-                <TabItem Header="嵌字">
-                    
-                </TabItem>
-            </TabControl>
+            <Rectangle Fill="#7F000000" Visibility="{Binding LassoMode, Converter={StaticResource Boolean2Visibility}}" MouseDown="ShadeMouseDown"/>
         </Grid>
     </Grid>
 </Window>
