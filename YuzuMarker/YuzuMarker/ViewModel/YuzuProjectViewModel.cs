@@ -15,6 +15,16 @@ namespace YuzuMarker.ViewModel
 {
     public class YuzuProjectViewModel : NotifyObject
     {
+        #region Property: TopMessage
+        public string TopMessage
+        {
+            get
+            {
+                return Manager.YuzuMarkerManager.MessageStack[^1];
+            }
+        }
+        #endregion
+
         #region Property: Project
         public YuzuProject<ObservableCollection<YuzuImage<ObservableCollection<YuzuNotationGroup>>>,
             ObservableCollection<YuzuNotationGroup>> Project

@@ -50,5 +50,33 @@ namespace YuzuMarker.Manager
                 _Group = value;
             }
         }
+
+        private static ObservableCollection<string> _MessageStack = new ObservableCollection<string>() { "就绪" };
+
+        public static ObservableCollection<string> MessageStack
+        {
+            get
+            {
+                return _MessageStack;
+            }
+            set
+            {
+                _MessageStack = value;
+            }
+        }
+
+        public static void PushMessage(NotifyObject dataContext, string message)
+        {
+            MessageStack.Add(message);
+            dataContext.RaisePropertyChanged("TopMessage");
+        }
+
+        public static string PopMessage(NotifyObject dataContext)
+        {
+            string lastMessage = MessageStack[^1];
+            MessageStack.RemoveAt(MessageStack.Count - 1);
+            dataContext.RaisePropertyChanged("TopMessage");
+            return lastMessage;
+        }
     }
 }
