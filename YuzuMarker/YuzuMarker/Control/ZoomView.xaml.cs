@@ -58,6 +58,40 @@ namespace YuzuMarker.Control
         public static readonly DependencyProperty ContentBackgroundProperty =
             DependencyProperty.Register("ContentBackground", typeof(Brush), typeof(ZoomView), new PropertyMetadata(null));
 
+        public delegate bool CanMouseEventHandler(object sender, MouseEventArgs e);
+
+        public MouseEventHandler CustomMouseMoveEvent
+        {
+            get { return (MouseEventHandler)GetValue(CustomMouseMoveEventProperty); }
+            set { SetValue(CustomMouseMoveEventProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for CustomMouseMoveEvent.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CustomMouseMoveEventProperty =
+            DependencyProperty.Register("CustomMouseMoveEvent", typeof(MouseEventHandler), typeof(ZoomView), new PropertyMetadata(null));
+
+        public CanMouseEventHandler CanCustomMouseMoveEvent
+        {
+            get { return (CanMouseEventHandler)GetValue(CanCustomMouseMoveEventProperty); }
+            set { SetValue(CanCustomMouseMoveEventProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for CanCustomMouseMoveEvent.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CanCustomMouseMoveEventProperty =
+            DependencyProperty.Register("CanCustomMouseMoveEvent", typeof(CanMouseEventHandler), typeof(ZoomView), new PropertyMetadata(null));
+
+        public CanMouseEventHandler CanDefaultMouseMoveEvent
+        {
+            get { return (CanMouseEventHandler)GetValue(CanDefaultMouseMoveEventProperty); }
+            set { SetValue(CanDefaultMouseMoveEventProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for CanDefaultMouseMoveEvent.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CanDefaultMouseMoveEventProperty =
+            DependencyProperty.Register("CanDefaultMouseMoveEvent", typeof(CanMouseEventHandler), typeof(ZoomView), new PropertyMetadata(null));
+
+
+
 
         public ZoomView()
         {
