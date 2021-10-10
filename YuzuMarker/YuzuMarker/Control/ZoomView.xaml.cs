@@ -154,25 +154,34 @@ namespace YuzuMarker.Control
             if (ContentWidth == 0 || ContentHeight == 0)
                 return;
 
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (CanDefaultMouseMoveEvent == null || CanDefaultMouseMoveEvent(sender, e))
             {
-                Point newPoint = e.GetPosition((ScrollViewer)sender);
-                if (LastPoint.X == 0 && LastPoint.Y == 0)
+                if (e.LeftButton == MouseButtonState.Pressed)
                 {
+                    Point newPoint = e.GetPosition((ScrollViewer)sender);
+                    if (LastPoint.X == 0 && LastPoint.Y == 0)
+                    {
+                        LastPoint = newPoint;
+                        return;
+                    }
+                    double deltaX = LastPoint.X - newPoint.X;
+                    double deltaY = LastPoint.Y - newPoint.Y;
+                    if (deltaX != 0)
+                        ZoomScrollViewer.ScrollToHorizontalOffset(ZoomScrollViewer.HorizontalOffset + deltaX);
+                    if (deltaY != 0)
+                        ZoomScrollViewer.ScrollToVerticalOffset(ZoomScrollViewer.VerticalOffset + deltaY);
                     LastPoint = newPoint;
-                    return;
                 }
-                double deltaX = LastPoint.X - newPoint.X;
-                double deltaY = LastPoint.Y - newPoint.Y;
-                if (deltaX != 0)
-                    ZoomScrollViewer.ScrollToHorizontalOffset(ZoomScrollViewer.HorizontalOffset + deltaX);
-                if (deltaY != 0)
-                    ZoomScrollViewer.ScrollToVerticalOffset(ZoomScrollViewer.VerticalOffset + deltaY);
-                LastPoint = newPoint;
-            } else
+                else
+                {
+                    LastPoint.X = 0;
+                    LastPoint.Y = 0;
+                }
+            }
+
+            if (CanCustomMouseMoveEvent == null || CanCustomMouseMoveEvent(sender, e))
             {
-                LastPoint.X = 0;
-                LastPoint.Y = 0;
+                CustomMouseMoveEvent?.Invoke(sender, e);
             }
         }
     }
