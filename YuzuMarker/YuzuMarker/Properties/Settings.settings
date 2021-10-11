@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="YuzuMarker.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="CustomCleaningStrokeColor" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">4294934451</Value>
+    </Setting>
+    <Setting Name="NormalCleaningStrokeColor" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">4289525422</Value>
+    </Setting>
+    <Setting Name="CustomCleaningFillColor" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">2147450803</Value>
+    </Setting>
+    <Setting Name="NormalCleaningFillColor" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">2142041774</Value>
+    </Setting>
+    <Setting Name="PhotoshopBridgeType" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="PhotoshopExtensionHTTPServerPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4016</Value>
+    </Setting>
+    <Setting Name="UIPolygonStrokeThickness" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="LassoModeBackgroundColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#7FE9B2FF</Value>
+    </Setting>
+    <Setting Name="LassoStrokeColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFB2F0FF</Value>
+    </Setting>
+    <Setting Name="LassoFillColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#7FB2F0FF</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
+

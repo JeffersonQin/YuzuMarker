@@ -8,6 +8,7 @@
         xmlns:vm="clr-namespace:YuzuMarker.ViewModel"
         xmlns:uc="clr-namespace:YuzuMarker.Control"
         xmlns:vc="clr-namespace:YuzuMarker.Converter"
+        xmlns:p="clr-namespace:YuzuMarker.Properties"
         x:Class="YuzuMarker.View.MainWindow"
         mc:Ignorable="d"
         KeyDown="Window_KeyDown"
@@ -135,9 +136,12 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    <Rectangle MouseDown="LassoMouseDownEvent" Fill="#7FE9B2FF" MouseMove="CustomMouseMoveEvent"
+                    <Rectangle MouseDown="LassoMouseDownEvent" Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoModeBackgroundColor}" MouseMove="CustomMouseMoveEvent"
                         Visibility="{Binding Data.LassoMode, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
-                    <Polygon Points="{Binding Data.LassoPoints, Source={StaticResource BindingProxy}}" Fill="#7FB2F0FF" Stroke="#FFB2F0FF"
+                    <Polygon Points="{Binding Data.LassoPoints, Source={StaticResource BindingProxy}}" 
+                        Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoFillColor}" 
+                        Stroke="{Binding Source={x:Static p:Settings.Default}, Path=LassoStrokeColor}"
+                        StrokeThickness="{Binding Source={x:Static p:Settings.Default}, Path=UIPolygonStrokeThickness}"
                         Visibility="{Binding Data.LassoMode, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
                 </Grid>
             </uc:ZoomView.ContainerContent>

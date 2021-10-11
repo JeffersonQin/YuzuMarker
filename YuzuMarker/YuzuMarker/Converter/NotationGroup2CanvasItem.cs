@@ -7,6 +7,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using YuzuMarker.DataFormat;
+using YuzuMarker.Properties;
 using YuzuMarker.Utils;
 
 namespace YuzuMarker.Converter
@@ -24,16 +25,16 @@ namespace YuzuMarker.Converter
             {
                 Polygon cleaningPolygon = new Polygon();
                 cleaningPolygon.Points = notationGroup.CleaningNotation.CleaningPoints.ToPointCollection();
-                cleaningPolygon.StrokeThickness = 10;
+                cleaningPolygon.StrokeThickness = Settings.Default.UIPolygonStrokeThickness;
                 if (notationGroup.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Custom)
                 {
-                    cleaningPolygon.Stroke = new SolidColorBrush(Properties.Settings.CustomCleaningStrokeColor.ToColor());
-                    cleaningPolygon.Fill = new SolidColorBrush(Properties.Settings.CustomCleaningFillColor.ToColor());
+                    cleaningPolygon.Stroke = new SolidColorBrush(Settings.Default.CustomCleaningStrokeColor.ToColor());
+                    cleaningPolygon.Fill = new SolidColorBrush(Settings.Default.CustomCleaningFillColor.ToColor());
                 }
                 else
                 {
-                    cleaningPolygon.Stroke = new SolidColorBrush(Properties.Settings.NormalCleaningStrokeColor.ToColor());
-                    cleaningPolygon.Fill = new SolidColorBrush(Properties.Settings.NormalCleaningFillColor.ToColor());
+                    cleaningPolygon.Stroke = new SolidColorBrush(Settings.Default.NormalCleaningStrokeColor.ToColor());
+                    cleaningPolygon.Fill = new SolidColorBrush(Settings.Default.NormalCleaningFillColor.ToColor());
                 }
 
                 container.Children.Add(cleaningPolygon);

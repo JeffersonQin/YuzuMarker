@@ -23,7 +23,7 @@ namespace YuzuMarker.PSBridge.Extension
             try
             {
                 response = webClient.DownloadString("http://localhost:" +
-                    Properties.Settings.PhotoshopExtensionHTTPServerPort + "/" + requestUri);
+                    Properties.CoreSettings.PhotoshopExtensionHTTPServerPort + "/" + requestUri);
             }
             catch (Exception e)
             {

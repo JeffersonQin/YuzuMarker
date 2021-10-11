@@ -8,7 +8,7 @@ namespace YuzuMarker.PSBridge
     {
         public static bool ExistLayerSet(string layerSetName)
         {
-            return Properties.Settings.PhotoshopBridgeType switch
+            return Properties.CoreSettings.PhotoshopBridgeType switch
             {
                 Properties.PSBridgeType.COM => COM.Invoker.ExistLayerSet(layerSetName),
                 Properties.PSBridgeType.Extension => Extension.Invoker.ExistLayerSet(layerSetName),
@@ -18,7 +18,7 @@ namespace YuzuMarker.PSBridge
 
         public static bool ExistArtLayer(string layerSetName, string artLayerName)
         {
-            return Properties.Settings.PhotoshopBridgeType switch
+            return Properties.CoreSettings.PhotoshopBridgeType switch
             {
                 Properties.PSBridgeType.COM => COM.Invoker.ExistArtLayer(layerSetName, artLayerName),
                 Properties.PSBridgeType.Extension => Extension.Invoker.ExistArtLayer(layerSetName, artLayerName),
@@ -28,7 +28,7 @@ namespace YuzuMarker.PSBridge
 
         public static void OpenFile(string path)
         {
-            switch (Properties.Settings.PhotoshopBridgeType)
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
             {
                 case Properties.PSBridgeType.COM:
                     COM.Invoker.OpenFile(path);
@@ -41,7 +41,7 @@ namespace YuzuMarker.PSBridge
 
         public static void CreateFile(string path)
         {
-            switch (Properties.Settings.PhotoshopBridgeType)
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
             {
                 case Properties.PSBridgeType.COM:
                     COM.Invoker.CreateFile(path);
@@ -54,7 +54,7 @@ namespace YuzuMarker.PSBridge
 
         public static void AddLayerSet(string layerSetName)
         {
-            switch (Properties.Settings.PhotoshopBridgeType)
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
             {
                 case Properties.PSBridgeType.COM:
                     COM.Invoker.AddLayerSet(layerSetName);
@@ -67,7 +67,7 @@ namespace YuzuMarker.PSBridge
 
         public static void AddArtLayer(string layerSetName, string artLayerName)
         {
-            switch (Properties.Settings.PhotoshopBridgeType)
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
             {
                 case Properties.PSBridgeType.COM:
                     COM.Invoker.AddArtLayer(layerSetName, artLayerName);
@@ -80,7 +80,7 @@ namespace YuzuMarker.PSBridge
 
         public static void RemoveLayerSet(string layerSetName)
         {
-            switch (Properties.Settings.PhotoshopBridgeType)
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
             {
                 case Properties.PSBridgeType.COM:
                     COM.Invoker.RemoveLayerSet(layerSetName);
@@ -93,7 +93,7 @@ namespace YuzuMarker.PSBridge
 
         public static void RemoveArtLayer(string layerSetName, string artLayerName)
         {
-            switch (Properties.Settings.PhotoshopBridgeType)
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
             {
                 case Properties.PSBridgeType.COM:
                     COM.Invoker.RemoveArtLayer(layerSetName, artLayerName);
@@ -106,7 +106,7 @@ namespace YuzuMarker.PSBridge
 
         public static void AddTextLayer(string layerSetName, string artLayerName)
         {
-            switch (Properties.Settings.PhotoshopBridgeType)
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
             {
                 case Properties.PSBridgeType.COM:
                     COM.Invoker.AddTextLayer(layerSetName, artLayerName);
@@ -119,7 +119,7 @@ namespace YuzuMarker.PSBridge
 
         public static void SetTextLayer(string layerSetName, string artLayerName)
         {
-            switch (Properties.Settings.PhotoshopBridgeType)
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
             {
                 case Properties.PSBridgeType.COM:
                     COM.Invoker.SetTextLayer(layerSetName, artLayerName);
