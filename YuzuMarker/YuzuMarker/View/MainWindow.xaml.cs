@@ -93,13 +93,17 @@ namespace YuzuMarker.View
         {
             return !(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl));
         }
+
+        private bool CanCustomMouseMoveEventHappen(object sender, MouseEventArgs e)
+        {
+            if (!ViewModel.LassoMode) return false;
+            if (e.LeftButton == MouseButtonState.Released) return false;
+            if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))) return false;
+            return true;
+        }
         
         private void CustomMouseMoveEvent(object sender, MouseEventArgs e)
         {
-            if (!ViewModel.LassoMode) return;
-            if (e.LeftButton == MouseButtonState.Released) return;
-            if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))) return;
-
             var pc = ViewModel.LassoPoints.Clone();
             pc.Add(e.GetPosition((IInputElement) sender));
             ViewModel.LassoPoints = pc;
@@ -191,6 +195,11 @@ namespace YuzuMarker.View
             // TODO: 暂存上一个CleaningType (enum)
             // TODO: 恢复暂存的CleaningType, 刷新 Data Binding
             EnableLassoMode(null, null, DidLassoModeFinishedForCustomCleaning);
+        }
+
+        private void CleaningNoneChecked(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

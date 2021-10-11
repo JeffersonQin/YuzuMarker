@@ -97,7 +97,7 @@
             <Rectangle Fill="#7F000000" Visibility="{Binding LassoMode, Converter={StaticResource Boolean2Visibility}}" MouseDown="ShadeMouseDown"/>
         </Grid>
         <!--这里的数据绑定的DataContext是ZoomView, 所以定义了一个BindingProxy来将DataContext换为祖先-->
-        <uc:ZoomView CanDefaultMouseMoveEvent="CanDefaultMouseMoveEventHappen"
+        <uc:ZoomView CanDefaultMouseMoveEvent="CanDefaultMouseMoveEventHappen" CustomMouseMoveEvent="CustomMouseMoveEvent" CanCustomMouseMoveEvent="CanCustomMouseMoveEventHappen"
             ContentHeight="{Binding Data.ImageSource.Height, Source={StaticResource BindingProxy}}" 
             ContentWidth="{Binding Data.ImageSource.Width, Source={StaticResource BindingProxy}}" 
             ContentBackground="#FFDAD5D5" Grid.Row="1" Grid.Column="2">
@@ -136,7 +136,7 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    <Rectangle MouseDown="LassoMouseDownEvent" Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoModeBackgroundColor}" MouseMove="CustomMouseMoveEvent"
+                    <Rectangle MouseDown="LassoMouseDownEvent" Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoModeBackgroundColor}" 
                         Visibility="{Binding Data.LassoMode, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
                     <Polygon Points="{Binding Data.LassoPoints, Source={StaticResource BindingProxy}}" 
                         Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoFillColor}" 
@@ -249,12 +249,30 @@
                             </TextBox>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="涂白">
+                    <TabItem Header="背景处理">
                         <GroupBox Header="选项" Grid.Row="0">
                             <StackPanel>
-                                <!--IsChecked 以后改成 DataBinding，写一个 enum -> bool 的 Converter-->
-                                <RadioButton Content="不涂白" IsChecked="True" GroupName="CleaningGroup" Margin="5"/>
-                                <RadioButton Content="Photoshop 自定义" GroupName="CleaningGroup" Margin="5" Checked="CleaningCustomChecked"/>
+                                <RadioButton GroupName="CleaningGroup" Margin="5" Content="不涂白" IsChecked="True" Checked="CleaningNoneChecked"/>
+                                <RadioButton GroupName="CleaningGroup" Margin="5">
+                                    <RadioButton.Content>
+                                        <StackPanel>
+                                            <TextBlock>正常涂白</TextBlock>
+                                            <Button>将来这里会有一堆按钮来控制</Button>
+                                        </StackPanel>
+                                    </RadioButton.Content>
+                                </RadioButton>
+                                <RadioButton GroupName="CleaningGroup" Margin="5" Checked="CleaningCustomChecked">
+                                    <RadioButton.Content>
+                                        <StackPanel>
+                                            <TextBlock>Photoshop 自定义蒙版</TextBlock>
+                                            <Button>
+                                                <StackPanel>
+                                                    <TextBlock>导出此蒙版到 Photoshop <LineBreak/>(若已导出将定位到该图层)</TextBlock>
+                                                </StackPanel>
+                                            </Button>
+                                        </StackPanel>
+                                    </RadioButton.Content>
+                                </RadioButton>
                             </StackPanel>
                         </GroupBox>
                     </TabItem>
