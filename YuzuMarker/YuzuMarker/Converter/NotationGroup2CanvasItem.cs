@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Windows.Controls;
@@ -19,15 +18,23 @@ namespace YuzuMarker.Converter
             Grid container =  new Grid();
 
             YuzuNotationGroup notationGroup = (YuzuNotationGroup)value;
-
+            if (notationGroup == null) return null;
+            
             if (notationGroup.CleaningNotation.CleaningNotationType != YuzuCleaningNotationType.None)
             {
                 Polygon cleaningPolygon = new Polygon();
                 cleaningPolygon.Points = notationGroup.CleaningNotation.CleaningPoints.ToPointCollection();
+                cleaningPolygon.StrokeThickness = 10;
                 if (notationGroup.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Custom)
-                    cleaningPolygon.Stroke = new SolidColorBrush(Colors.Red);
+                {
+                    cleaningPolygon.Stroke = new SolidColorBrush(Properties.Settings.CustomCleaningStrokeColor.ToColor());
+                    cleaningPolygon.Fill = new SolidColorBrush(Properties.Settings.CustomCleaningFillColor.ToColor());
+                }
                 else
-                    cleaningPolygon.Stroke = new SolidColorBrush(Colors.Blue);
+                {
+                    cleaningPolygon.Stroke = new SolidColorBrush(Properties.Settings.NormalCleaningStrokeColor.ToColor());
+                    cleaningPolygon.Fill = new SolidColorBrush(Properties.Settings.NormalCleaningFillColor.ToColor());
+                }
 
                 container.Children.Add(cleaningPolygon);
             }
