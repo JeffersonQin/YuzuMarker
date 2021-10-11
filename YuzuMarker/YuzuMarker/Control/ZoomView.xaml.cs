@@ -154,7 +154,7 @@ namespace YuzuMarker.Control
             if (ContentWidth == 0 || ContentHeight == 0)
                 return;
 
-            if (CanDefaultMouseMoveEvent == null || CanDefaultMouseMoveEvent(sender, e))
+            if (CanDefaultMouseMoveEvent == null || CanDefaultMouseMoveEvent(ContainerContent, e))
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
@@ -179,9 +179,9 @@ namespace YuzuMarker.Control
                 }
             }
 
-            if (CanCustomMouseMoveEvent == null || CanCustomMouseMoveEvent(sender, e))
+            if (CanCustomMouseMoveEvent == null || CanCustomMouseMoveEvent(ContainerContent, e))
             {
-                CustomMouseMoveEvent?.Invoke(sender, e);
+                CustomMouseMoveEvent?.Invoke(ContainerContent, e);
             }
         }
     }
