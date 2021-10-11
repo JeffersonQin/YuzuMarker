@@ -212,7 +212,8 @@
                     </ListView>
                 </Grid>
                 <GridSplitter HorizontalAlignment="Stretch" Grid.Row="1"/>
-                <TabControl Grid.Row="2">
+                <TabControl Grid.Row="2"
+                            IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}">
                     <TabItem Header="录入">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -224,7 +225,6 @@
                             </StackPanel>
                             <TextBox Grid.Row="1" LostFocus="TextAreaOnLostFocus" KeyDown="TextAreaOnKeyDown"
                                      AcceptsTab="True" AcceptsReturn="True"
-                                     IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"
                                      Text="{Binding SelectedNotationGroupText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <TextBox.Style>
                                     <Style TargetType="{x:Type TextBox}">
