@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -68,6 +69,15 @@ namespace YuzuMarker.DataFormat
                     JObject markNotationJObject = JObject.Parse(File.ReadAllText(Path.Combine(notationFolderPathForImage, "./" + timestamp + "-mark.json")));
                     YuzuNotationGroup notationGroup = new YuzuNotationGroup(timestamp, (int)markNotationJObject["x"], (int)markNotationJObject["y"], (string)markNotationJObject["text"], notationFinished);
 
+                    JObject cleaningNotationJObject = JObject.Parse(File.ReadAllText(Path.Combine(notationFolderPathForImage, "./" + timestamp + "-cleaning.json")));
+                    var cleaningNotationType = (YuzuCleaningNotationType)int.Parse(cleaningNotationJObject["type"].ToString());
+                    List<PointF> cleaningNotationPoints = new List<PointF>();
+                    foreach (JObject cleaningNotationPoint in cleaningNotationJObject["points"] as JArray)
+                    {
+                        cleaningNotationPoints.Add(new PointF(float.Parse(cleaningNotationPoint["x"].ToString()), float.Parse(cleaningNotationPoint["y"].ToString())));
+                    }
+                    notationGroup.CleaningNotation = new YuzuCleaningNotation(cleaningNotationType, cleaningNotationPoints);
+                    
                     // Other Notations
 
                     yuzuImage.NotationGroups.Add(notationGroup);
@@ -119,6 +129,22 @@ namespace YuzuMarker.DataFormat
                         { "text", notationGroup.text }
                     };
                     File.WriteAllText(Path.Combine(notationFolderPathForImage, timestamp + "-mark.json"), markNotationJObject.ToString(), Encoding.UTF8);
+
+                    JArray cleaningNotationPointJArray = new JArray();
+                    foreach (PointF point in notationGroup.CleaningNotation.CleaningPoints)
+                    {
+                        cleaningNotationPointJArray.Add(new JObject()
+                        {
+                            { "x", point.X },
+                            { "y", point.Y }
+                        });
+                    }
+                    JObject cleaningNotationJObject = new JObject()
+                    {
+                        {"type", (int) notationGroup.CleaningNotation.CleaningNotationType},
+                        {"points", cleaningNotationPointJArray}
+                    };
+                    File.WriteAllText(Path.Combine(notationFolderPathForImage, timestamp + "-cleaning.json"), cleaningNotationJObject.ToString(), Encoding.UTF8);
 
                     // Other Notations
                 }
