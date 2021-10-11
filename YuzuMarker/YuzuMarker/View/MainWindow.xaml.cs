@@ -87,6 +87,7 @@ namespace YuzuMarker.View
         }
         #endregion
 
+        #region Lasso Drawing Event Handling
         private bool CanDefaultMouseMoveEventHappen(object sender, MouseEventArgs e)
         {
             return !(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl));
@@ -103,41 +104,17 @@ namespace YuzuMarker.View
             ViewModel.LassoPoints = pc;
         }
 
-        private void EnableLassoMode()
-        {
-            // TODO: 暂存上一个CleaningType (enum)
-            Manager.YuzuMarkerManager.PushMessage(ViewModel, "按住 Ctrl + 鼠标左键选择工作区域，点击画布外侧区域取消，Enter键确认区域");
-            ViewModel.LassoPoints = new PointCollection();
-            ViewModel.LassoMode = true;
-        }
-
-        private void DisableLassoMode()
-        {
-            ViewModel.LassoMode = false;
-            Manager.YuzuMarkerManager.PopMessage(ViewModel);
-        }
-
-        private void CancelLassoSelection()
-        {
-            // TODO: 恢复暂存的CleaningType, 刷新 Data Binding
-            DisableLassoMode();
-        }
-
-
-        private void CleaningCustomChecked(object sender, RoutedEventArgs e)
-        {
-            EnableLassoMode();
-        }
-
         private void LassoMouseDownEvent(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
             {
-                var pc = new PointCollection {e.GetPosition((IInputElement) sender)};
+                var pc = new PointCollection { e.GetPosition((IInputElement)sender) };
                 ViewModel.LassoPoints = pc;
             }
         }
+        #endregion
 
+        #region Lasso UI Finish / Cancel Event Handling
         private void ShadeMouseDown(object sender, MouseButtonEventArgs e)
         {
             CancelLassoSelection();
@@ -160,8 +137,54 @@ namespace YuzuMarker.View
                     CancelLassoSelection();
                 }
             }
-            // TODO: 保存 LassoPoints 到 Model 里去
+            FinishLassoSelection();
+        }
+        #endregion
+
+        #region Lasso Finish / Cancel Delegate Defining
+        private delegate void LassoModeEventHandler();
+
+        private event LassoModeEventHandler DidLassoModeCancelled;
+
+        private event LassoModeEventHandler DidLassoModeFinished;
+        #endregion
+
+        #region Lasso Enable / Finish / Cancel Wrapping
+        private void EnableLassoMode(LassoModeEventHandler DidLassoModeEnabled, LassoModeEventHandler DidLassoModeCancelled, LassoModeEventHandler DidLassoModeFinished)
+        {
+            DidLassoModeEnabled?.Invoke();
+            Manager.YuzuMarkerManager.PushMessage(ViewModel, "按住 Ctrl + 鼠标左键选择工作区域，点击画布外侧区域取消，Enter键确认区域");
+            ViewModel.LassoPoints = new PointCollection();
+            ViewModel.LassoMode = true;
+            this.DidLassoModeCancelled = DidLassoModeCancelled;
+            this.DidLassoModeFinished = DidLassoModeFinished;
+        }
+
+        private void DisableLassoMode()
+        {
+            ViewModel.LassoMode = false;
+            Manager.YuzuMarkerManager.PopMessage(ViewModel);
+        }
+
+        private void CancelLassoSelection()
+        {
+            DidLassoModeCancelled?.Invoke();
             DisableLassoMode();
+        }
+
+        private void FinishLassoSelection()
+        {
+            DidLassoModeFinished?.Invoke();
+            DisableLassoMode();
+        }
+        #endregion
+
+        private void CleaningCustomChecked(object sender, RoutedEventArgs e)
+        {
+            // TODO: 暂存上一个CleaningType (enum)
+            // TODO: 恢复暂存的CleaningType, 刷新 Data Binding
+            // TODO: 保存 LassoPoints 到 Model 里去
+            EnableLassoMode(null, null, null);
         }
     }
 }
