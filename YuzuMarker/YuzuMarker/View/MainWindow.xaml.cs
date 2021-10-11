@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YuzuMarker.Utils;
 using YuzuMarker.ViewModel;
 
 namespace YuzuMarker.View
@@ -179,12 +180,17 @@ namespace YuzuMarker.View
         }
         #endregion
 
+        private void DidLassoModeFinishedForCustomCleaning()
+        {
+            ViewModel.SelectedNotationGroupItem.CleaningNotation = new DataFormat.YuzuCleaningNotation(DataFormat.YuzuCleaningNotationType.Custom, ViewModel.LassoPoints.ToGenericPoints());
+            ViewModel.RefreshImageList();
+        }
+
         private void CleaningCustomChecked(object sender, RoutedEventArgs e)
         {
             // TODO: 暂存上一个CleaningType (enum)
             // TODO: 恢复暂存的CleaningType, 刷新 Data Binding
-            // TODO: 保存 LassoPoints 到 Model 里去
-            EnableLassoMode(null, null, null);
+            EnableLassoMode(null, null, DidLassoModeFinishedForCustomCleaning);
         }
     }
 }

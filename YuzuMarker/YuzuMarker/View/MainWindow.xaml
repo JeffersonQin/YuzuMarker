@@ -24,6 +24,7 @@
             <vc:IntPlusConverter/>
         </vc:ValueConverterGroup>
         <vc:NotationGroup2Index x:Key="NotationGroup2Index"/>
+        <vc:NotationGroup2CanvasItem x:Key="NotationGroup2CanvasItem"/>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Command="{Binding CreateProject}" Modifiers="Ctrl" Key="N"/>
@@ -110,7 +111,7 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <ContentPresenter Content=""/>
+                                <ContentPresenter Content="{Binding Converter={StaticResource NotationGroup2CanvasItem}}"/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
