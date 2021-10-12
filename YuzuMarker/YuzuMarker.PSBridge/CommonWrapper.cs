@@ -6,6 +6,7 @@ namespace YuzuMarker.PSBridge
 {
     public static class CommonWrapper
     {
+        #region [Deprecated] Old API Section
         public static bool ExistLayerSet(string layerSetName)
         {
             return Properties.CoreSettings.PhotoshopBridgeType switch
@@ -129,5 +130,6 @@ namespace YuzuMarker.PSBridge
                     break;
             }
         }
+        #endregion
     }
 }
