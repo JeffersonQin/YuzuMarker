@@ -25,7 +25,7 @@ namespace YuzuMarker.DataFormat
             this.y = y;
             this.text = text;
             IsFinished = finished;
-            CleaningNotation = new YuzuCleaningNotation(YuzuCleaningNotationType.None);
+            CleaningNotation = new YuzuCleaningNotation(YuzuCleaningNotationType.Normal);
         }
 
         public YuzuNotationGroup(long Timestamp, int x, int y, string text, bool finished)
@@ -35,7 +35,7 @@ namespace YuzuMarker.DataFormat
             this.y = y;
             this.text = text;
             IsFinished = finished;
-            CleaningNotation = new YuzuCleaningNotation(YuzuCleaningNotationType.None);
+            CleaningNotation = new YuzuCleaningNotation(YuzuCleaningNotationType.Normal);
         }
 
         // Other kinds of notations

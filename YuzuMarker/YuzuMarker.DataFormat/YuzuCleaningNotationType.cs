@@ -2,6 +2,6 @@
 {
     public enum YuzuCleaningNotationType
     {
-        None = 0, Normal = 1, Custom = 2
+        Normal = 0, Custom = 1
     }
 }

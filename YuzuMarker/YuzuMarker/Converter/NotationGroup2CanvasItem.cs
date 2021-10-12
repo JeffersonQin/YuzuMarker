@@ -21,7 +21,7 @@ namespace YuzuMarker.Converter
             YuzuNotationGroup notationGroup = (YuzuNotationGroup)value;
             if (notationGroup == null) return null;
             
-            if (notationGroup.CleaningNotation.CleaningNotationType != YuzuCleaningNotationType.None)
+            if (notationGroup.CleaningNotation.CleaningPoints.Count > 0)
             {
                 Polygon cleaningPolygon = new Polygon();
                 cleaningPolygon.Points = notationGroup.CleaningNotation.CleaningPoints.ToPointCollection();
