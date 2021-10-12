@@ -142,5 +142,29 @@ namespace YuzuMarker.Properties {
                 this["LassoFillColor"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4293951616")]
+        public uint FailStatusColor {
+            get {
+                return ((uint)(this["FailStatusColor"]));
+            }
+            set {
+                this["FailStatusColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4278254234")]
+        public uint SuccessStatusColor {
+            get {
+                return ((uint)(this["SuccessStatusColor"]));
+            }
+            set {
+                this["SuccessStatusColor"] = value;
+            }
+        }
     }
 }

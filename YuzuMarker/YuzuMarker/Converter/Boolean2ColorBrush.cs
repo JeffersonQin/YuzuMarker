@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Text;
 using System.Windows.Data;
 using System.Windows.Media;
+using YuzuMarker.Utils;
 
 namespace YuzuMarker.Converter
 {
@@ -13,9 +14,9 @@ namespace YuzuMarker.Converter
         {
             if (((bool) value) == true)
             {
-                return new SolidColorBrush(Colors.MediumSpringGreen);
+                return new SolidColorBrush(Properties.Settings.Default.SuccessStatusColor.ToColor());
             }
-            return new SolidColorBrush(Colors.LightCoral);
+            return new SolidColorBrush(Properties.Settings.Default.FailStatusColor.ToColor());
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

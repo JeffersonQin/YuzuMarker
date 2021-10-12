@@ -19,8 +19,8 @@ namespace YuzuMarker.Converter
             YuzuNotationGroup notationGroup = (YuzuNotationGroup)value;
             if (notationGroup == null) return null;
 
-            if (notationGroup.CleaningNotation.CleaningPoints.Count == 0) return new SolidColorBrush(Colors.LightCoral);
-            return new SolidColorBrush(Colors.MediumSpringGreen);
+            if (notationGroup.CleaningNotation.CleaningPoints.Count == 0) return new SolidColorBrush(Settings.Default.FailStatusColor.ToColor());
+            return new SolidColorBrush(Settings.Default.SuccessStatusColor.ToColor());
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
