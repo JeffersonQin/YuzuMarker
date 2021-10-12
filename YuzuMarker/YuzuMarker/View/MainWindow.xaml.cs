@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using YuzuMarker.DataFormat;
 using YuzuMarker.Utils;
 using YuzuMarker.ViewModel;
 
@@ -88,6 +89,13 @@ namespace YuzuMarker.View
         }
         #endregion
 
+        #region Canvas Item Clicking Event
+        private void NotationRenderItemClicked(object sender, MouseButtonEventArgs e)
+        {
+            ViewModel.SelectedNotationGroupItem = (YuzuNotationGroup)((ContentPresenter) sender).DataContext;
+        }
+        #endregion
+
         #region Lasso Drawing Event Handling
         private bool CanDefaultMouseMoveEventHappen(object sender, MouseEventArgs e)
         {
@@ -146,22 +154,21 @@ namespace YuzuMarker.View
         }
         #endregion
 
-        #region Lasso Finish / Cancel Delegate Defining
+        #region Lasso Delegate Defining
         private delegate void LassoModeEventHandler();
-
-        private event LassoModeEventHandler DidLassoModeCancelled;
 
         private event LassoModeEventHandler DidLassoModeFinished;
         #endregion
 
         #region Lasso Enable / Finish / Cancel Wrapping
-        private void EnableLassoMode(LassoModeEventHandler DidLassoModeEnabled, LassoModeEventHandler DidLassoModeCancelled, LassoModeEventHandler DidLassoModeFinished)
+        private YuzuCleaningNotation LastCleaningNotation = null;
+
+        private void EnableLassoMode(LassoModeEventHandler DidLassoModeFinished)
         {
-            DidLassoModeEnabled?.Invoke();
+            LastCleaningNotation = ViewModel.SelectedNotationGroupItem.CleaningNotation;
             Manager.YuzuMarkerManager.PushMessage(ViewModel, "按住 Ctrl + 鼠标左键选择工作区域，点击画布外侧区域取消，Enter键确认区域");
             ViewModel.LassoPoints = new PointCollection();
             ViewModel.LassoMode = true;
-            this.DidLassoModeCancelled = DidLassoModeCancelled;
             this.DidLassoModeFinished = DidLassoModeFinished;
         }
 
@@ -173,7 +180,8 @@ namespace YuzuMarker.View
 
         private void CancelLassoSelection()
         {
-            DidLassoModeCancelled?.Invoke();
+            ViewModel.SelectedNotationGroupItem.CleaningNotation = LastCleaningNotation;
+            ViewModel.RefreshImageList();
             DisableLassoMode();
         }
 
@@ -186,20 +194,37 @@ namespace YuzuMarker.View
 
         private void DidLassoModeFinishedForCustomCleaning()
         {
-            ViewModel.SelectedNotationGroupItem.CleaningNotation = new DataFormat.YuzuCleaningNotation(DataFormat.YuzuCleaningNotationType.Custom, ViewModel.LassoPoints.ToGenericPoints());
+            ViewModel.SelectedNotationGroupItem.CleaningNotation = 
+                new YuzuCleaningNotation(YuzuCleaningNotationType.Custom, ViewModel.LassoPoints.ToGenericPoints());
             ViewModel.RefreshImageList();
         }
 
         private void CleaningCustomChecked(object sender, RoutedEventArgs e)
         {
-            // TODO: 暂存上一个CleaningType (enum)
-            // TODO: 恢复暂存的CleaningType, 刷新 Data Binding
-            EnableLassoMode(null, null, DidLassoModeFinishedForCustomCleaning);
+            // Judge whether this is triggered by data binding
+            if (ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Custom) return;
+            EnableLassoMode(DidLassoModeFinishedForCustomCleaning);
         }
 
-        private void CleaningNoneChecked(object sender, RoutedEventArgs e)
+        private void DidLassoModeFinishedForNormalCleaning()
         {
-            
+            ViewModel.SelectedNotationGroupItem.CleaningNotation =
+                new YuzuCleaningNotation(YuzuCleaningNotationType.Normal, ViewModel.LassoPoints.ToGenericPoints());
+            ViewModel.RefreshImageList();
+        }
+        
+        private void CleaningNormalChecked(object sender, RoutedEventArgs e)
+        {
+            // Judge whether this is triggered by data binding
+            if (ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Normal) return;
+            ViewModel.SelectedNotationGroupItem.CleaningNotation =
+                new YuzuCleaningNotation(YuzuCleaningNotationType.Normal);
+            ViewModel.RefreshImageList();
+        }
+
+        private void CleaningNormalLassoModeButtonClicked(object sender, RoutedEventArgs e)
+        {
+            EnableLassoMode(DidLassoModeFinishedForNormalCleaning);
         }
     }
 }
