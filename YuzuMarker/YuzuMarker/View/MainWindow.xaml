@@ -279,7 +279,8 @@
                                     <RadioButton.Content>
                                         <StackPanel>
                                             <TextBlock>Photoshop 自定义蒙版</TextBlock>
-                                            <Button IsEnabled="{Binding ElementName=CustomCleaningRadioButton, Path=IsChecked}">
+                                            <Button IsEnabled="{Binding ElementName=CustomCleaningRadioButton, Path=IsChecked}"
+                                                    Command="{Binding ExportCustomCleaningMaskToPhotoshop}">
                                                 <StackPanel>
                                                     <TextBlock Margin="2">导出此蒙版到 Photoshop <LineBreak/>(若已导出将定位到该图层)</TextBlock>
                                                 </StackPanel>

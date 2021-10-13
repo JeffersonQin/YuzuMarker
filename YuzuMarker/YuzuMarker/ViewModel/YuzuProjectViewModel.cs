@@ -185,6 +185,29 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
+        #region Command: Export Custom Cleaning Mask to Phot
+
+        private DelegateCommand _ExportCustomCleaningMaskToPhotoshop;
+
+        public DelegateCommand ExportCustomCleaningMaskToPhotoshop
+        {
+            get
+            {
+                if (_ExportCustomCleaningMaskToPhotoshop == null)
+                    _ExportCustomCleaningMaskToPhotoshop = new DelegateCommand()
+                    {
+                        CommandAction = () =>
+                        {
+                            PSBridge.CommonWrapper.GeneratePSDIfNotExist(SelectedImageItem.GetImageFilePath(), SelectedImageItem.GetImagePSDPath());
+                            // TODO: Finish Exportation
+                        }
+                    };
+                return _ExportCustomCleaningMaskToPhotoshop;
+            }
+        }
+
+        #endregion
+
         #region Command: Select NotationGroup
         private DelegateCommand<int> _SelectNotationGroup;
 
