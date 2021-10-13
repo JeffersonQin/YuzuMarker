@@ -7,6 +7,7 @@ namespace YuzuMarker.PSBridge.Extension
 {
     public static class Invoker
     {
+        #region [Deprecated] Old API Section
         public static bool ExistLayerSet(string layerSetName)
         {
             JObject ret = WebUtil.GET("existLayerSet", new Dictionary<string, string>
@@ -38,14 +39,6 @@ namespace YuzuMarker.PSBridge.Extension
             {
                 throw new Exception("YuzuMarker.PSBridge.Extension.Invoker: failed to read data");
             }
-        }
-
-        public static void OpenFile(string path)
-        {
-            WebUtil.GET("openFile", new Dictionary<string, string>
-            {
-                { "path", path }
-            });
         }
 
         public static void CreateFile(string path)
@@ -107,5 +100,80 @@ namespace YuzuMarker.PSBridge.Extension
                 { "artLayerName", artLayerName }
             });
         }
+        #endregion
+
+        #region New Native Common API Section
+        public static void OpenFile(string path)
+        {
+            WebUtil.GET("openFile", new Dictionary<string, string>
+            {
+                { "path", path }
+            });
+        }
+
+        public static void SaveFileAs(string path)
+        {
+            WebUtil.GET("saveFileAs", new Dictionary<string, string>
+            {
+                { "path", path }
+            });
+        }
+        
+        public static bool ExistArtLayerURI(string artLayerPath)
+        {
+            JObject ret = WebUtil.GET("existArtLayerURI", new Dictionary<string, string>
+            {
+                { "artLayerPath", artLayerPath }
+            });
+            try
+            {
+                return (bool)ret["exist"];
+            }
+            catch
+            {
+                throw new Exception("YuzuMarker.PSBridge.Extension.Invoker: failed to read data");
+            }
+        }
+        
+        public static bool ExistLayerSetURI(string layerSetPath)
+        {
+            JObject ret = WebUtil.GET("existLayerSetURI", new Dictionary<string, string>
+            {
+                { "layerSetPath", layerSetPath }
+            });
+            try
+            {
+                return (bool)ret["exist"];
+            }
+            catch
+            {
+                throw new Exception("YuzuMarker.PSBridge.Extension.Invoker: failed to read data");
+            }
+        }
+
+        public static void CreateArtLayerIfNotExistByURI(string artLayerPath)
+        {
+            WebUtil.GET("createArtLayerIfNotExistByURI", new Dictionary<string, string>
+            {
+                { "artLayerPath", artLayerPath }
+            });
+        }
+        
+        public static void CreateLayerSetIfNotExistByURI(string layerSetPath)
+        {
+            WebUtil.GET("createLayerSetIfNotExistByURI", new Dictionary<string, string>
+            {
+                { "layerSetPath", layerSetPath }
+            });
+        }
+        #endregion
+
+        #region Wrapping Section
+        public static void GeneratePSD(string imagePath, string psdPath)
+        {
+            OpenFile(imagePath);
+            SaveFileAs(psdPath);
+        }
+        #endregion
     }
 }

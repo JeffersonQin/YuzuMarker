@@ -27,19 +27,6 @@ namespace YuzuMarker.PSBridge
             };
         }
 
-        public static void OpenFile(string path)
-        {
-            switch (Properties.CoreSettings.PhotoshopBridgeType)
-            {
-                case Properties.PSBridgeType.COM:
-                    COM.Invoker.OpenFile(path);
-                    break;
-                case Properties.PSBridgeType.Extension:
-                    Extension.Invoker.OpenFile(path);
-                    break;
-            }
-        }
-
         public static void CreateFile(string path)
         {
             switch (Properties.CoreSettings.PhotoshopBridgeType)
@@ -131,5 +118,83 @@ namespace YuzuMarker.PSBridge
             }
         }
         #endregion
+        
+        public static void OpenFile(string path)
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    COM.Invoker.OpenFile(path);
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.OpenFile(path);
+                    break;
+            }
+        }
+
+        public static void SaveFileAs(string path)
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.SaveFileAs(path);
+                    break;
+            }
+        }
+        
+        public static void ExistArtLayerURI(string artLayerPath)
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.ExistArtLayerURI(artLayerPath);
+                    break;
+            }
+        }
+        
+        public static void ExistLayerSetURI(string layerSetPath)
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.ExistLayerSetURI(layerSetPath);
+                    break;
+            }
+        }
+        
+        public static void CreateArtLayerIfNotExistByURI(string artLayerPath)
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.CreateArtLayerIfNotExistByURI(artLayerPath);
+                    break;
+            }
+        }
+        
+        public static void CreateLayerSetIfNotExistByURI(string layerSetPath)
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.CreateLayerSetIfNotExistByURI(layerSetPath);
+                    break;
+            }
+        }
     }
 }
