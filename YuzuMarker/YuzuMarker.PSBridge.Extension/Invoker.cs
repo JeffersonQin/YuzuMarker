@@ -167,13 +167,5 @@ namespace YuzuMarker.PSBridge.Extension
             });
         }
         #endregion
-
-        #region Wrapping Section
-        public static void GeneratePSD(string imagePath, string psdPath)
-        {
-            OpenFile(imagePath);
-            SaveFileAs(psdPath);
-        }
-        #endregion
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace YuzuMarker.PSBridge
@@ -118,7 +119,8 @@ namespace YuzuMarker.PSBridge
             }
         }
         #endregion
-        
+
+        #region New API Section
         public static void OpenFile(string path)
         {
             switch (Properties.CoreSettings.PhotoshopBridgeType)
@@ -196,5 +198,19 @@ namespace YuzuMarker.PSBridge
                     break;
             }
         }
+        #endregion
+        
+        #region Wrapping Section
+        public static void GeneratePSD(string imagePath, string psdPath)
+        {
+            OpenFile(imagePath);
+            SaveFileAs(psdPath);
+        }
+
+        public static void GeneratePSDIfNotExist(string imagePath, string psdPath)
+        {
+            if (!File.Exists(psdPath)) GeneratePSD(imagePath, psdPath);
+        }
+        #endregion
     }
 }
