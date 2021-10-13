@@ -192,6 +192,7 @@ namespace YuzuMarker.View
         }
         #endregion
 
+        #region Lasso CheckBox Group Handling
         private void DidLassoModeFinishedForCustomCleaning()
         {
             ViewModel.SelectedNotationGroupItem.CleaningNotation = 
@@ -226,5 +227,6 @@ namespace YuzuMarker.View
         {
             EnableLassoMode(DidLassoModeFinishedForNormalCleaning);
         }
+        #endregion
     }
 }
