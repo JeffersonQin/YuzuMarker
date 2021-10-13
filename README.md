@@ -41,6 +41,20 @@
   * 🚧 [字体自动识别](https://github.com/JeffersonQin/YuzuMarker.FontDetection)
   * 🚧 [字体布局半自动化](https://github.com/JeffersonQin/YuzuMarker.TextAutoLayout)
 
+# 关于 Photoshop 内的操作规范
+
+对于图片的操作，我们主要进行两种操作：
+
+* 涂白
+* 嵌字
+
+由此可以引出我们对于图层的排布要求（全部都是自动生成的）：
+
+* 原图图层置于最底部
+* 所有自动涂白的背景位于同一个图层内
+* 每个自定义涂白分别有各自的图层
+* 每个嵌入文本分别有各自的文本图层
+
 # 关于文件格式的设计
 
 ```
