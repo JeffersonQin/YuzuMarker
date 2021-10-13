@@ -31,9 +31,13 @@
   * 🕒 UXP 方案 (等待这个方案成熟后再开工)
 * ✅ 翻译标注部分
 * 🚧 文字录入部分
+  * ✅ 文字录入界面
+  * 🚧 特殊符号 / 罗马字工具箱
 * 🚧 涂白部分
+  * ✅ 涂白界面
   * 🚧 文字块自动识别
 * 🚧 嵌字部分
+  * 🚧 嵌字界面
   * 🚧 [字体自动识别](https://github.com/JeffersonQin/YuzuMarker.FontDetection)
   * 🚧 [字体布局半自动化](https://github.com/JeffersonQin/YuzuMarker.TextAutoLayout)
 
