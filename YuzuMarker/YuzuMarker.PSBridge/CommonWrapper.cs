@@ -207,9 +207,10 @@ namespace YuzuMarker.PSBridge
             SaveFileAs(psdPath);
         }
 
-        public static void GeneratePSDIfNotExist(string imagePath, string psdPath)
+        public static void OpenAndGeneratePSDIfNotExist(string imagePath, string psdPath)
         {
             if (!File.Exists(psdPath)) GeneratePSD(imagePath, psdPath);
+            else OpenFile(psdPath);
         }
         #endregion
     }

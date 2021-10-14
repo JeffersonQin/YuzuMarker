@@ -198,7 +198,7 @@ namespace YuzuMarker.ViewModel
                     {
                         CommandAction = () =>
                         {
-                            PSBridge.CommonWrapper.GeneratePSDIfNotExist(SelectedImageItem.GetImageFilePath(), SelectedImageItem.GetImagePSDPath());
+                            PSBridge.CommonWrapper.OpenAndGeneratePSDIfNotExist(SelectedImageItem.GetImageFilePath(), SelectedImageItem.GetImagePSDPath());
                             // TODO: Finish Exportation
                         }
                     };
