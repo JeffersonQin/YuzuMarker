@@ -212,6 +212,15 @@ namespace YuzuMarker.PSBridge
             if (!File.Exists(psdPath)) GeneratePSD(imagePath, psdPath);
             else OpenFile(psdPath);
         }
+
+        public static void InitPSDFileStructure(string psdPath)
+        {
+            OpenFile(psdPath);
+            /* TODO:
+             * Rename background to Background
+             * Add LayerSet 自定义涂白, 自动涂白, 嵌字
+             */
+        }
         #endregion
     }
 }
