@@ -9,6 +9,8 @@
         xmlns:uc="clr-namespace:YuzuMarker.Control"
         xmlns:vc="clr-namespace:YuzuMarker.Converter"
         xmlns:p="clr-namespace:YuzuMarker.Properties"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True"
         x:Class="YuzuMarker.View.MainWindow"
         mc:Ignorable="d"
         KeyDown="Window_KeyDown"
@@ -137,7 +139,8 @@
                             <DataTemplate>
                                 <Button Command="{Binding Data.SelectNotationGroup, Source={StaticResource BindingProxy}}"
                                         CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"
-                                        Content="{Binding Converter={StaticResource NotationGroup2Index}}" Width="20"/>
+                                        Content="{Binding Converter={StaticResource NotationGroup2Index}}"
+                                        Background="RoyalBlue"/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
