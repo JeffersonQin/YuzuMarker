@@ -198,8 +198,16 @@ namespace YuzuMarker.ViewModel
                     {
                         CommandAction = () =>
                         {
-                            PSBridge.CommonWrapper.OpenAndGeneratePSDIfNotExist(SelectedImageItem.GetImageFilePath(), SelectedImageItem.GetImagePSDPath());
-                            // TODO: Finish Exportation
+                            try
+                            {
+                                PSBridge.CommonWrapper.OpenAndGeneratePSDIfNotExist(
+                                    SelectedImageItem.GetImageFilePath(), SelectedImageItem.GetImagePSDPath());
+                                // TODO: Finish Exportation
+                            }
+                            catch (Exception e)
+                            {
+                                Utils.ExceptionHandler.ShowExceptionMessage(e);
+                            }
                         }
                     };
                 return _ExportCustomCleaningMaskToPhotoshop;
