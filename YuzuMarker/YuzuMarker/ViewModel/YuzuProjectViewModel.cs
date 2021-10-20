@@ -200,9 +200,13 @@ namespace YuzuMarker.ViewModel
                         {
                             try
                             {
-                                PSBridge.CommonWrapper.OpenAndGeneratePSDIfNotExist(
+                                PSBridge.CommonWrapper.OpenAndInitPSDFileStructureIfNotExist(
                                     SelectedImageItem.GetImageFilePath(), SelectedImageItem.GetImagePSDPath());
-                                // TODO: Finish Exportation
+                                
+                                // TODO: Copy Layer to specific path
+                                
+                                PSBridge.CommonWrapper.PerformSelection(SelectedNotationGroupItem.CleaningNotation.CleaningPoints);
+                                PSBridge.CommonWrapper.ApplyMask();
                             }
                             catch (Exception e)
                             {

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace YuzuMarker.PSBridge.Extension
@@ -164,6 +165,29 @@ namespace YuzuMarker.PSBridge.Extension
             WebUtil.GET("createLayerSetIfNotExistByURI", new Dictionary<string, string>
             {
                 { "layerSetPath", layerSetPath }
+            });
+        }
+
+        public static void ApplyMask()
+        {
+            WebUtil.GET("applyMask", new Dictionary<string, string>());
+        }
+
+        public static void PerformSelection(List<PointF> points)
+        {
+            JArray pointsJSON = new JArray();
+            foreach (PointF point in points)
+            {
+                pointsJSON.Add(new JObject()
+                {
+                    { "x", point.X },
+                    { "y", point.Y }
+                });
+            }
+            
+            WebUtil.GET("performSelection", new Dictionary<string, string>
+            {
+                { "points", pointsJSON.ToString() }
             });
         }
         #endregion

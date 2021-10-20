@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Text;
 
@@ -198,6 +199,32 @@ namespace YuzuMarker.PSBridge
                     break;
             }
         }
+
+        public static void ApplyMask()
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.ApplyMask();
+                    break;
+            }
+        }
+        
+        public static void PerformSelection(List<PointF> points)
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.PerformSelection(points);
+                    break;
+            }
+        }
         #endregion
         
         #region Wrapping Section
@@ -207,19 +234,17 @@ namespace YuzuMarker.PSBridge
             SaveFileAs(psdPath);
         }
 
-        public static void OpenAndGeneratePSDIfNotExist(string imagePath, string psdPath)
+        public static void OpenAndInitPSDFileStructureIfNotExist(string imagePath, string psdPath)
         {
-            if (!File.Exists(psdPath)) GeneratePSD(imagePath, psdPath);
+            if (!File.Exists(psdPath))
+            {
+                GeneratePSD(imagePath, psdPath);
+                /* TODO:
+                 * Rename background to Background
+                 * Add LayerSet 自定义涂白, 自动涂白, 嵌字
+                 */
+            }
             else OpenFile(psdPath);
-        }
-
-        public static void InitPSDFileStructure(string psdPath)
-        {
-            OpenFile(psdPath);
-            /* TODO:
-             * Rename background to Background
-             * Add LayerSet 自定义涂白, 自动涂白, 嵌字
-             */
         }
         #endregion
     }
