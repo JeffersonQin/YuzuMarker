@@ -1,0 +1,1 @@
+pyinstaller.exe -D -y --distpath %1 YuzuIPS.py

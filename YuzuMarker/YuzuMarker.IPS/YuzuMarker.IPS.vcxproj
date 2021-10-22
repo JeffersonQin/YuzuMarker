@@ -139,6 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <CustomBuild Include="Build.bat">
+      <Message>Build project through pyinstaller</Message>
+      <Command>.\Build.bat $(SolutionDir)build\</Command>
+      <LinkObjects>true</LinkObjects>
+      <Outputs>Always_Rebuild</Outputs>
+    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

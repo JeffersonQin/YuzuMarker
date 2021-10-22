@@ -37,4 +37,8 @@
     </None>
   </ItemGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="$(SolutionDir)ExportIPS.bat $(TargetDir) $(SolutionDir)" />
+  </Target>
+
 </Project>
