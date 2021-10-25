@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace YuzuMarker.DataFormat
+namespace YuzuMarker.Common
 {
     public static class IOUtils
     {
