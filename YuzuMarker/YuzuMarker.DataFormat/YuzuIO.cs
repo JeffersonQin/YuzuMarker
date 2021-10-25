@@ -25,6 +25,7 @@ namespace YuzuMarker.DataFormat
         {
             return (YuzuProject)BasicYuzuIO.LoadProject(path, (timestamp, x, y, text, finished, rootDir) =>
             {
+                // TODO: refactor start: 只初始化 Type，其他全部为 null
                 var notationGroup = new YuzuNotationGroup(timestamp, x, y, text, finished);
 
                 var cleaningNotationJObject = JObject.Parse(File.ReadAllText(Path.Combine(rootDir, "./" + timestamp + "-cleaning.json")));
@@ -33,6 +34,7 @@ namespace YuzuMarker.DataFormat
                     (from JObject cleaningNotationPoint in (JArray) cleaningNotationJObject["points"] 
                         select new PointF(float.Parse(cleaningNotationPoint["x"].ToString()), float.Parse(cleaningNotationPoint["y"].ToString()))).ToList();
                 notationGroup.CleaningNotation = new YuzuCleaningNotation(cleaningNotationType, cleaningNotationPoints);
+                // TODO: refactor end
                 
                 // Other Notations
 
@@ -47,6 +49,7 @@ namespace YuzuMarker.DataFormat
             {
                 var notationGroup = basicGroup as YuzuNotationGroup;
                 
+                // TODO: refactor start: 将 temp folder 的内容覆盖掉原来的每个 image folder (Notations) 当中的对应项
                 var cleaningNotationPointJArray = new JArray();
                 foreach (var point in notationGroup.CleaningNotation.CleaningPoints)
                 {
@@ -62,7 +65,8 @@ namespace YuzuMarker.DataFormat
                     {"points", cleaningNotationPointJArray}
                 };
                 File.WriteAllText(Path.Combine(rootDir, notationGroup.Timestamp + "-cleaning.json"), cleaningNotationJObject.ToString(), Encoding.UTF8);
-
+                // TODO: refactor end
+                
                 // Other Notations
             });
         }

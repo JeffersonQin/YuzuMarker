@@ -18,6 +18,10 @@ namespace YuzuMarker.DataFormat
         {
             CleaningNotation = new YuzuCleaningNotation(YuzuCleaningNotationType.Normal);
         }
+        
+        // TODO: refactor start: 新增 load cleaning notation (1. 尝试从 temp 2. 尝试复制到 temp 3. 记得 Ensure)
+        
+        // TODO: refactor end
 
         // Other kinds of notations
     }

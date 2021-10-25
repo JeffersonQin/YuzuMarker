@@ -81,6 +81,8 @@ namespace YuzuMarker.View
         }
         #endregion
 
+        // TODO: refactor start: 重写 lasso 交互
+        // lasso 用 PointsCollection 没问题, 每次结束以后 / 开始之前 都需要和 cv::Mat 做运算，重新渲染，每次圈完以后 lasso 消失
         #region Canvas Item Clicking Event
         private void NotationRenderItemClicked(object sender, MouseButtonEventArgs e)
         {
@@ -220,5 +222,6 @@ namespace YuzuMarker.View
             EnableLassoMode(DidLassoModeFinishedForNormalCleaning);
         }
         #endregion
+        // TODO: refactor end
     }
 }

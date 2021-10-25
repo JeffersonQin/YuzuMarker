@@ -21,6 +21,7 @@ namespace YuzuMarker.Converter
             YuzuNotationGroup notationGroup = (YuzuNotationGroup)value;
             if (notationGroup == null) return null;
             
+            // TODO: refactor start: 逻辑将修改为 : cv::Mat (1-channel) => WPF (Writable Bitmap)
             if (notationGroup.CleaningNotation.CleaningPoints.Count > 0)
             {
                 Polygon cleaningPolygon = new Polygon();
@@ -39,6 +40,7 @@ namespace YuzuMarker.Converter
 
                 container.Children.Add(cleaningPolygon);
             }
+            // TODO: refactor end
 
             return container;
         }

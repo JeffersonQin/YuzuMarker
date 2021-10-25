@@ -147,6 +147,10 @@ namespace YuzuMarker.ViewModel
             }
         }
         #endregion
+        
+        // TODO: refactor start: 增加 lasso mask Property
+        
+        // TODO: refactor end
 
         #region Property: SelectedNotationGroupText
         public string SelectedNotationGroupText
