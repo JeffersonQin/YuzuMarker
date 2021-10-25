@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using YuzuMarker.BasicDataFormat;
 using YuzuMarker.Common;
 using YuzuMarker.DataFormat;
 
@@ -26,25 +27,14 @@ namespace YuzuMarker.ViewModel
         #endregion
 
         #region Property: Project
-        public YuzuProject<ObservableCollection<YuzuImage<ObservableCollection<YuzuNotationGroup>>>,
-            ObservableCollection<YuzuNotationGroup>> Project
-        {
-            get
-            {
-                return Manager.YuzuMarkerManager.Project;
-            }
-        }
+        public YuzuProject Project => Manager.YuzuMarkerManager.Project;
+
         #endregion
 
         #region Property: Images
-        public ObservableCollection<YuzuImage<ObservableCollection<YuzuNotationGroup>>> Images
-        {
-            get
-            {
-                if (Manager.YuzuMarkerManager.Project == null) return null;
-                return Manager.YuzuMarkerManager.Project.Images;
-            }
-        }
+        public ObservableCollection<BasicYuzuImage> Images
+            => Manager.YuzuMarkerManager.Project == null ? null : Manager.YuzuMarkerManager.Project.Images;
+
         #endregion
 
         #region Property: ImageSource
@@ -71,18 +61,12 @@ namespace YuzuMarker.ViewModel
         #endregion
 
         #region Property: SelectedImageItem
-        public YuzuImage<ObservableCollection<YuzuNotationGroup>> SelectedImageItem
+        public YuzuImage SelectedImageItem
         {
-            get
-            {
-                return Manager.YuzuMarkerManager.Image;
-            }
+            get => Manager.YuzuMarkerManager.Image;
             set
             {
-                if (Manager.YuzuMarkerManager.Project == null)
-                    Manager.YuzuMarkerManager.Image = null;
-                else
-                    Manager.YuzuMarkerManager.Image = value;
+                Manager.YuzuMarkerManager.Image = Manager.YuzuMarkerManager.Project == null ? null : value;
                 RaisePropertyChanged("ImageSource");
                 RaisePropertyChanged("SelectedImageItem");
                 RaisePropertyChanged("NotationGroups");
@@ -92,14 +76,9 @@ namespace YuzuMarker.ViewModel
         #endregion
 
         #region Property: NotationGroups
-        public ObservableCollection<YuzuNotationGroup> NotationGroups
-        {
-            get
-            {
-                if (SelectedImageItem == null) return null;
-                return SelectedImageItem.NotationGroups;
-            }
-        }
+        public ObservableCollection<BasicYuzuNotationGroup> NotationGroups 
+            => SelectedImageItem?.NotationGroups;
+
         #endregion
 
         #region Property: SelectedNotationGroupItem
@@ -175,11 +154,11 @@ namespace YuzuMarker.ViewModel
             get
             {
                 if (SelectedNotationGroupItem == null) return null;
-                return SelectedNotationGroupItem.text;
+                return SelectedNotationGroupItem.Text;
             }
             set
             {
-                SelectedNotationGroupItem.text = value;
+                SelectedNotationGroupItem.Text = value;
                 RaisePropertyChanged("SelectedNotationGroupText");
             }
         }
@@ -201,7 +180,7 @@ namespace YuzuMarker.ViewModel
                             try
                             {
                                 PSBridge.CommonWrapper.OpenAndInitPSDFileStructureIfNotExist(
-                                    SelectedImageItem.GetImageFilePath(), SelectedImageItem.GetImagePSDPath());
+                                    SelectedImageItem.GetImageFilePath(), SelectedImageItem.GetImagePsdPath());
                                 
                                 // TODO: Copy Layer to specific path
                                 
@@ -234,7 +213,7 @@ namespace YuzuMarker.ViewModel
                         {
                             try
                             {
-                                SelectedNotationGroupItem = NotationGroups[index - 1];
+                                SelectedNotationGroupItem = NotationGroups[index - 1] as YuzuNotationGroup;
                             }
                             catch (Exception e)
                             {
@@ -437,7 +416,6 @@ namespace YuzuMarker.ViewModel
                         CommandAction = () =>
                         {
                             SelectedImageItem.IsFinished = !SelectedImageItem.IsFinished;
-                            RefreshImageList();
                         }
                     };
                 return _SetImageFinishStatus;
@@ -518,10 +496,7 @@ namespace YuzuMarker.ViewModel
                                 };
                                 if (openFileDialog.ShowDialog() == true)
                                 {
-                                    Manager.YuzuMarkerManager.Project = YuzuIO.LoadProject
-                                        <ObservableCollection<YuzuImage<ObservableCollection<YuzuNotationGroup>>>,
-                                        ObservableCollection<YuzuNotationGroup>>
-                                        (openFileDialog.FileNames[0]);
+                                    Manager.YuzuMarkerManager.Project = YuzuIO.LoadProject(openFileDialog.FileNames[0]);
                                     RaisePropertyChanged("Project");
                                     RaisePropertyChanged("Images");
                                     RaisePropertyChanged("ImageSource");
@@ -598,10 +573,7 @@ namespace YuzuMarker.ViewModel
         {
             try
             {
-                Manager.YuzuMarkerManager.Project = YuzuIO.CreateProject
-                    <ObservableCollection<YuzuImage<ObservableCollection<YuzuNotationGroup>>>,
-                    ObservableCollection<YuzuNotationGroup>>
-                    (path, fileName, projectName);
+                Manager.YuzuMarkerManager.Project = YuzuIO.CreateProject(path, fileName, projectName);
                 RaisePropertyChanged("Project");
                 RaisePropertyChanged("Images");
                 RaisePropertyChanged("ImageSource");
@@ -614,7 +586,7 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
-        #region Refresh children attributes (which are not notify objects)
+        #region Refresh children attributes (which are not notify objects), also used for refreshing notationGroup, because it is converted as a whole
         public void RefreshImageList()
         {
             // Backup properties

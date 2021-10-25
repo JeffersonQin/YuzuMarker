@@ -129,8 +129,8 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemContainerStyle>
                             <Style>
-                                <Setter Property="Canvas.Left" Value="{Binding x, Mode=OneWay}"/>
-                                <Setter Property="Canvas.Top" Value="{Binding y, Mode=OneWay}"/>
+                                <Setter Property="Canvas.Left" Value="{Binding X, Mode=OneWay}"/>
+                                <Setter Property="Canvas.Top" Value="{Binding Y, Mode=OneWay}"/>
                             </Style>
                         </ItemsControl.ItemContainerStyle>
                         <ItemsControl.ItemTemplate>
@@ -191,7 +191,7 @@
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Grid>
-                                                <TextBlock Text="{Binding text}" Foreground="{Binding IsFinished, Converter={StaticResource ColorStatus}}"/>
+                                                <TextBlock Text="{Binding Text}" Foreground="{Binding IsFinished, Converter={StaticResource ColorStatus}}"/>
                                             </Grid>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
@@ -229,7 +229,7 @@
                             <StackPanel Grid.Row="0">
 
                             </StackPanel>
-                            <TextBox Grid.Row="1" LostFocus="TextAreaOnLostFocus" KeyDown="TextAreaOnKeyDown"
+                            <TextBox Grid.Row="1" KeyDown="TextAreaOnKeyDown"
                                      AcceptsTab="True" AcceptsReturn="True"
                                      Text="{Binding SelectedNotationGroupText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <TextBox.Style>
