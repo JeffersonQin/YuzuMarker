@@ -5,156 +5,66 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using YuzuMarker.BasicDataFormat;
+using YuzuMarker.Common;
 
 namespace YuzuMarker.DataFormat
 {
     public static class YuzuIO
     {
-        public static YuzuProject<LP, LI> CreateProject<LP, LI>(string path, string fileName, string projectName)
-            where LP : IList<YuzuImage<LI>>, new() where LI : IList<YuzuNotationGroup>, new()
+        public static YuzuProject CreateProject(string path, string fileName, string projectName)
         {
-            if (!Directory.Exists(path))
-            {
-                throw new Exception("YuzuProjectIO Error: Create path does not exist. Path: " + path);
-            }
-            string projectFolderPath = Path.Combine(path, fileName);
-            if (Directory.Exists(projectFolderPath) || File.Exists(projectFolderPath))
-            {
-                throw new Exception("YuzuProjectIO Error: file / directory already exist. Path: " + projectFolderPath);
-            }
-            Directory.CreateDirectory(projectFolderPath);
-
-            YuzuProject<LP, LI> project = new YuzuProject<LP, LI>(projectFolderPath, fileName, projectName);
-            SaveProject(project);
-
-            return project;
+            return BasicYuzuIO.CreateProject(path, fileName, projectName) as YuzuProject;
         }
 
-        public static YuzuProject<LP, LI> LoadProject<LP, LI>(string path)
-            where LP : IList<YuzuImage<LI>>, new() where LI : IList<YuzuNotationGroup>, new()
+        public static YuzuProject LoadProject(string path)
         {
-            string projectFileName = Path.GetFileNameWithoutExtension(path);
-            XDocument yuzuProjectXMLDoc = XDocument.Load(path);
-            
-            XElement xProject = yuzuProjectXMLDoc.Element("YuzuProject");
-            string projectName = xProject.Element("Name").Value;
-
-            string notationFolderPath = Path.Combine(Path.GetDirectoryName(path), "./Notations/");
-            IOUtils.EnsureDirectoryExist(notationFolderPath);
-            
-            XElement xImages = xProject.Element("Images");
-            LP yuzuImages = new LP();
-            YuzuProject<LP, LI> yuzuProject = new YuzuProject<LP, LI>(Path.GetDirectoryName(path), projectFileName, projectName, yuzuImages);
-
-            foreach (XElement xImage in xImages.Elements("Image"))
+            return (YuzuProject)BasicYuzuIO.LoadProject(path, (timestamp, x, y, text, finished, rootDir) =>
             {
-                string imageName = xImage.Value;
-                bool imageFinished = (bool)xImage.Attribute("IsFinished");
-                YuzuImage<LI> yuzuImage = new YuzuImage<LI>(yuzuProject.path, imageName, imageFinished);
-                yuzuProject.Images.Add(yuzuImage);
+                var notationGroup = new YuzuNotationGroup(timestamp, x, y, text, finished);
 
-                string notationFolderPathForImage = Path.Combine(notationFolderPath, "./" + imageName + "/");
-                IOUtils.EnsureDirectoryExist(notationFolderPathForImage);
+                var cleaningNotationJObject = JObject.Parse(File.ReadAllText(Path.Combine(rootDir, "./" + timestamp + "-cleaning.json")));
+                var cleaningNotationType = (YuzuCleaningNotationType)int.Parse(cleaningNotationJObject["type"].ToString());
+                var cleaningNotationPoints = 
+                    (from JObject cleaningNotationPoint in (JArray) cleaningNotationJObject["points"] 
+                        select new PointF(float.Parse(cleaningNotationPoint["x"].ToString()), float.Parse(cleaningNotationPoint["y"].ToString()))).ToList();
+                notationGroup.CleaningNotation = new YuzuCleaningNotation(cleaningNotationType, cleaningNotationPoints);
+                
+                // Other Notations
 
-                string indexFileContent = File.ReadAllText(Path.Combine(notationFolderPathForImage, "./index.json"));
-                JArray notationIndexJArray = JArray.Parse(indexFileContent);
-                foreach (JObject notationIndexJObject in notationIndexJArray)
-                {
-                    long timestamp = long.Parse(notationIndexJObject["timestamp"].ToString());
-                    bool notationFinished = (bool)notationIndexJObject["finished"];
-
-                    JObject markNotationJObject = JObject.Parse(File.ReadAllText(Path.Combine(notationFolderPathForImage, "./" + timestamp + "-mark.json")));
-                    YuzuNotationGroup notationGroup = new YuzuNotationGroup(timestamp, (int)markNotationJObject["x"], (int)markNotationJObject["y"], (string)markNotationJObject["text"], notationFinished);
-
-                    JObject cleaningNotationJObject = JObject.Parse(File.ReadAllText(Path.Combine(notationFolderPathForImage, "./" + timestamp + "-cleaning.json")));
-                    var cleaningNotationType = (YuzuCleaningNotationType)int.Parse(cleaningNotationJObject["type"].ToString());
-                    List<PointF> cleaningNotationPoints = new List<PointF>();
-                    foreach (JObject cleaningNotationPoint in cleaningNotationJObject["points"] as JArray)
-                    {
-                        cleaningNotationPoints.Add(new PointF(float.Parse(cleaningNotationPoint["x"].ToString()), float.Parse(cleaningNotationPoint["y"].ToString())));
-                    }
-                    notationGroup.CleaningNotation = new YuzuCleaningNotation(cleaningNotationType, cleaningNotationPoints);
-                    
-                    // Other Notations
-
-                    yuzuImage.NotationGroups.Add(notationGroup);
-                }
-            }
-
-            return yuzuProject;
+                return notationGroup;
+            }, (projectPath, fileName, projectName, images) => new YuzuProject(projectPath, fileName, projectName, images), 
+               (parentPath, imageName, finished) => new YuzuImage(parentPath, imageName, finished));
         }
 
-        public static void SaveProject<LP, LI>(YuzuProject<LP, LI> project) 
-            where LP : IList<YuzuImage<LI>>, new() where LI : IList<YuzuNotationGroup>, new()
+        public static void SaveProject(YuzuProject project)
         {
-            XDocument yuzuProjectXMLDoc = new XDocument();
-            yuzuProjectXMLDoc.Declaration = new XDeclaration("1.0", "utf-8", "no");
-            
-            XElement xProject = new XElement("YuzuProject");
-            XElement xProjectName = new XElement("Name", project.projectName);
-            xProject.Add(xProjectName);
-            
-            XElement xImages = new XElement("Images");
-
-            string notationFolderPath = Path.Combine(project.path, "./Notations/");
-            IOUtils.EnsureDirectoryExist(notationFolderPath);
-            foreach (YuzuImage<LI> yuzuImage in project.Images)
+            BasicYuzuIO.SaveProject(project, (basicGroup, rootDir) =>
             {
-                XElement xImage = new XElement("Image", yuzuImage.ImageName);
-                xImage.SetAttributeValue("IsFinished", yuzuImage.IsFinished);
-                xImages.Add(xImage);
-
-                string notationFolderPathForImage = Path.Combine(notationFolderPath, "./" + yuzuImage.ImageName + "/");
-                IOUtils.EnsureDirectoryExist(notationFolderPathForImage);
-
-                JArray notationIndexJArray = new JArray();
-
-                foreach (YuzuNotationGroup notationGroup in yuzuImage.NotationGroups)
+                var notationGroup = basicGroup as YuzuNotationGroup;
+                
+                var cleaningNotationPointJArray = new JArray();
+                foreach (var point in notationGroup.CleaningNotation.CleaningPoints)
                 {
-                    long timestamp = notationGroup.Timestamp;
-                    JObject notationIndexJObject = new JObject
+                    cleaningNotationPointJArray.Add(new JObject()
                     {
-                        { "timestamp", timestamp + "" },
-                        { "finished", notationGroup.IsFinished }
-                    };
-                    notationIndexJArray.Add(notationIndexJObject);
-
-                    JObject markNotationJObject = new JObject
-                    {
-                        { "x", notationGroup.x },
-                        { "y", notationGroup.y },
-                        { "text", notationGroup.text }
-                    };
-                    File.WriteAllText(Path.Combine(notationFolderPathForImage, timestamp + "-mark.json"), markNotationJObject.ToString(), Encoding.UTF8);
-
-                    JArray cleaningNotationPointJArray = new JArray();
-                    foreach (PointF point in notationGroup.CleaningNotation.CleaningPoints)
-                    {
-                        cleaningNotationPointJArray.Add(new JObject()
-                        {
-                            { "x", point.X },
-                            { "y", point.Y }
-                        });
-                    }
-                    JObject cleaningNotationJObject = new JObject()
-                    {
-                        {"type", (int) notationGroup.CleaningNotation.CleaningNotationType},
-                        {"points", cleaningNotationPointJArray}
-                    };
-                    File.WriteAllText(Path.Combine(notationFolderPathForImage, timestamp + "-cleaning.json"), cleaningNotationJObject.ToString(), Encoding.UTF8);
-
-                    // Other Notations
+                        { "x", point.X },
+                        { "y", point.Y }
+                    });
                 }
-                File.WriteAllText(Path.Combine(notationFolderPathForImage, "./index.json"), notationIndexJArray.ToString(), Encoding.UTF8);
-            }
+                var cleaningNotationJObject = new JObject()
+                {
+                    {"type", (int) notationGroup.CleaningNotation.CleaningNotationType},
+                    {"points", cleaningNotationPointJArray}
+                };
+                File.WriteAllText(Path.Combine(rootDir, notationGroup.Timestamp + "-cleaning.json"), cleaningNotationJObject.ToString(), Encoding.UTF8);
 
-            xProject.Add(xImages);
-            yuzuProjectXMLDoc.Add(xProject);
-
-            yuzuProjectXMLDoc.Save(Path.Combine(project.path, project.fileName + ".yuzu"));
+                // Other Notations
+            });
         }
     }
 }

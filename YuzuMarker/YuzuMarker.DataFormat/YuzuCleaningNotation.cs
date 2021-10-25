@@ -2,14 +2,27 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using YuzuMarker.Common;
 
 namespace YuzuMarker.DataFormat
 {
-    public class YuzuCleaningNotation
+    public class YuzuCleaningNotation : NotifyObject
     {
-        public YuzuCleaningNotationType CleaningNotationType;
+        private YuzuCleaningNotationType _cleaningNotationType;
 
-        public List<PointF> CleaningPoints;
+        public YuzuCleaningNotationType CleaningNotationType
+        {
+            get => _cleaningNotationType;
+            set => SetProperty(ref _cleaningNotationType, value);
+        }
+
+        private List<PointF> _cleaningPoints;
+
+        public List<PointF> CleaningPoints
+        {
+            get => _cleaningPoints;
+            set => SetProperty(ref _cleaningPoints, value);
+        }
 
         public YuzuCleaningNotation(YuzuCleaningNotationType type, List<PointF> points)
         {
