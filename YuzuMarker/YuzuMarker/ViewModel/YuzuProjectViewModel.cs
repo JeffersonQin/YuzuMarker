@@ -66,7 +66,10 @@ namespace YuzuMarker.ViewModel
             get => Manager.YuzuMarkerManager.Image;
             set
             {
+                // TODO: refactor start: load / dispose Cleaning Notation
                 Manager.YuzuMarkerManager.Image = Manager.YuzuMarkerManager.Project == null ? null : value;
+                // TODO: refactor end
+                
                 RaisePropertyChanged("ImageSource");
                 RaisePropertyChanged("SelectedImageItem");
                 RaisePropertyChanged("NotationGroups");
@@ -147,6 +150,10 @@ namespace YuzuMarker.ViewModel
             }
         }
         #endregion
+        
+        // TODO: refactor start: 增加 lasso mask Property
+        
+        // TODO: refactor end
 
         #region Property: SelectedNotationGroupText
         public string SelectedNotationGroupText

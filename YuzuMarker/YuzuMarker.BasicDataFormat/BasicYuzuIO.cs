@@ -32,9 +32,9 @@ namespace YuzuMarker.BasicDataFormat
 
         public delegate BasicYuzuProject ProjectInitializer(string path, string fileName, string projectName, ObservableCollection<BasicYuzuImage> images);
 
-        public delegate BasicYuzuImage ImageInitializer(string path, string imageName, bool finished);
+        public delegate BasicYuzuImage ImageInitializer(BasicYuzuProject project, string imageName, bool finished);
 
-        public delegate BasicYuzuNotationGroup LoadNotationGroupHandler(long timestamp, int x, int y, string text, bool finished, string rootDir);
+        public delegate BasicYuzuNotationGroup LoadNotationGroupHandler(BasicYuzuImage image, long timestamp, int x, int y, string text, bool finished, string rootDir);
 
         public static BasicYuzuProject LoadProject(string path, 
             LoadNotationGroupHandler loadNotationGroupHandler = null,
@@ -63,8 +63,8 @@ namespace YuzuMarker.BasicDataFormat
                 var imageFinished = (bool)xImage.Attribute("IsFinished");
 
                 var yuzuImage = imageInitializer == null ?
-                    new BasicYuzuImage(yuzuProject.Path, imageName, imageFinished) : 
-                    imageInitializer.Invoke(yuzuProject.Path, imageName, imageFinished);
+                    new BasicYuzuImage(yuzuProject, imageName, imageFinished) : 
+                    imageInitializer.Invoke(yuzuProject, imageName, imageFinished);
                 
                 yuzuProject.Images.Add(yuzuImage);
 
@@ -82,8 +82,8 @@ namespace YuzuMarker.BasicDataFormat
                     var markNotationJObject = JObject.Parse(File.ReadAllText(Path.Combine(notationFolderPathForImage, "./" + timestamp + "-mark.json")));
 
                     var notationGroup = loadNotationGroupHandler == null ? 
-                        new BasicYuzuNotationGroup(timestamp, (int)markNotationJObject["x"], (int)markNotationJObject["y"], (string)markNotationJObject["text"], notationFinished) : 
-                        loadNotationGroupHandler.Invoke(timestamp, (int)markNotationJObject["x"], (int)markNotationJObject["y"], (string)markNotationJObject["text"], notationFinished, notationFolderPathForImage);
+                        new BasicYuzuNotationGroup(yuzuImage, timestamp, (int)markNotationJObject["x"], (int)markNotationJObject["y"], (string)markNotationJObject["text"], notationFinished) : 
+                        loadNotationGroupHandler.Invoke(yuzuImage, timestamp, (int)markNotationJObject["x"], (int)markNotationJObject["y"], (string)markNotationJObject["text"], notationFinished, notationFolderPathForImage);
                     yuzuImage.NotationGroups.Add(notationGroup);
                 }
             }

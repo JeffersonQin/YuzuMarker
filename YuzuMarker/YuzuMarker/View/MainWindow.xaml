@@ -143,11 +143,13 @@
                     </ItemsControl>
                     <Rectangle MouseDown="LassoMouseDownEvent" Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoModeBackgroundColor}" 
                         Visibility="{Binding Data.LassoMode, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
+                    <!--TODO: refactor start: 增加 Image (Lasso Mask)-->
+                    <!--TODO: refactor end-->
                     <Polygon Points="{Binding Data.LassoPoints, Source={StaticResource BindingProxy}}" 
-                        Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoFillColor}" 
-                        Stroke="{Binding Source={x:Static p:Settings.Default}, Path=LassoStrokeColor}"
-                        StrokeThickness="{Binding Source={x:Static p:Settings.Default}, Path=UIPolygonStrokeThickness}"
-                        Visibility="{Binding Data.LassoMode, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
+                             Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoFillColor}" 
+                             Stroke="{Binding Source={x:Static p:Settings.Default}, Path=LassoStrokeColor}"
+                             StrokeThickness="{Binding Source={x:Static p:Settings.Default}, Path=UIPolygonStrokeThickness}"
+                             Visibility="{Binding Data.LassoMode, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
                 </Grid>
             </uc:ZoomView.ContainerContent>
         </uc:ZoomView>

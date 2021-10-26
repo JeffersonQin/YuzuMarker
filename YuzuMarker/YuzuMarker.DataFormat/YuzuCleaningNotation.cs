@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using OpenCvSharp;
 using YuzuMarker.Common;
 
 namespace YuzuMarker.DataFormat
@@ -16,6 +17,7 @@ namespace YuzuMarker.DataFormat
             set => SetProperty(ref _cleaningNotationType, value);
         }
 
+        // TODO: refactor start: 替换为类似于临时属性的 cv::Mat
         private List<PointF> _cleaningPoints;
 
         public List<PointF> CleaningPoints
@@ -35,5 +37,6 @@ namespace YuzuMarker.DataFormat
             CleaningNotationType = type;
             CleaningPoints = new List<PointF>();
         }
+        // TODO: refactor end
     }
 }

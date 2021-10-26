@@ -9,15 +9,19 @@ namespace YuzuMarker.DataFormat
     {
         public YuzuCleaningNotation CleaningNotation { get; set; }
 
-        public YuzuNotationGroup(int x, int y, string text, bool finished) : base(x, y, text, finished)
+        public YuzuNotationGroup(YuzuImage parentImage, int x, int y, string text, bool finished) : base(parentImage, x, y, text, finished)
         {
             CleaningNotation = new YuzuCleaningNotation(YuzuCleaningNotationType.Normal);
         }
 
-        public YuzuNotationGroup(long timestamp, int x, int y, string text, bool finished) : base(timestamp, x, y, text, finished)
+        public YuzuNotationGroup(YuzuImage parentImage, long timestamp, int x, int y, string text, bool finished) : base(parentImage, timestamp, x, y, text, finished)
         {
             CleaningNotation = new YuzuCleaningNotation(YuzuCleaningNotationType.Normal);
         }
+        
+        // TODO: refactor start: 新增 load cleaning notation (1. 尝试从 temp 2. 尝试复制到 temp 3. 记得 Ensure)
+        
+        // TODO: refactor end
 
         // Other kinds of notations
     }

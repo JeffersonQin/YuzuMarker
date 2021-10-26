@@ -7,16 +7,6 @@ namespace YuzuMarker.BasicDataFormat
 {
     public class BasicYuzuProject : NotifyObject
     {
-        public static void EnsureImageFolderExist(string parentPath)
-        {
-            IOUtils.EnsureDirectoryExist(System.IO.Path.Combine(parentPath, "./Images"));
-        }
-
-        public static void EnsurePsdFolderExist(string parentPath)
-        {
-            IOUtils.EnsureDirectoryExist(System.IO.Path.Combine(parentPath, "./PSD"));
-        }
-        
         private string _path;
 
         public string Path
@@ -123,7 +113,7 @@ namespace YuzuMarker.BasicDataFormat
         {
             var imageFileName = CopyImage(imagePath);
 
-            Images.Insert(index, new BasicYuzuImage(this.Path, imageFileName, false));
+            Images.Insert(index, new BasicYuzuImage(this, imageFileName, false));
             return imageFileName;
         }
         
@@ -131,7 +121,7 @@ namespace YuzuMarker.BasicDataFormat
         {
             var imageFileName = CopyImage(imagePath);
 
-            Images.Add(new BasicYuzuImage(this.Path, imageFileName, false));
+            Images.Add(new BasicYuzuImage(this, imageFileName, false));
             return imageFileName;
         }
     }
