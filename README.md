@@ -199,6 +199,4 @@ PSD/
 
 感谢 Jetbrains 提供的教育许可证
 
-<img src="./assets/jb_beam.svg" alt="JetBrains Logo (Main) logo." width=200>
-<img src="./assets/PyCharm_icon.svg" alt="PyCharm logo." width=200>
-<img src="./assets/Rider_icon.svg" alt="Rider logo." width=200>
+<img src="./assets/jb_beam.svg" alt="JetBrains Logo (Main) logo." width=200><img src="./assets/PyCharm_icon.svg" alt="PyCharm logo." width=200><img src="./assets/Rider_icon.svg" alt="Rider logo." width=200>
