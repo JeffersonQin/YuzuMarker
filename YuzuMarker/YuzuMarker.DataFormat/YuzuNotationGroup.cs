@@ -9,12 +9,12 @@ namespace YuzuMarker.DataFormat
     {
         public YuzuCleaningNotation CleaningNotation { get; set; }
 
-        public YuzuNotationGroup(int x, int y, string text, bool finished) : base(x, y, text, finished)
+        public YuzuNotationGroup(YuzuImage parentImage, int x, int y, string text, bool finished) : base(parentImage, x, y, text, finished)
         {
             CleaningNotation = new YuzuCleaningNotation(YuzuCleaningNotationType.Normal);
         }
 
-        public YuzuNotationGroup(long timestamp, int x, int y, string text, bool finished) : base(timestamp, x, y, text, finished)
+        public YuzuNotationGroup(YuzuImage parentImage, long timestamp, int x, int y, string text, bool finished) : base(parentImage, timestamp, x, y, text, finished)
         {
             CleaningNotation = new YuzuCleaningNotation(YuzuCleaningNotationType.Normal);
         }

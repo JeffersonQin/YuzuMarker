@@ -23,10 +23,10 @@ namespace YuzuMarker.DataFormat
 
         public static YuzuProject LoadProject(string path)
         {
-            return (YuzuProject)BasicYuzuIO.LoadProject(path, (timestamp, x, y, text, finished, rootDir) =>
+            return (YuzuProject)BasicYuzuIO.LoadProject(path, (image, timestamp, x, y, text, finished, rootDir) =>
             {
                 // TODO: refactor start: 只初始化 Type，其他全部为 null
-                var notationGroup = new YuzuNotationGroup(timestamp, x, y, text, finished);
+                var notationGroup = new YuzuNotationGroup(image as YuzuImage, timestamp, x, y, text, finished);
 
                 var cleaningNotationJObject = JObject.Parse(File.ReadAllText(Path.Combine(rootDir, "./" + timestamp + "-cleaning.json")));
                 var cleaningNotationType = (YuzuCleaningNotationType)int.Parse(cleaningNotationJObject["type"].ToString());
@@ -40,7 +40,7 @@ namespace YuzuMarker.DataFormat
 
                 return notationGroup;
             }, (projectPath, fileName, projectName, images) => new YuzuProject(projectPath, fileName, projectName, images), 
-               (parentPath, imageName, finished) => new YuzuImage(parentPath, imageName, finished));
+               (project, imageName, finished) => new YuzuImage(project as YuzuProject, imageName, finished));
         }
 
         public static void SaveProject(YuzuProject project)

@@ -14,7 +14,7 @@ namespace YuzuMarker.DataFormat
         {
             var imageFileName = CopyImage(imagePath);
 
-            Images.Insert(index, new YuzuImage(this.Path, imageFileName, false));
+            Images.Insert(index, new YuzuImage(this, imageFileName, false));
             return imageFileName;
         }
 
@@ -22,7 +22,7 @@ namespace YuzuMarker.DataFormat
         {
             var imageFileName = CopyImage(imagePath);
 
-            Images.Add(new YuzuImage(this.Path, imageFileName, false));
+            Images.Add(new YuzuImage(this, imageFileName, false));
             return imageFileName;
         }
     }

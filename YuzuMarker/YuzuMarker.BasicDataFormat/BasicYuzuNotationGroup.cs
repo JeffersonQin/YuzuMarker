@@ -7,6 +7,14 @@ namespace YuzuMarker.BasicDataFormat
 {
     public class BasicYuzuNotationGroup : NotifyObject
     {
+        private BasicYuzuImage _parentImage;
+
+        public BasicYuzuImage ParentImage
+        {
+            get => _parentImage;
+            set => SetProperty(ref _parentImage, value);
+        }
+        
         private long _timestamp;
 
         public long Timestamp
@@ -47,8 +55,9 @@ namespace YuzuMarker.BasicDataFormat
             set => SetProperty(ref _isFinished, value);
         }
 
-        public BasicYuzuNotationGroup(int x, int y, string text, bool finished)
+        public BasicYuzuNotationGroup(BasicYuzuImage parentImage, int x, int y, string text, bool finished)
         {
+            ParentImage = parentImage;
             Timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             X = x;
             Y = y;
@@ -56,8 +65,9 @@ namespace YuzuMarker.BasicDataFormat
             IsFinished = finished;
         }
 
-        public BasicYuzuNotationGroup(long timestamp, int x, int y, string text, bool finished)
+        public BasicYuzuNotationGroup(BasicYuzuImage parentImage, long timestamp, int x, int y, string text, bool finished)
         {
+            ParentImage = parentImage;
             Timestamp = timestamp;
             X = x;
             Y = y;

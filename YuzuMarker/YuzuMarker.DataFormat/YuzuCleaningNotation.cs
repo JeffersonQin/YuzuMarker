@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using OpenCvSharp;
 using YuzuMarker.Common;
 
 namespace YuzuMarker.DataFormat

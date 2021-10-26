@@ -7,12 +7,12 @@ namespace YuzuMarker.BasicDataFormat
 {
     public class BasicYuzuImage : NotifyObject
     {
-        private string _parentPath;
+        private BasicYuzuProject _parentProject;
 
-        public string ParentPath
+        public BasicYuzuProject ParentProject
         {
-            get => _parentPath;
-            set => SetProperty(ref _parentPath, value);
+            get => _parentProject;
+            set => SetProperty(ref _parentProject, value);
         }
         
         private string _imageName;
@@ -39,11 +39,11 @@ namespace YuzuMarker.BasicDataFormat
             set => SetProperty(ref _notationGroups, value);
         }
 
-        public BasicYuzuImage(string parentPath, string imageName, bool finished)
+        public BasicYuzuImage(BasicYuzuProject parentProject, string imageName, bool finished)
         {
-            if (!File.Exists(Path.Combine(parentPath, "./Images/", imageName)))
+            if (!File.Exists(Path.Combine(parentProject.Path, "./Images/", imageName)))
                 throw new Exception("YuzuImage Init Error: file does not exist. Name: " + imageName);
-            ParentPath = parentPath;
+            ParentProject = parentProject;
             ImageName = imageName;
             NotationGroups = new ObservableCollection<BasicYuzuNotationGroup>();
             IsFinished = finished;
@@ -51,7 +51,7 @@ namespace YuzuMarker.BasicDataFormat
         
         public virtual void CreateNewNotation(int x, int y, string text, bool finished)
         {
-            NotationGroups.Add(new BasicYuzuNotationGroup(x, y, text, finished));
+            NotationGroups.Add(new BasicYuzuNotationGroup(this, x, y, text, finished));
         }
 
         public void RemoveNotationGroupAt(int index)
@@ -61,7 +61,7 @@ namespace YuzuMarker.BasicDataFormat
 
         public virtual void CreateNewNotationAt(int index, int x, int y, string text, bool finished)
         {
-            NotationGroups.Insert(index, new BasicYuzuNotationGroup(x, y, text, finished));
+            NotationGroups.Insert(index, new BasicYuzuNotationGroup(this, x, y, text, finished));
         }
         
         public void MoveNotationGroup(int fromIndex, int toIndex)
@@ -73,14 +73,14 @@ namespace YuzuMarker.BasicDataFormat
 
         public string GetImageFilePath()
         {
-            BasicYuzuProject.EnsureImageFolderExist(ParentPath);
-            return Path.Combine(ParentPath, "./Images/", ImageName);
+            ParentProject.EnsureImageFolderExist();
+            return Path.Combine(ParentProject.Path, "./Images/", ImageName);
         }
 
         public string GetImagePsdPath()
         {
-            BasicYuzuProject.EnsurePsdFolderExist(ParentPath);
-            return Path.Combine(ParentPath, "./PSD/" + ImageName + ".psd");
+            ParentProject.EnsurePsdFolderExist();
+            return Path.Combine(ParentProject.Path, "./PSD/" + ImageName + ".psd");
         }
     }
 }
