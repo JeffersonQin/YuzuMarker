@@ -82,5 +82,11 @@ namespace YuzuMarker.BasicDataFormat
             ParentProject.EnsurePsdFolderExist();
             return Path.Combine(ParentProject.Path, "./PSD/" + ImageName + ".psd");
         }
+
+        public string GetImageTempPath()
+        {
+            ParentProject.EnsureTempFolderExist();
+            return Path.Combine(ParentProject.Path, "./temp/" + ImageName);
+        }
     }
 }
