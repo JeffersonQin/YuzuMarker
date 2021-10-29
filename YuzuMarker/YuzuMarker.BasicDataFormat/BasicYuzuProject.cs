@@ -58,6 +58,11 @@ namespace YuzuMarker.BasicDataFormat
         {
             IOUtils.EnsureDirectoryExist(System.IO.Path.Combine(Path, "./PSD"));
         }
+
+        public void EnsureTempFolderExist()
+        {
+            IOUtils.EnsureDirectoryExist(System.IO.Path.Combine(Path, "./temp"));
+        }
         
         public BasicYuzuProject(string path, string fileName, string projectName)
         {
