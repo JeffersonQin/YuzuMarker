@@ -36,10 +36,13 @@ namespace YuzuMarker.BasicDataFormat
 
         public delegate BasicYuzuNotationGroup LoadNotationGroupHandler(BasicYuzuImage image, long timestamp, int x, int y, string text, bool finished, string rootDir);
 
+        public delegate void AdditionalIOActionHandler(BasicYuzuProject project);
+        
         public static BasicYuzuProject LoadProject(string path, 
             LoadNotationGroupHandler loadNotationGroupHandler = null,
             ProjectInitializer projectInitializer = null, 
-            ImageInitializer imageInitializer = null)
+            ImageInitializer imageInitializer = null,
+            AdditionalIOActionHandler additionalIoActionHandler = null)
         {
             var projectFileName = Path.GetFileNameWithoutExtension(path);
             var yuzuProjectXMLDoc = XDocument.Load(path);
@@ -88,12 +91,16 @@ namespace YuzuMarker.BasicDataFormat
                 }
             }
 
+            additionalIoActionHandler?.Invoke(yuzuProject);
+
             return yuzuProject;
         }
 
         public delegate void SaveNotationGroupHandler(BasicYuzuNotationGroup notationGroup, string rootDir);
 
-        public static void SaveProject(BasicYuzuProject project, SaveNotationGroupHandler saveNotationGroupHandler = null) 
+        public static void SaveProject(BasicYuzuProject project, 
+            SaveNotationGroupHandler saveNotationGroupHandler = null,
+            AdditionalIOActionHandler additionalIoActionHandler = null) 
         {
             var yuzuProjectXmlDoc = new XDocument {Declaration = new XDeclaration("1.0", "utf-8", "no")};
 
@@ -143,6 +150,8 @@ namespace YuzuMarker.BasicDataFormat
             yuzuProjectXmlDoc.Add(xProject);
 
             yuzuProjectXmlDoc.Save(Path.Combine(project.Path, project.FileName + ".yuzu"));
+            
+            additionalIoActionHandler?.Invoke(project);
         }
     }
 }
