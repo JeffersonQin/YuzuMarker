@@ -14,8 +14,5 @@ namespace YuzuMarker.Properties
         public static int PhotoshopExtensionHTTPServerPort = 4016;
 
         public static PSBridgeType PhotoshopBridgeType = PSBridgeType.Extension;
-
-        // TODO: The following properties have not been added to settings
-        public static string MaskImageType = "jpg";
     }
 }
