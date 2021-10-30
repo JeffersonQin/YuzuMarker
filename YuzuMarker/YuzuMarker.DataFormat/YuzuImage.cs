@@ -30,6 +30,15 @@ namespace YuzuMarker.DataFormat
             }
         }
 
+        public void WriteImageNotations()
+        {
+            foreach (var basicYuzuNotationGroup in NotationGroups)
+            {
+                var notationGroup = basicYuzuNotationGroup as YuzuNotationGroup;
+                notationGroup?.WriteNotationResource();
+            }
+        }
+
         public void UnloadImageNotations()
         {
             foreach (var basicYuzuNotationGroup in NotationGroups)
