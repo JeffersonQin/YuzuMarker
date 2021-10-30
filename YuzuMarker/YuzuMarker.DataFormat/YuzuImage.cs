@@ -20,5 +20,23 @@ namespace YuzuMarker.DataFormat
         {
             NotationGroups.Insert(index, new YuzuNotationGroup(this, x, y, text, finished));
         }
+
+        public void LoadImageNotations()
+        {
+            foreach (var basicYuzuNotationGroup in NotationGroups)
+            {
+                var notationGroup = basicYuzuNotationGroup as YuzuNotationGroup;
+                notationGroup?.LoadNotationResource();
+            }
+        }
+
+        public void UnloadImageNotations()
+        {
+            foreach (var basicYuzuNotationGroup in NotationGroups)
+            {
+                var notationGroup = basicYuzuNotationGroup as YuzuNotationGroup;
+                notationGroup?.UnloadNotationResource();
+            }
+        }
     }
 }
