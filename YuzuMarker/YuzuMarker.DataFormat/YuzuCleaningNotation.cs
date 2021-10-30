@@ -23,5 +23,14 @@ namespace YuzuMarker.DataFormat
         {
             CleaningNotationType = type;
         }
+        
+        public bool IsEmpty()
+        {
+            if (CleaningMask != null)
+                if (!CleaningMask.IsDisposed)
+                    if (CleaningMask.CvPtr != IntPtr.Zero)
+                        return Cv2.CountNonZero(CleaningMask) == 0;
+            return true;
+        }
     }
 }
