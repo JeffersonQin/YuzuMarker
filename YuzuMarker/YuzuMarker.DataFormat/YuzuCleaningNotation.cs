@@ -17,7 +17,7 @@ namespace YuzuMarker.DataFormat
             set => SetProperty(ref _cleaningNotationType, value);
         }
 
-        public Mat CleaningMask;
+        public UMat CleaningMask;
 
         public YuzuCleaningNotation(YuzuCleaningNotationType type)
         {
