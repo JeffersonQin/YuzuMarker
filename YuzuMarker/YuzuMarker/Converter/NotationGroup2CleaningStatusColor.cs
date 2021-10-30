@@ -19,7 +19,7 @@ namespace YuzuMarker.Converter
             YuzuNotationGroup notationGroup = (YuzuNotationGroup)value;
             if (notationGroup == null) return null;
 
-            if (notationGroup.CleaningNotation.CleaningPoints.Count == 0) return new SolidColorBrush(Settings.Default.FailStatusColor.ToColor());
+            if (notationGroup.CleaningNotation.IsEmpty()) return new SolidColorBrush(Settings.Default.FailStatusColor.ToColor());
             return new SolidColorBrush(Settings.Default.SuccessStatusColor.ToColor());
         }
 
