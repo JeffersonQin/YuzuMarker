@@ -348,6 +348,7 @@ namespace YuzuMarker.ViewModel
                             {
                                 if (MessageBox.Show("工程文件将被自动保存。确定继续？", "导入图片", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                                 {
+                                    Manager.YuzuMarkerManager.Image.WriteImageNotations();
                                     YuzuIO.SaveProject(Project);
                                     OpenFileDialog openFileDialog = new OpenFileDialog
                                     {
