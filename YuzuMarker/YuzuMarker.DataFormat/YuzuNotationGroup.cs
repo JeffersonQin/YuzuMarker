@@ -33,24 +33,36 @@ namespace YuzuMarker.DataFormat
                 if (!File.Exists(maskImagePath))
                 {
                     using var src = new Mat(ParentImage.GetImageFilePath());
-                    CleaningNotation.CleaningMask = NotationResourcesTracker.NewMat(new Size(src.Cols, src.Rows),
-                        MatType.CV_8UC1, new Scalar(0));
+                    CleaningNotation.CleaningMask = NotationResourcesTracker.T<UMat>(new UMat(new Size(src.Cols, src.Rows),
+                        MatType.CV_8UC1, new Scalar(0)));
                 }
                 else
                 {
-                    CleaningNotation.CleaningMask = NotationResourcesTracker.T(new Mat(maskImagePath, ImreadModes.Grayscale));
+                    CleaningNotation.CleaningMask = NotationResourcesTracker.T<UMat>(new UMat());
+                    using var src = Cv2.ImRead(maskImagePath, ImreadModes.Grayscale);
+                    src.CopyTo(CleaningNotation.CleaningMask);
                 }
             }
             else
             {
-                CleaningNotation.CleaningMask = NotationResourcesTracker.T(new Mat(tempMaskImagePath, ImreadModes.Grayscale));
+                CleaningNotation.CleaningMask = NotationResourcesTracker.T<UMat>(new UMat());
+                using var src = Cv2.ImRead(tempMaskImagePath, ImreadModes.Grayscale);
+                src.CopyTo(CleaningNotation.CleaningMask);
             }
+        }
+
+        public void WriteNotationResource()
+        {
+            var tempMaskImagePath = Path.Combine(ParentImage.GetImageTempPath(), "./" + Timestamp + "-cleaning-mask.png");
+            var writeMat = CleaningNotation.CleaningMask.GetMat(AccessFlag.READ);
+            Cv2.ImWrite(tempMaskImagePath, writeMat);
+            writeMat.Dispose();
         }
 
         public void UnloadNotationResource()
         {
-            var tempMaskImagePath = Path.Combine(ParentImage.GetImageTempPath(), "./" + Timestamp + "-cleaning-mask.png");
-            Cv2.ImWrite(tempMaskImagePath, CleaningNotation.CleaningMask);
+            WriteNotationResource();
+            CleaningNotation.CleaningMask.Dispose();
             NotationResourcesTracker.Dispose();
         }
 
