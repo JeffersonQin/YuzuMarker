@@ -53,7 +53,7 @@ namespace YuzuMarker.View
             long TimestampNow = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             if (ClickPoint.X == NewClickPoint.X && ClickPoint.Y == NewClickPoint.Y && TimestampNow - ClickTimestamp <= 500)
             {
-                Manager.YuzuMarkerManager.Image.CreateNewNotation((int)ClickPoint.X, (int)ClickPoint.Y, "", false);
+                Manager.YuzuMarkerManager.Image.CreateAndLoadNewNotationGroup((int)ClickPoint.X, (int)ClickPoint.Y, "", false);
             }
             // Clear status
             ClickPoint.X = 0;
