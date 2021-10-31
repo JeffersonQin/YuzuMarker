@@ -59,6 +59,11 @@ namespace YuzuMarker.BasicDataFormat
             NotationGroups.RemoveAt(index);
         }
 
+        public void RemoveNotationGroup(BasicYuzuNotationGroup notationGroup)
+        {
+            NotationGroups.Remove(notationGroup);
+        }
+
         public virtual void CreateNewNotationAt(int index, int x, int y, string text, bool finished)
         {
             NotationGroups.Insert(index, new BasicYuzuNotationGroup(this, x, y, text, finished));
