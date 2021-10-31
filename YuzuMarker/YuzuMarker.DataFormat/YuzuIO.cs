@@ -25,22 +25,21 @@ namespace YuzuMarker.DataFormat
         {
             return (YuzuProject)BasicYuzuIO.LoadProject(path, (image, timestamp, x, y, text, finished, rootDir) =>
             {
-                // TODO: refactor start: 只初始化 Type，其他全部为 null
                 var notationGroup = new YuzuNotationGroup(image as YuzuImage, timestamp, x, y, text, finished);
 
-                var cleaningNotationJObject = JObject.Parse(File.ReadAllText(Path.Combine(rootDir, "./" + timestamp + "-cleaning.json")));
-                var cleaningNotationType = (YuzuCleaningNotationType)int.Parse(cleaningNotationJObject["type"].ToString());
-                var cleaningNotationPoints = 
-                    (from JObject cleaningNotationPoint in (JArray) cleaningNotationJObject["points"] 
-                        select new PointF(float.Parse(cleaningNotationPoint["x"].ToString()), float.Parse(cleaningNotationPoint["y"].ToString()))).ToList();
-                notationGroup.CleaningNotation = new YuzuCleaningNotation(cleaningNotationType, cleaningNotationPoints);
-                // TODO: refactor end
+                // Cleaning Notation
+                notationGroup.CleaningNotation = new YuzuCleaningNotation(YuzuCleaningNotationType.Normal);
                 
                 // Other Notations
 
                 return notationGroup;
-            }, (projectPath, fileName, projectName, images) => new YuzuProject(projectPath, fileName, projectName, images), 
-               (project, imageName, finished) => new YuzuImage(project as YuzuProject, imageName, finished));
+            }, 
+            (projectPath, fileName, projectName, images) => new YuzuProject(projectPath, fileName, projectName, images), 
+            (project, imageName, finished) => new YuzuImage(project as YuzuProject, imageName, finished),
+            (project) => {
+                project.EnsureTempFolderExist();
+                Directory.Delete(Path.Combine(project.Path, "./temp"), true);
+            });
         }
 
         public static void SaveProject(YuzuProject project)
@@ -49,24 +48,14 @@ namespace YuzuMarker.DataFormat
             {
                 var notationGroup = basicGroup as YuzuNotationGroup;
                 
-                // TODO: refactor start: 将 temp folder 的内容覆盖掉原来的每个 image folder (Notations) 当中的对应项
-                var cleaningNotationPointJArray = new JArray();
-                foreach (var point in notationGroup.CleaningNotation.CleaningPoints)
+                // Cleaning Notation
+                var tempCleaningMaskPath = Path.Combine(notationGroup.ParentImage.GetImageTempPath(), "./" + notationGroup.Timestamp + "-cleaning-mask.png");
+                if (File.Exists(tempCleaningMaskPath))
                 {
-                    cleaningNotationPointJArray.Add(new JObject()
-                    {
-                        { "x", point.X },
-                        { "y", point.Y }
-                    });
+                    var cleaningMaskTargetPath = Path.Combine(notationGroup.ParentImage.GetImageNotationPath(), "./" + notationGroup.Timestamp + "-cleaning-mask.png");
+                    File.Copy(tempCleaningMaskPath, cleaningMaskTargetPath, true);
                 }
-                var cleaningNotationJObject = new JObject()
-                {
-                    {"type", (int) notationGroup.CleaningNotation.CleaningNotationType},
-                    {"points", cleaningNotationPointJArray}
-                };
-                File.WriteAllText(Path.Combine(rootDir, notationGroup.Timestamp + "-cleaning.json"), cleaningNotationJObject.ToString(), Encoding.UTF8);
-                // TODO: refactor end
-                
+
                 // Other Notations
             });
         }

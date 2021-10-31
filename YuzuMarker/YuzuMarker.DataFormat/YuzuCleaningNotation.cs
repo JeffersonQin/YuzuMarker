@@ -17,11 +17,20 @@ namespace YuzuMarker.DataFormat
             set => SetProperty(ref _cleaningNotationType, value);
         }
 
-        public Mat CleaningMask;
+        public UMat CleaningMask;
 
         public YuzuCleaningNotation(YuzuCleaningNotationType type)
         {
             CleaningNotationType = type;
+        }
+        
+        public bool IsEmpty()
+        {
+            if (CleaningMask != null)
+                if (!CleaningMask.IsDisposed)
+                    if (CleaningMask.CvPtr != IntPtr.Zero)
+                        return Cv2.CountNonZero(CleaningMask) == 0;
+            return true;
         }
     }
 }

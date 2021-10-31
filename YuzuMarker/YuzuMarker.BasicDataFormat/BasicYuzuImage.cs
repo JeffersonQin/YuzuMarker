@@ -59,6 +59,11 @@ namespace YuzuMarker.BasicDataFormat
             NotationGroups.RemoveAt(index);
         }
 
+        public void RemoveNotationGroup(BasicYuzuNotationGroup notationGroup)
+        {
+            NotationGroups.Remove(notationGroup);
+        }
+
         public virtual void CreateNewNotationAt(int index, int x, int y, string text, bool finished)
         {
             NotationGroups.Insert(index, new BasicYuzuNotationGroup(this, x, y, text, finished));
@@ -86,7 +91,17 @@ namespace YuzuMarker.BasicDataFormat
         public string GetImageTempPath()
         {
             ParentProject.EnsureTempFolderExist();
-            return Path.Combine(ParentProject.Path, "./temp/" + ImageName);
+            var path = Path.Combine(ParentProject.Path, "./temp/" + ImageName);
+            IOUtils.EnsureDirectoryExist(path);
+            return path;
+        }
+
+        public string GetImageNotationPath()
+        {
+            ParentProject.EnsureImageFolderExist();
+            var path = Path.Combine(ParentProject.Path, "./Notations/" + ImageName);
+            IOUtils.EnsureDirectoryExist(path);
+            return path;
         }
     }
 }

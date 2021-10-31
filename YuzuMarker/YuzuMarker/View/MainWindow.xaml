@@ -99,7 +99,7 @@
                         </ListView.View>
                     </ListView>
             </Grid>
-            <Rectangle Fill="#7F000000" Visibility="{Binding LassoMode, Converter={StaticResource Boolean2Visibility}}" MouseDown="ShadeMouseDown"/>
+            <Rectangle Fill="#7F000000" Visibility="{Binding LassoModeEnabled, Converter={StaticResource Boolean2Visibility}}" MouseDown="ShadeMouseDown"/>
         </Grid>
         <!--这里的数据绑定的DataContext是ZoomView, 所以定义了一个BindingProxy来将DataContext换为祖先-->
         <uc:ZoomView CanDefaultMouseMoveEvent="CanDefaultMouseMoveEventHappen" CustomMouseMoveEvent="CustomMouseMoveEvent" CanCustomMouseMoveEvent="CanCustomMouseMoveEventHappen"
@@ -142,14 +142,14 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                     <Rectangle MouseDown="LassoMouseDownEvent" Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoModeBackgroundColor}" 
-                        Visibility="{Binding Data.LassoMode, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
+                        Visibility="{Binding Data.LassoModeEnabled, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
                     <!--TODO: refactor start: 增加 Image (Lasso Mask)-->
                     <!--TODO: refactor end-->
                     <Polygon Points="{Binding Data.LassoPoints, Source={StaticResource BindingProxy}}" 
                              Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoFillColor}" 
                              Stroke="{Binding Source={x:Static p:Settings.Default}, Path=LassoStrokeColor}"
                              StrokeThickness="{Binding Source={x:Static p:Settings.Default}, Path=UIPolygonStrokeThickness}"
-                             Visibility="{Binding Data.LassoMode, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
+                             Visibility="{Binding Data.LassoModeEnabled, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
                 </Grid>
             </uc:ZoomView.ContainerContent>
         </uc:ZoomView>
@@ -301,7 +301,7 @@
                     <TextBlock x:Name="GlobalStatusInformationLabel" TextWrapping="Wrap" Text="{Binding TopMessage}"/>
                 </StatusBar>
             </Grid>
-            <Rectangle Fill="#7F000000" Visibility="{Binding LassoMode, Converter={StaticResource Boolean2Visibility}}" MouseDown="ShadeMouseDown"/>
+            <Rectangle Fill="#7F000000" Visibility="{Binding LassoModeEnabled, Converter={StaticResource Boolean2Visibility}}" MouseDown="ShadeMouseDown"/>
         </Grid>
     </Grid>
 </Window>

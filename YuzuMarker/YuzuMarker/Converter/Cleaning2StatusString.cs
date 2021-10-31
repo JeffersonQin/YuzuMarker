@@ -11,7 +11,7 @@ namespace YuzuMarker.Converter
         {
             YuzuCleaningNotation cleaningNotation = (YuzuCleaningNotation) value;
             if (cleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Custom) return "PS自定义蒙版";
-            if (cleaningNotation.CleaningPoints.Count == 0) return "不涂白";
+            if (cleaningNotation.IsEmpty()) return "不涂白";
             return "区域已选择";
         }
 

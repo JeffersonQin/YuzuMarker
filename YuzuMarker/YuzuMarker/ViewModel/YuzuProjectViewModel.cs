@@ -66,10 +66,15 @@ namespace YuzuMarker.ViewModel
             get => Manager.YuzuMarkerManager.Image;
             set
             {
-                // TODO: refactor start: load / dispose Cleaning Notation
+                if (Manager.YuzuMarkerManager.Image == null)
+                {
+                    Manager.YuzuMarkerManager.Image = value;
+                    goto EndSection;
+                }
+                Manager.YuzuMarkerManager.Image.UnloadImageNotations();
                 Manager.YuzuMarkerManager.Image = Manager.YuzuMarkerManager.Project == null ? null : value;
-                // TODO: refactor end
-                
+            EndSection:
+                value?.LoadImageNotations();
                 RaisePropertyChanged("ImageSource");
                 RaisePropertyChanged("SelectedImageItem");
                 RaisePropertyChanged("NotationGroups");
@@ -117,19 +122,19 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
-        #region Property: LassoMode
-        private bool _LassoMode = false;
+        #region Property: LassoModeEnabled
+        private bool _lassoModeEnabled = false;
 
-        public bool LassoMode
+        public bool LassoModeEnabled
         {
             get
             {
-                return _LassoMode;
+                return _lassoModeEnabled;
             }
             set
             {
-                _LassoMode = value;
-                RaisePropertyChanged("LassoMode");
+                _lassoModeEnabled = value;
+                RaisePropertyChanged("LassoModeEnabled");
             }
         }
         #endregion
@@ -247,7 +252,7 @@ namespace YuzuMarker.ViewModel
                         {
                             try
                             {
-                                NotationGroups.Remove(SelectedNotationGroupItem);
+                                SelectedImageItem.RemoveAndUnloadNotationGroup(SelectedNotationGroupItem);
                                 RefreshImageList();
                             }
                             catch (Exception e)
@@ -348,6 +353,7 @@ namespace YuzuMarker.ViewModel
                             {
                                 if (MessageBox.Show("工程文件将被自动保存。确定继续？", "导入图片", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                                 {
+                                    Manager.YuzuMarkerManager.Image.WriteImageNotations();
                                     YuzuIO.SaveProject(Project);
                                     OpenFileDialog openFileDialog = new OpenFileDialog
                                     {

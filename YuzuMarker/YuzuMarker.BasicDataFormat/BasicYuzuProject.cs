@@ -53,6 +53,11 @@ namespace YuzuMarker.BasicDataFormat
         {
             IOUtils.EnsureDirectoryExist(System.IO.Path.Combine(Path, "./Images"));
         }
+
+        public void EnsureNotationFolderExist()
+        {
+            IOUtils.EnsureDirectoryExist(System.IO.Path.Combine(Path, "./Notations"));
+        }
         
         public void EnsurePsdFolderExist()
         {

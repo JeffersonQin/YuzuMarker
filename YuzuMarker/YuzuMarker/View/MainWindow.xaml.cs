@@ -53,7 +53,7 @@ namespace YuzuMarker.View
             long TimestampNow = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             if (ClickPoint.X == NewClickPoint.X && ClickPoint.Y == NewClickPoint.Y && TimestampNow - ClickTimestamp <= 500)
             {
-                Manager.YuzuMarkerManager.Image.CreateNewNotation((int)ClickPoint.X, (int)ClickPoint.Y, "", false);
+                Manager.YuzuMarkerManager.Image.CreateAndLoadNewNotationGroup((int)ClickPoint.X, (int)ClickPoint.Y, "", false);
             }
             // Clear status
             ClickPoint.X = 0;
@@ -98,7 +98,7 @@ namespace YuzuMarker.View
 
         private bool CanCustomMouseMoveEventHappen(object sender, MouseEventArgs e)
         {
-            if (!ViewModel.LassoMode) return false;
+            if (!ViewModel.LassoModeEnabled) return false;
             if (e.LeftButton == MouseButtonState.Released) return false;
             if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))) return false;
             return true;
@@ -129,7 +129,7 @@ namespace YuzuMarker.View
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (!ViewModel.LassoMode) return;
+            if (!ViewModel.LassoModeEnabled) return;
             if (e.Key != Key.Enter) return;
 
             if (ViewModel.LassoPoints.Count < 3)
@@ -162,13 +162,13 @@ namespace YuzuMarker.View
             LastCleaningNotation = ViewModel.SelectedNotationGroupItem.CleaningNotation;
             Manager.YuzuMarkerManager.PushMessage(ViewModel, "按住 Ctrl + 鼠标左键选择工作区域，点击画布外侧区域取消，Enter键确认区域");
             ViewModel.LassoPoints = new PointCollection();
-            ViewModel.LassoMode = true;
+            ViewModel.LassoModeEnabled = true;
             this.DidLassoModeFinished = DidLassoModeFinished;
         }
 
         private void DisableLassoMode()
         {
-            ViewModel.LassoMode = false;
+            ViewModel.LassoModeEnabled = false;
             Manager.YuzuMarkerManager.PopMessage(ViewModel);
         }
 
