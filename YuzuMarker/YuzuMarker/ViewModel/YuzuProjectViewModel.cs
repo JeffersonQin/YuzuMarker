@@ -252,7 +252,7 @@ namespace YuzuMarker.ViewModel
                         {
                             try
                             {
-                                NotationGroups.Remove(SelectedNotationGroupItem);
+                                SelectedImageItem.RemoveAndUnloadNotationGroup(SelectedNotationGroupItem);
                                 RefreshImageList();
                             }
                             catch (Exception e)
