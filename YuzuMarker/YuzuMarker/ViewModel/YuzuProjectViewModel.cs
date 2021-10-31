@@ -66,18 +66,13 @@ namespace YuzuMarker.ViewModel
             get => Manager.YuzuMarkerManager.Image;
             set
             {
-                if (Manager.YuzuMarkerManager.Project == null)
-                {
-                    Manager.YuzuMarkerManager.Image = null;
-                    goto EndSection;
-                }
                 if (Manager.YuzuMarkerManager.Image == null)
                 {
                     Manager.YuzuMarkerManager.Image = value;
                     goto EndSection;
                 }
                 Manager.YuzuMarkerManager.Image.UnloadImageNotations();
-                Manager.YuzuMarkerManager.Image = value;
+                Manager.YuzuMarkerManager.Image = Manager.YuzuMarkerManager.Project == null ? null : value;
             EndSection:
                 value?.LoadImageNotations();
                 RaisePropertyChanged("ImageSource");
