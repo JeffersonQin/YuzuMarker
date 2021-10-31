@@ -66,10 +66,20 @@ namespace YuzuMarker.ViewModel
             get => Manager.YuzuMarkerManager.Image;
             set
             {
-                // TODO: refactor start: load / dispose Cleaning Notation
-                Manager.YuzuMarkerManager.Image = Manager.YuzuMarkerManager.Project == null ? null : value;
-                // TODO: refactor end
-                
+                if (Manager.YuzuMarkerManager.Project == null)
+                {
+                    Manager.YuzuMarkerManager.Image = null;
+                    goto EndSection;
+                }
+                if (Manager.YuzuMarkerManager.Image == null)
+                {
+                    Manager.YuzuMarkerManager.Image = value;
+                    goto EndSection;
+                }
+                Manager.YuzuMarkerManager.Image.UnloadImageNotations();
+                Manager.YuzuMarkerManager.Image = value;
+            EndSection:
+                value?.LoadImageNotations();
                 RaisePropertyChanged("ImageSource");
                 RaisePropertyChanged("SelectedImageItem");
                 RaisePropertyChanged("NotationGroups");
