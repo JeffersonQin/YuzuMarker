@@ -122,19 +122,19 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
-        #region Property: LassoMode
-        private bool _LassoMode = false;
+        #region Property: LassoModeEnabled
+        private bool _lassoModeEnabled = false;
 
-        public bool LassoMode
+        public bool LassoModeEnabled
         {
             get
             {
-                return _LassoMode;
+                return _lassoModeEnabled;
             }
             set
             {
-                _LassoMode = value;
-                RaisePropertyChanged("LassoMode");
+                _lassoModeEnabled = value;
+                RaisePropertyChanged("LassoModeEnabled");
             }
         }
         #endregion
