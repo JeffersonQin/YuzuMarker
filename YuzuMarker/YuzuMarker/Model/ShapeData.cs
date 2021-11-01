@@ -35,5 +35,10 @@ namespace YuzuMarker.Model
             get => _height;
             set => SetProperty(ref _height, value);
         }
+
+        public ShapeData()
+        {
+            X = Y = Width = Height = 0;
+        }
     }
 }
