@@ -166,5 +166,17 @@ namespace YuzuMarker.Properties {
                 this["SuccessStatusColor"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2142433535")]
+        public uint SelectionMaskFillColor {
+            get {
+                return ((uint)(this["SelectionMaskFillColor"]));
+            }
+            set {
+                this["SelectionMaskFillColor"] = value;
+            }
+        }
     }
 }
