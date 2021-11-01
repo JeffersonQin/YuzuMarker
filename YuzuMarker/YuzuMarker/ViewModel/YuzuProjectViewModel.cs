@@ -3,14 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using OpenCvSharp;
 using YuzuMarker.BasicDataFormat;
 using YuzuMarker.Common;
 using YuzuMarker.DataFormat;
+using YuzuMarker.Model;
+using YuzuMarker.Utils;
 
 namespace YuzuMarker.ViewModel
 {
@@ -71,10 +76,12 @@ namespace YuzuMarker.ViewModel
                     Manager.YuzuMarkerManager.Image = value;
                     goto EndSection;
                 }
-                Manager.YuzuMarkerManager.Image.UnloadImageNotations();
+                if (!_refreshingImageList)
+                    Manager.YuzuMarkerManager.Image.UnloadImageNotations();
                 Manager.YuzuMarkerManager.Image = Manager.YuzuMarkerManager.Project == null ? null : value;
             EndSection:
-                value?.LoadImageNotations();
+                if (!_refreshingImageList)
+                    value?.LoadImageNotations();
                 RaisePropertyChanged("ImageSource");
                 RaisePropertyChanged("SelectedImageItem");
                 RaisePropertyChanged("NotationGroups");
@@ -86,7 +93,6 @@ namespace YuzuMarker.ViewModel
         #region Property: NotationGroups
         public ObservableCollection<BasicYuzuNotationGroup> NotationGroups 
             => SelectedImageItem?.NotationGroups;
-
         #endregion
 
         #region Property: SelectedNotationGroupItem
@@ -122,23 +128,150 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
-        #region Property: LassoModeEnabled
-        private bool _lassoModeEnabled = false;
+        #region Property: SelectionModeEnabled
+        private bool _selectionModeEnabled = false;
 
-        public bool LassoModeEnabled
+        public bool SelectionModeEnabled
         {
             get
             {
-                return _lassoModeEnabled;
+                return _selectionModeEnabled;
             }
             set
             {
-                _lassoModeEnabled = value;
-                RaisePropertyChanged("LassoModeEnabled");
+                _selectionModeEnabled = value;
+                RaisePropertyChanged("SelectionModeEnabled");
+            }
+        }
+        #endregion
+        
+        #region Property: SelectionDrawing
+        private bool _selectionDrawing = false;
+        
+        public bool SelectionDrawing
+        {
+            get => _selectionDrawing;
+            set
+            {
+                if (_selectionDrawing == value) return;
+                _selectionDrawing = value;
+                if (!value)
+                {
+                    try
+                    {
+                        switch (SelectionType)
+                        {
+                            case SelectionType.Lasso:
+                                if (LassoPoints.Count < 3)
+                                    throw new Exception("套索未选择工作区域，操作失败");
+                                break;
+                            case SelectionType.Rectangle:
+                                if (RectangleShapeData.Width == 0 || RectangleShapeData.Height == 0)
+                                    throw new Exception("未框选工作区域，操作失败");
+                                break;
+                            case SelectionType.Oval:
+                                if (OvalShapeData.Width == 0 || OvalShapeData.Height == 0)
+                                    throw new Exception("未圈选工作区域，操作失败");
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Utils.ExceptionHandler.ShowExceptionMessage(ex);
+                    }
+
+                    var newUMat = UMat.Zeros(SelectionMaskUMat.Rows, SelectionMaskUMat.Cols, MatType.CV_8UC1);
+
+                    switch (SelectionType)
+                    {
+                        case SelectionType.Lasso:
+                            // Photoshop style: FillConvexPoly
+                            Cv2.FillPoly(newUMat, InputArray.Create(LassoPoints.ToOpenCvPoint()), new Scalar(255));
+                            break;
+                        case SelectionType.Rectangle:
+                            if (RectangleShapeData.Width < 0)
+                            {
+                                RectangleShapeData.Width *= -1;
+                                RectangleShapeData.X -= RectangleShapeData.Width;
+                            }
+                            if (RectangleShapeData.Height < 0)
+                            {
+                                RectangleShapeData.Height *= -1;
+                                RectangleShapeData.Y -= RectangleShapeData.Height;
+                            }
+                            Cv2.Rectangle(newUMat, new OpenCvSharp.Point(RectangleShapeData.X, RectangleShapeData.Y), 
+                            new OpenCvSharp.Point(RectangleShapeData.X + RectangleShapeData.Width, RectangleShapeData.Y + RectangleShapeData.Height), 
+                            new Scalar(255), -1);
+                            break;
+                        case SelectionType.Oval:
+                            if (OvalShapeData.Width < 0)
+                            {
+                                OvalShapeData.Width *= -1;
+                                OvalShapeData.X -= OvalShapeData.Width;
+                            }
+                            if (OvalShapeData.Height < 0)
+                            {
+                                OvalShapeData.Height *= -1;
+                                OvalShapeData.Y -= OvalShapeData.Height;
+                            }
+                            Cv2.Ellipse(newUMat, new RotatedRect(
+                                new Point2f((float)(OvalShapeData.X + OvalShapeData.Width / 2.0), (float)(OvalShapeData.Y + OvalShapeData.Height / 2.0)), 
+                                    new Size2f(OvalShapeData.Width, OvalShapeData.Height), 0), new Scalar(255), -1);
+                            break;
+                    }
+                    
+                    switch (SelectionMode)
+                    {
+                        case SelectionMode.New:
+                            SelectionMaskUMat.Dispose();
+                            SelectionMaskUMat = newUMat;
+                            break;
+                        case SelectionMode.Add:
+                            Cv2.BitwiseOr(SelectionMaskUMat, newUMat, SelectionMaskUMat);
+                            newUMat.Dispose();
+                            break;
+                        case SelectionMode.Subtract:
+                            Cv2.BitwiseNot(newUMat, newUMat);
+                            Cv2.BitwiseAnd(SelectionMaskUMat, newUMat, SelectionMaskUMat);
+                            newUMat.Dispose();
+                            break;
+                        case SelectionMode.Intersect:
+                            Cv2.BitwiseAnd(SelectionMaskUMat, newUMat, SelectionMaskUMat);
+                            newUMat.Dispose();
+                            break;
+                    }
+                    
+                    RaisePropertyChanged("SelectionMaskUMat");
+                    
+                    LassoPoints = new PointCollection();
+                    RectangleShapeData = new ShapeData();
+                    OvalShapeData = new ShapeData();
+                }
+                RaisePropertyChanged("SelectionDrawing");
             }
         }
         #endregion
 
+        #region Property: SelectionType
+        private SelectionType _selectionType = SelectionType.Lasso;
+
+        public SelectionType SelectionType
+        {
+            get => _selectionType;
+            set => SetProperty(ref _selectionType, value);
+        }
+        #endregion
+
+        #region Property: SelectionMode
+        private SelectionMode _selectionMode = SelectionMode.New;
+
+        public SelectionMode SelectionMode
+        {
+            get => _selectionMode;
+            set => SetProperty(ref _selectionMode, value);
+        }
+        #endregion
+        
         #region Property: LassoPoints (Used for Lasso Polygon)
         private PointCollection _LassoPoints = new PointCollection();
 
@@ -155,10 +288,40 @@ namespace YuzuMarker.ViewModel
             }
         }
         #endregion
+
+        #region Property: RectangleShapeData (Used for Lasso Rectangle)
+        private ShapeData _rectangleShapeData = new ShapeData();
         
-        // TODO: refactor start: 增加 lasso mask Property
+        public ShapeData RectangleShapeData
+        {
+            get => _rectangleShapeData;
+            set => SetProperty(ref _rectangleShapeData, value);
+        }
+        #endregion
+
+        #region Property: OvalShapeData (Used for Lasso Oval)
+        private ShapeData _ovalShapeData = new ShapeData();
         
-        // TODO: refactor end
+        public ShapeData OvalShapeData
+        {
+            get => _ovalShapeData;
+            set => SetProperty(ref _ovalShapeData, value);
+        }
+        #endregion
+
+        #region Property: SelectionMaskUMat
+        private UMat _selectionMaskUMat;
+
+        public UMat SelectionMaskUMat
+        {
+            get => _selectionMaskUMat;
+            set
+            {
+                _selectionMaskUMat = value;
+                RaisePropertyChanged("SelectionMaskUMat");
+            }
+        }
+        #endregion
 
         #region Property: SelectedNotationGroupText
         public string SelectedNotationGroupText
@@ -176,7 +339,7 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
-        #region Command: Export Custom Cleaning Mask to Phot
+        #region Command: Export Custom Cleaning Mask to Photoshop
 
         private DelegateCommand _ExportCustomCleaningMaskToPhotoshop;
 
@@ -195,9 +358,6 @@ namespace YuzuMarker.ViewModel
                                     SelectedImageItem.GetImageFilePath(), SelectedImageItem.GetImagePsdPath());
                                 
                                 // TODO: Copy Layer to specific path
-                                
-                                PSBridge.CommonWrapper.PerformSelection(SelectedNotationGroupItem.CleaningNotation.CleaningPoints);
-                                PSBridge.CommonWrapper.ApplyMask();
                             }
                             catch (Exception e)
                             {
@@ -600,8 +760,11 @@ namespace YuzuMarker.ViewModel
         #endregion
 
         #region Refresh children attributes (which are not notify objects), also used for refreshing notationGroup, because it is converted as a whole
+        private bool _refreshingImageList = false;
+        
         public void RefreshImageList()
         {
+            _refreshingImageList = true;
             // Backup properties
             var project = Project;
             var selectedImageItem = SelectedImageItem;
@@ -619,6 +782,7 @@ namespace YuzuMarker.ViewModel
             // refresh properties again
             RaisePropertyChanged("Images");
             RaisePropertyChanged("NotationGroups");
+            _refreshingImageList = false;
         }
         #endregion
     }

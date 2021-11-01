@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using YuzuMarker.DataFormat;
+using YuzuMarker.Model;
 using YuzuMarker.Utils;
 using YuzuMarker.ViewModel;
 
@@ -80,9 +81,7 @@ namespace YuzuMarker.View
             }
         }
         #endregion
-
-        // TODO: refactor start: 重写 lasso 交互
-        // lasso 用 PointsCollection 没问题, 每次结束以后 / 开始之前 都需要和 cv::Mat 做运算，重新渲染，每次圈完以后 lasso 消失
+        
         #region Canvas Item Clicking Event
         private void NotationRenderItemClicked(object sender, MouseButtonEventArgs e)
         {
@@ -90,7 +89,7 @@ namespace YuzuMarker.View
         }
         #endregion
 
-        #region Lasso Drawing Event Handling
+        #region Selection Drawing Event Handling
         private bool CanDefaultMouseMoveEventHappen(object sender, MouseEventArgs e)
         {
             return !(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl));
@@ -98,114 +97,145 @@ namespace YuzuMarker.View
 
         private bool CanCustomMouseMoveEventHappen(object sender, MouseEventArgs e)
         {
-            if (!ViewModel.LassoModeEnabled) return false;
+            if (!ViewModel.SelectionModeEnabled) return false;
             if (e.LeftButton == MouseButtonState.Released) return false;
             if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))) return false;
             return true;
         }
         
+        // Handle Selection Drawing
         private void CustomMouseMoveEvent(object sender, MouseEventArgs e)
         {
-            var pc = ViewModel.LassoPoints.Clone();
-            pc.Add(e.GetPosition((IInputElement) sender));
-            ViewModel.LassoPoints = pc;
+            if (!ViewModel.SelectionDrawing) return;
+            var mousePoint = e.GetPosition((IInputElement) sender);
+            switch (ViewModel.SelectionType)
+            {
+                case SelectionType.Lasso:
+                    var pc = ViewModel.LassoPoints.Clone();
+                    pc.Add(mousePoint);
+                    ViewModel.LassoPoints = pc;
+                    break;
+                case SelectionType.Rectangle:
+                    ViewModel.RectangleShapeData.Width = (float)(mousePoint.X - ViewModel.RectangleShapeData.X);
+                    ViewModel.RectangleShapeData.Height = (float)(mousePoint.Y - ViewModel.RectangleShapeData.Y);
+                    ViewModel.RaisePropertyChanged("RectangleShapeData");
+                    break;
+                case SelectionType.Oval:
+                    ViewModel.OvalShapeData.Width = (float)(mousePoint.X - ViewModel.OvalShapeData.X);
+                    ViewModel.OvalShapeData.Height = (float)(mousePoint.Y - ViewModel.OvalShapeData.Y);
+                    ViewModel.RaisePropertyChanged("OvalShapeData");
+                    break;
+            }
         }
 
-        private void LassoMouseDownEvent(object sender, MouseButtonEventArgs e)
+        // Start Selection Drawing
+        private void SelectionMouseDownEvent(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
+            if (e.ChangedButton == MouseButton.Left && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
-                var pc = new PointCollection { e.GetPosition((IInputElement)sender) };
-                ViewModel.LassoPoints = pc;
+                ViewModel.SelectionDrawing = true;
+                var mousePoint = e.GetPosition((IInputElement) sender);
+                switch (ViewModel.SelectionType)
+                {
+                    case SelectionType.Lasso:
+                        var pc = new PointCollection { mousePoint };
+                        ViewModel.LassoPoints = pc;
+                        break;
+                    case SelectionType.Rectangle:
+                        ViewModel.RectangleShapeData.X = (float)mousePoint.X;
+                        ViewModel.RectangleShapeData.Y = (float)mousePoint.Y;
+                        ViewModel.RectangleShapeData.Width = ViewModel.RectangleShapeData.Height = 0;
+                        ViewModel.RaisePropertyChanged("RectangleShapeData");
+                        break;
+                    case SelectionType.Oval:
+                        ViewModel.OvalShapeData.X = (float)mousePoint.X;
+                        ViewModel.OvalShapeData.Y = (float)mousePoint.Y;
+                        ViewModel.RectangleShapeData.Width = ViewModel.RectangleShapeData.Height = 0;
+                        ViewModel.RaisePropertyChanged("OvalShapeData");
+                        break;
+                }
             }
+        }
+        
+        // Stop Selection Drawing
+        private void Window_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (ViewModel.SelectionDrawing) ViewModel.SelectionDrawing = false;
+        }
+        
+        // Stop Selection Drawing
+        private void Window_OnKeyUp(object sender, KeyEventArgs e)
+        {
+            if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))) ViewModel.SelectionDrawing = false;
         }
         #endregion
 
-        #region Lasso UI Finish / Cancel Event Handling
+        #region Selection UI Finish / Cancel Event Handling
+        // Cancel Selection
         private void ShadeMouseDown(object sender, MouseButtonEventArgs e)
         {
-            CancelLassoSelection();
+            DisableSelectionMode();
         }
 
+        // Finish Selection
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (!ViewModel.LassoModeEnabled) return;
+            if (!ViewModel.SelectionModeEnabled) return;
             if (e.Key != Key.Enter) return;
-
-            if (ViewModel.LassoPoints.Count < 3)
-            {
-                try
-                {
-                    throw new Exception("未选择工作区域，操作失败");
-                }
-                catch (Exception ex)
-                {
-                    Utils.ExceptionHandler.ShowExceptionMessage(ex);
-                    CancelLassoSelection();
-                }
-            }
-            FinishLassoSelection();
+            DidSelectionModeFinished?.Invoke();
+            DisableSelectionMode();
         }
         #endregion
 
-        #region Lasso Delegate Defining
-        private delegate void LassoModeEventHandler();
+        #region Selection Delegate Defining
+        private delegate void SelectionModeEventHandler();
 
-        private event LassoModeEventHandler DidLassoModeFinished;
+        private event SelectionModeEventHandler DidSelectionModeFinished;
         #endregion
 
-        #region Lasso Enable / Finish / Cancel Wrapping
-        private YuzuCleaningNotation LastCleaningNotation = null;
-
-        private void EnableLassoMode(LassoModeEventHandler DidLassoModeFinished)
+        #region Selection Enable / Finish Wrapping
+        private void EnableSelectionMode(SelectionModeEventHandler didSelectionModeFinished)
         {
-            LastCleaningNotation = ViewModel.SelectedNotationGroupItem.CleaningNotation;
             Manager.YuzuMarkerManager.PushMessage(ViewModel, "按住 Ctrl + 鼠标左键选择工作区域，点击画布外侧区域取消，Enter键确认区域");
+            ViewModel.SelectionMaskUMat = Manager.YuzuMarkerManager.Group.CleaningNotation.CleaningMask.Clone();
             ViewModel.LassoPoints = new PointCollection();
-            ViewModel.LassoModeEnabled = true;
-            this.DidLassoModeFinished = DidLassoModeFinished;
+            ViewModel.RectangleShapeData = new ShapeData();
+            ViewModel.OvalShapeData = new ShapeData();
+            ViewModel.SelectionModeEnabled = true;
+            DidSelectionModeFinished = didSelectionModeFinished;
         }
 
-        private void DisableLassoMode()
+        private void DisableSelectionMode()
         {
-            ViewModel.LassoModeEnabled = false;
+            ViewModel.SelectionDrawing = false;
+            ViewModel.SelectionModeEnabled = false;
+            ViewModel.SelectionMaskUMat.Dispose();
             Manager.YuzuMarkerManager.PopMessage(ViewModel);
         }
-
-        private void CancelLassoSelection()
-        {
-            ViewModel.SelectedNotationGroupItem.CleaningNotation = LastCleaningNotation;
-            ViewModel.RefreshImageList();
-            DisableLassoMode();
-        }
-
-        private void FinishLassoSelection()
-        {
-            DidLassoModeFinished?.Invoke();
-            DisableLassoMode();
-        }
         #endregion
 
-        #region Lasso CheckBox Group Handling
-        private void DidLassoModeFinishedForCustomCleaning()
+        #region Selection CheckBox Group Handling
+        private void didSelectionModeFinishedForCustomCleaning()
         {
-            ViewModel.SelectedNotationGroupItem.CleaningNotation = 
-                new YuzuCleaningNotation(YuzuCleaningNotationType.Custom, ViewModel.LassoPoints.ToGenericPoints());
-            ViewModel.RefreshImageList();
+            // ViewModel.SelectedNotationGroupItem.CleaningNotation = 
+            //     new YuzuCleaningNotation(YuzuCleaningNotationType.Custom, ViewModel.LassoPoints.ToGenericPoints());
+            // ViewModel.RefreshImageList();
+            // TODO: 用　MaskUMat 来保存 Custom Cleaning 的 Mask
         }
 
         private void CleaningCustomChecked(object sender, RoutedEventArgs e)
         {
             // Judge whether this is triggered by data binding
             if (ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Custom) return;
-            EnableLassoMode(DidLassoModeFinishedForCustomCleaning);
+            EnableSelectionMode(didSelectionModeFinishedForCustomCleaning);
         }
 
-        private void DidLassoModeFinishedForNormalCleaning()
+        private void didSelectionModeFinishedForNormalCleaning()
         {
-            ViewModel.SelectedNotationGroupItem.CleaningNotation =
-                new YuzuCleaningNotation(YuzuCleaningNotationType.Normal, ViewModel.LassoPoints.ToGenericPoints());
-            ViewModel.RefreshImageList();
+            // ViewModel.SelectedNotationGroupItem.CleaningNotation =
+            //     new YuzuCleaningNotation(YuzuCleaningNotationType.Normal, ViewModel.LassoPoints.ToGenericPoints());
+            // ViewModel.RefreshImageList();
+            // TODO: 用 MaskUMat 来保存 Normal Cleaning 的 Mask
         }
         
         private void CleaningNormalChecked(object sender, RoutedEventArgs e)
@@ -217,9 +247,9 @@ namespace YuzuMarker.View
             ViewModel.RefreshImageList();
         }
 
-        private void CleaningNormalLassoModeButtonClicked(object sender, RoutedEventArgs e)
+        private void CleaningNormalSelectionModeButtonClicked(object sender, RoutedEventArgs e)
         {
-            EnableLassoMode(DidLassoModeFinishedForNormalCleaning);
+            EnableSelectionMode(didSelectionModeFinishedForNormalCleaning);
         }
         #endregion
         // TODO: refactor end
