@@ -12,6 +12,8 @@
         x:Class="YuzuMarker.View.MainWindow"
         mc:Ignorable="d"
         KeyDown="Window_KeyDown"
+        KeyUp="Window_OnKeyUp"
+        MouseLeftButtonUp="Window_OnMouseLeftButtonUp"
         Title="YuzuMarker by gyro永不抽风" Height="600" Width="1000">
     <Window.DataContext>
         <vm:YuzuProjectViewModel/>
@@ -31,6 +33,13 @@
         <vc:NotationGroup2CleaningStatusString x:Key="NotationGroup2CleaningStatusString"/>
         <vc:NotationGroup2CleaningStatusColor x:Key="NotationGroup2CleaningStatusColor"/>
         <vc:Cleaning2StatusString x:Key="Cleaning2StatusString"/>
+        <vc:SelectionControllerVisibility x:Key="SelectionControllerVisibility"/>
+        <vc:MaskUMat2Bitmap x:Key="MaskUMat2Bitmap"/>
+        <vc:SelectionModeConverter x:Key="SelectionModeConverter"/>
+        <vc:SelectionTypeConverter x:Key="SelectionTypeConverter"/>
+        <vc:ShapeData2LeftConverter x:Key="ShapeData2LeftConverter"/>
+        <vc:ShapeData2TopConverter x:Key="ShapeData2TopConverter"/>
+        <vc:NegativeLengthDataConverter x:Key="NegativeLengthDataConverter"/>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Command="{Binding CreateProject}" Modifiers="Ctrl" Key="N"/>
@@ -99,60 +108,104 @@
                         </ListView.View>
                     </ListView>
             </Grid>
-            <Rectangle Fill="#7F000000" Visibility="{Binding LassoModeEnabled, Converter={StaticResource Boolean2Visibility}}" MouseDown="ShadeMouseDown"/>
+            <Rectangle Fill="#7F000000" Visibility="{Binding SelectionModeEnabled, Converter={StaticResource Boolean2Visibility}}" MouseDown="ShadeMouseDown"/>
         </Grid>
         <!--这里的数据绑定的DataContext是ZoomView, 所以定义了一个BindingProxy来将DataContext换为祖先-->
-        <uc:ZoomView CanDefaultMouseMoveEvent="CanDefaultMouseMoveEventHappen" CustomMouseMoveEvent="CustomMouseMoveEvent" CanCustomMouseMoveEvent="CanCustomMouseMoveEventHappen"
-            ContentHeight="{Binding Data.ImageSource.Height, Source={StaticResource BindingProxy}}" 
-            ContentWidth="{Binding Data.ImageSource.Width, Source={StaticResource BindingProxy}}" 
-            ContentBackground="#FFDAD5D5" Grid.Row="1" Grid.Column="2">
-            <uc:ZoomView.ContainerContent>
-                <Grid ClipToBounds="True" MouseDown="ImageAreaMouseDown" MouseUp="ImageAreaMouseUp">
-                    <Image Source="{Binding Data.ImageSource, Mode=OneWay, Source={StaticResource BindingProxy}}"></Image>
-                    <ItemsControl ItemsSource="{Binding Data.NotationGroups, Mode=OneWay, Source={StaticResource BindingProxy}}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <Canvas/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <ContentPresenter MouseDown="NotationRenderItemClicked" Content="{Binding Converter={StaticResource NotationGroup2CanvasItem}}"/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    <ItemsControl ItemsSource="{Binding Data.NotationGroups, Mode=OneWay, Source={StaticResource BindingProxy}}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <Canvas/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemContainerStyle>
-                            <Style>
-                                <Setter Property="Canvas.Left" Value="{Binding X, Mode=OneWay}"/>
-                                <Setter Property="Canvas.Top" Value="{Binding Y, Mode=OneWay}"/>
-                            </Style>
-                        </ItemsControl.ItemContainerStyle>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Button Command="{Binding Data.SelectNotationGroup, Source={StaticResource BindingProxy}}"
-                                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"
-                                        Content="{Binding Converter={StaticResource NotationGroup2Index}}" Width="20"/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    <Rectangle MouseDown="LassoMouseDownEvent" Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoModeBackgroundColor}" 
-                        Visibility="{Binding Data.LassoModeEnabled, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
-                    <!--TODO: refactor start: 增加 Image (Lasso Mask)-->
-                    <!--TODO: refactor end-->
-                    <Polygon Points="{Binding Data.LassoPoints, Source={StaticResource BindingProxy}}" 
-                             Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoFillColor}" 
-                             Stroke="{Binding Source={x:Static p:Settings.Default}, Path=LassoStrokeColor}"
-                             StrokeThickness="{Binding Source={x:Static p:Settings.Default}, Path=UIPolygonStrokeThickness}"
-                             Visibility="{Binding Data.LassoModeEnabled, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
+        <Grid Grid.Row="1" Grid.Column="2" ClipToBounds="True">
+            <uc:ZoomView CanDefaultMouseMoveEvent="CanDefaultMouseMoveEventHappen" CustomMouseMoveEvent="CustomMouseMoveEvent" CanCustomMouseMoveEvent="CanCustomMouseMoveEventHappen"
+                ContentHeight="{Binding Data.ImageSource.Height, Source={StaticResource BindingProxy}}" 
+                ContentWidth="{Binding Data.ImageSource.Width, Source={StaticResource BindingProxy}}" 
+                ContentBackground="#FFDAD5D5">
+                <uc:ZoomView.ContainerContent>
+                    <Grid ClipToBounds="True" MouseDown="ImageAreaMouseDown" MouseUp="ImageAreaMouseUp">
+                        <Image Source="{Binding Data.ImageSource, Mode=OneWay, Source={StaticResource BindingProxy}}"></Image>
+                        <ItemsControl ItemsSource="{Binding Data.NotationGroups, Mode=OneWay, Source={StaticResource BindingProxy}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ContentPresenter MouseDown="NotationRenderItemClicked" Content="{Binding Converter={StaticResource NotationGroup2CanvasItem}}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <ItemsControl ItemsSource="{Binding Data.NotationGroups, Mode=OneWay, Source={StaticResource BindingProxy}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style>
+                                    <Setter Property="Canvas.Left" Value="{Binding X, Mode=OneWay}"/>
+                                    <Setter Property="Canvas.Top" Value="{Binding Y, Mode=OneWay}"/>
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding Data.SelectNotationGroup, Source={StaticResource BindingProxy}}"
+                                            CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"
+                                            Content="{Binding Converter={StaticResource NotationGroup2Index}}" Width="20"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <Rectangle MouseDown="SelectionMouseDownEvent" Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoModeBackgroundColor}" 
+                            Visibility="{Binding Data.SelectionModeEnabled, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
+                        <uc:NonClickableImage Visibility="{Binding Data.SelectionModeEnabled, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"
+                            Source="{Binding Data.SelectionMaskUMat, Source={StaticResource BindingProxy}, Converter={StaticResource MaskUMat2Bitmap}}"/>
+                        <Canvas Visibility="{Binding Data.SelectionModeEnabled, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}">
+                            <Rectangle Canvas.Top="{Binding Data.RectangleShapeData, Source={StaticResource BindingProxy}, Converter={StaticResource ShapeData2TopConverter}}"
+                                       Canvas.Left="{Binding Data.RectangleShapeData, Source={StaticResource BindingProxy}, Converter={StaticResource ShapeData2LeftConverter}}"
+                                       Width="{Binding Data.RectangleShapeData.Width, Source={StaticResource BindingProxy}, Converter={StaticResource NegativeLengthDataConverter}}"
+                                       Height="{Binding Data.RectangleShapeData.Height, Source={StaticResource BindingProxy}, Converter={StaticResource NegativeLengthDataConverter}}" 
+                                       Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoFillColor}" 
+                                       Stroke="{Binding Source={x:Static p:Settings.Default}, Path=LassoStrokeColor}"
+                                       StrokeThickness="{Binding Source={x:Static p:Settings.Default}, Path=UIPolygonStrokeThickness}"/>
+                            <Ellipse Canvas.Top="{Binding Data.OvalShapeData, Source={StaticResource BindingProxy}, Converter={StaticResource ShapeData2TopConverter}}"
+                                     Canvas.Left="{Binding Data.OvalShapeData, Source={StaticResource BindingProxy}, Converter={StaticResource ShapeData2LeftConverter}}"
+                                     Width="{Binding Data.OvalShapeData.Width, Source={StaticResource BindingProxy}, Converter={StaticResource NegativeLengthDataConverter}}"
+                                     Height="{Binding Data.OvalShapeData.Height, Source={StaticResource BindingProxy}, Converter={StaticResource NegativeLengthDataConverter}}" 
+                                     Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoFillColor}" 
+                                     Stroke="{Binding Source={x:Static p:Settings.Default}, Path=LassoStrokeColor}"
+                                     StrokeThickness="{Binding Source={x:Static p:Settings.Default}, Path=UIPolygonStrokeThickness}"/>
+                            <Polygon Points="{Binding Data.LassoPoints, Source={StaticResource BindingProxy}}" 
+                                     Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoFillColor}" 
+                                     Stroke="{Binding Source={x:Static p:Settings.Default}, Path=LassoStrokeColor}"
+                                     StrokeThickness="{Binding Source={x:Static p:Settings.Default}, Path=UIPolygonStrokeThickness}"/>
+                        </Canvas>
+                    </Grid>
+                </uc:ZoomView.ContainerContent>
+            </uc:ZoomView>
+            <StackPanel Margin="25">
+                <StackPanel.Visibility>
+                    <MultiBinding Converter="{StaticResource SelectionControllerVisibility}">
+                        <Binding Path="SelectionModeEnabled"></Binding>
+                        <Binding Path="SelectionDrawing"></Binding>
+                    </MultiBinding>
+                </StackPanel.Visibility>
+                <Grid Background="#7F000000">
+                    <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <RadioButton Margin="5" GroupName="SelectionMode" Style="{StaticResource {x:Type ToggleButton}}" Content="New"
+                                     IsChecked="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}, ConverterParameter=0, Mode=TwoWay}"/>
+                        <RadioButton Margin="5" GroupName="SelectionMode" Style="{StaticResource {x:Type ToggleButton}}" Content="Add"
+                                     IsChecked="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}, ConverterParameter=1, Mode=TwoWay}"/>
+                        <RadioButton Margin="5" GroupName="SelectionMode" Style="{StaticResource {x:Type ToggleButton}}" Content="Subtract"
+                                     IsChecked="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}, ConverterParameter=2, Mode=TwoWay}"/>
+                        <RadioButton Margin="5" GroupName="SelectionMode" Style="{StaticResource {x:Type ToggleButton}}" Content="Intersect"
+                                     IsChecked="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}, ConverterParameter=3, Mode=TwoWay}"/>
+                        <Border Width="1" Margin="2" Background="White"/>
+                        <RadioButton Margin="5" GroupName="SelectionType" Style="{StaticResource {x:Type ToggleButton}}" Content="Lasso"
+                                     IsChecked="{Binding SelectionType, Converter={StaticResource SelectionTypeConverter}, ConverterParameter=0, Mode=TwoWay}"/>
+                        <RadioButton Margin="5" GroupName="SelectionType" Style="{StaticResource {x:Type ToggleButton}}" Content="Rect" 
+                                     IsChecked="{Binding SelectionType, Converter={StaticResource SelectionTypeConverter}, ConverterParameter=1, Mode=TwoWay}"/>
+                        <RadioButton Margin="5" GroupName="SelectionType" Style="{StaticResource {x:Type ToggleButton}}" Content="Oval"
+                                     IsChecked="{Binding SelectionType, Converter={StaticResource SelectionTypeConverter}, ConverterParameter=2, Mode=TwoWay}"/>
+                    </StackPanel>
                 </Grid>
-            </uc:ZoomView.ContainerContent>
-        </uc:ZoomView>
+            </StackPanel>
+        </Grid>
         <Grid Grid.Row="1" Grid.Column="4" ClipToBounds="True">
             <Grid>
                 <Grid.RowDefinitions>
@@ -268,7 +321,7 @@
                                         <StackPanel>
                                             <TextBlock>正常涂白</TextBlock>
                                             <WrapPanel IsEnabled="{Binding ElementName=NormalCleaningRadioButton, Path=IsChecked}">
-                                                <Button Margin="2" Click="CleaningNormalLassoModeButtonClicked">套索选择</Button>
+                                                <Button Margin="2" Click="CleaningNormalSelectionModeButtonClicked">套索选择</Button>
                                                 <Button Margin="2">选择自动识别的气泡</Button>
                                                 <Button Margin="2">缩小区域1单位</Button>
                                                 <Button Margin="2">放大区域1单位</Button>
@@ -301,7 +354,7 @@
                     <TextBlock x:Name="GlobalStatusInformationLabel" TextWrapping="Wrap" Text="{Binding TopMessage}"/>
                 </StatusBar>
             </Grid>
-            <Rectangle Fill="#7F000000" Visibility="{Binding LassoModeEnabled, Converter={StaticResource Boolean2Visibility}}" MouseDown="ShadeMouseDown"/>
+            <Rectangle Fill="#7F000000" Visibility="{Binding SelectionModeEnabled, Converter={StaticResource Boolean2Visibility}}" MouseDown="ShadeMouseDown"/>
         </Grid>
     </Grid>
 </Window>

@@ -28,7 +28,9 @@ namespace YuzuMarker.DataFormat
                 var notationGroup = new YuzuNotationGroup(image as YuzuImage, timestamp, x, y, text, finished);
 
                 // Cleaning Notation
-                notationGroup.CleaningNotation = new YuzuCleaningNotation(YuzuCleaningNotationType.Normal);
+                var cleaningText = File.ReadAllText(Path.Combine(image.GetImageNotationPath(), "./" + timestamp + "-cleaning.json"));
+                var cleaningJson = JObject.Parse(cleaningText);
+                notationGroup.CleaningNotation = new YuzuCleaningNotation((YuzuCleaningNotationType)int.Parse(cleaningJson["type"].ToString()));
                 
                 // Other Notations
 
@@ -55,6 +57,9 @@ namespace YuzuMarker.DataFormat
                     var cleaningMaskTargetPath = Path.Combine(notationGroup.ParentImage.GetImageNotationPath(), "./" + notationGroup.Timestamp + "-cleaning-mask.png");
                     File.Copy(tempCleaningMaskPath, cleaningMaskTargetPath, true);
                 }
+                var cleaningJson = new JObject();
+                cleaningJson["type"] = (int)notationGroup.CleaningNotation.CleaningNotationType;
+                File.WriteAllText(Path.Combine(notationGroup.ParentImage.GetImageNotationPath(), "./" + notationGroup.Timestamp + "-cleaning.json"), cleaningJson.ToString());
 
                 // Other Notations
             });

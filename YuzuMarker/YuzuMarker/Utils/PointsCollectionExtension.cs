@@ -21,5 +21,13 @@ namespace YuzuMarker.Utils
             points.ForEach(p => pointCollection.Add(new System.Windows.Point(p.X, p.Y)));
             return pointCollection;
         }
+
+        public static OpenCvSharp.Point[] ToOpenCvPoint(this PointCollection pointCollection)
+        {
+            OpenCvSharp.Point[] points = new OpenCvSharp.Point[pointCollection.Count];
+            for (var i = 0; i < pointCollection.Count; i++)
+                points[i] = new OpenCvSharp.Point((int)pointCollection[i].X, (int)pointCollection[i].Y);
+            return points;
+        }
     }
 }
