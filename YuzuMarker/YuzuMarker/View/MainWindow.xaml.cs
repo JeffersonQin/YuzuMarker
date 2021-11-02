@@ -217,10 +217,10 @@ namespace YuzuMarker.View
         #region Selection CheckBox Group Handling
         private void didSelectionModeFinishedForCustomCleaning()
         {
-            // ViewModel.SelectedNotationGroupItem.CleaningNotation = 
-            //     new YuzuCleaningNotation(YuzuCleaningNotationType.Custom, ViewModel.LassoPoints.ToGenericPoints());
-            // ViewModel.RefreshImageList();
-            // TODO: 用　MaskUMat 来保存 Custom Cleaning 的 Mask
+            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.Dispose();
+            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask = ViewModel.SelectionMaskUMat.Clone();
+            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType = YuzuCleaningNotationType.Custom;
+            ViewModel.RefreshImageList();
         }
 
         private void CleaningCustomChecked(object sender, RoutedEventArgs e)
@@ -232,18 +232,17 @@ namespace YuzuMarker.View
 
         private void didSelectionModeFinishedForNormalCleaning()
         {
-            // ViewModel.SelectedNotationGroupItem.CleaningNotation =
-            //     new YuzuCleaningNotation(YuzuCleaningNotationType.Normal, ViewModel.LassoPoints.ToGenericPoints());
-            // ViewModel.RefreshImageList();
-            // TODO: 用 MaskUMat 来保存 Normal Cleaning 的 Mask
+            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.Dispose();
+            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask = ViewModel.SelectionMaskUMat.Clone();
+            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType = YuzuCleaningNotationType.Normal;
+            ViewModel.RefreshImageList();
         }
         
         private void CleaningNormalChecked(object sender, RoutedEventArgs e)
         {
             // Judge whether this is triggered by data binding
             if (ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Normal) return;
-            ViewModel.SelectedNotationGroupItem.CleaningNotation =
-                new YuzuCleaningNotation(YuzuCleaningNotationType.Normal);
+            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType = YuzuCleaningNotationType.Normal;
             ViewModel.RefreshImageList();
         }
 
@@ -252,6 +251,5 @@ namespace YuzuMarker.View
             EnableSelectionMode(didSelectionModeFinishedForNormalCleaning);
         }
         #endregion
-        // TODO: refactor end
     }
 }

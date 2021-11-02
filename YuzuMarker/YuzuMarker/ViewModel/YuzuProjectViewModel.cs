@@ -513,8 +513,7 @@ namespace YuzuMarker.ViewModel
                             {
                                 if (MessageBox.Show("工程文件将被自动保存。确定继续？", "导入图片", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                                 {
-                                    Manager.YuzuMarkerManager.Image.WriteImageNotations();
-                                    YuzuIO.SaveProject(Project);
+                                    SaveProject.CommandAction.Invoke();
                                     OpenFileDialog openFileDialog = new OpenFileDialog
                                     {
                                         Filter = "(*.jpg;*.png;*.jpeg)|*.jpg;*.png;*.jpeg",
@@ -529,7 +528,7 @@ namespace YuzuMarker.ViewModel
                                             Manager.YuzuMarkerManager.Project.CreateNewImage(filePath);
                                         }
                                     }
-                                    YuzuIO.SaveProject(Project);
+                                    SaveProject.CommandAction.Invoke();
                                 }
                             } catch (Exception e)
                             {
@@ -558,11 +557,11 @@ namespace YuzuMarker.ViewModel
                             {
                                 if (MessageBox.Show("此操作不可撤回，并且工程文件将被自动保存。确定继续？", "删除图片", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                                 {
-                                    YuzuIO.SaveProject(Project);
+                                    SaveProject.CommandAction.Invoke();
                                     Project.RemoveImage(SelectedImageItem);
                                     RaisePropertyChanged("Project");
                                     RaisePropertyChanged("Images");
-                                    YuzuIO.SaveProject(Project);
+                                    SaveProject.CommandAction.Invoke();
                                 }
                             }
                             catch (Exception e)
@@ -701,6 +700,7 @@ namespace YuzuMarker.ViewModel
                         {
                             try
                             {
+                                Manager.YuzuMarkerManager.Image.WriteImageNotations();
                                 YuzuIO.SaveProject(Manager.YuzuMarkerManager.Project);
                             }
                             catch (Exception e)
