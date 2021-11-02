@@ -9,13 +9,7 @@ namespace YuzuMarker.Manager
 {
     public static class YuzuMarkerManager
     {
-        public static YuzuProject Project { get; set; }
-
-        public static YuzuImage Image { get; set; }
-
-        public static YuzuNotationGroup Group { get; set; }
-
-        public static ObservableCollection<string> MessageStack { get; } = new ObservableCollection<string>() { "就绪" };
+        public static ObservableCollection<string> MessageStack { get; } = new ObservableCollection<string> { "就绪" };
 
         public static void PushMessage(NotifyObject dataContext, string message)
         {

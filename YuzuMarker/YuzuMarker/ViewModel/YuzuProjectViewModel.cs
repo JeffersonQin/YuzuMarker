@@ -22,24 +22,22 @@ namespace YuzuMarker.ViewModel
     public class YuzuProjectViewModel : NotifyObject
     {
         #region Property: TopMessage
-        public string TopMessage
-        {
-            get
-            {
-                return Manager.YuzuMarkerManager.MessageStack[^1];
-            }
-        }
+        public string TopMessage => Manager.YuzuMarkerManager.MessageStack[^1];
+
         #endregion
 
         #region Property: Project
-        public YuzuProject Project => Manager.YuzuMarkerManager.Project;
-
+        private YuzuProject _project;
+        
+        public YuzuProject Project
+        {
+            get => _project;
+            set => SetProperty(ref _project, value);
+        }
         #endregion
 
         #region Property: Images
-        public ObservableCollection<BasicYuzuImage> Images
-            => Manager.YuzuMarkerManager.Project == null ? null : Manager.YuzuMarkerManager.Project.Images;
-
+        public ObservableCollection<BasicYuzuImage> Images => Project?.Images;
         #endregion
 
         #region Property: ImageSource
@@ -47,12 +45,12 @@ namespace YuzuMarker.ViewModel
         {
             get
             {
-                if (Manager.YuzuMarkerManager.Image == null) return null;
+                if (SelectedImageItem == null) return null;
                 try
                 {
-                    BitmapImage bitmap = new BitmapImage();
+                    var bitmap = new BitmapImage();
                     bitmap.BeginInit();
-                    bitmap.UriSource = new Uri(Manager.YuzuMarkerManager.Image.GetImageFilePath());
+                    bitmap.UriSource = new Uri(SelectedImageItem.GetImageFilePath());
                     bitmap.EndInit();
                     return bitmap;
                 }
@@ -66,24 +64,25 @@ namespace YuzuMarker.ViewModel
         #endregion
 
         #region Property: SelectedImageItem
+        private YuzuImage _selectedImageItem;
+        
         public YuzuImage SelectedImageItem
         {
-            get => Manager.YuzuMarkerManager.Image;
+            get => _selectedImageItem;
             set
             {
-                if (Manager.YuzuMarkerManager.Image == null)
+                if (_selectedImageItem == null)
                 {
-                    Manager.YuzuMarkerManager.Image = value;
+                    SetProperty(ref _selectedImageItem, value);
                     goto EndSection;
                 }
                 if (!_refreshingImageList)
-                    Manager.YuzuMarkerManager.Image.UnloadImageNotations();
-                Manager.YuzuMarkerManager.Image = Manager.YuzuMarkerManager.Project == null ? null : value;
+                    _selectedImageItem.UnloadImageNotations();
+                SetProperty(ref _selectedImageItem, Project == null ? null : value);
             EndSection:
                 if (!_refreshingImageList)
                     value?.LoadImageNotations();
                 RaisePropertyChanged("ImageSource");
-                RaisePropertyChanged("SelectedImageItem");
                 RaisePropertyChanged("NotationGroups");
                 RaisePropertyChanged("SelectedNotationGroupItem");
             }
@@ -96,35 +95,26 @@ namespace YuzuMarker.ViewModel
         #endregion
 
         #region Property: SelectedNotationGroupItem
+        private YuzuNotationGroup _selectedNotationGroupItem;
+        
         public YuzuNotationGroup SelectedNotationGroupItem
         {
-            get
-            {
-                return Manager.YuzuMarkerManager.Group;
-            }
+            get => _selectedNotationGroupItem;
             set
             {
-                Manager.YuzuMarkerManager.Group = value;
-                RaisePropertyChanged("SelectedNotationGroupItem");
+                SetProperty(ref _selectedNotationGroupItem, value);
                 RaisePropertyChanged("SelectedNotationGroupText");
             }
         }
         #endregion
 
         #region Property: LabelMode
-        private bool _LabelMode = false;
+        private bool _labelMode = false;
 
         public bool LabelMode
         {
-            get
-            {
-                return _LabelMode;
-            }
-            set
-            {
-                _LabelMode = value;
-                RaisePropertyChanged("LabelMode");
-            }
+            get => _labelMode;
+            set => SetProperty(ref _labelMode, value);
         }
         #endregion
 
@@ -525,7 +515,7 @@ namespace YuzuMarker.ViewModel
                                     {
                                         foreach (string filePath in openFileDialog.FileNames)
                                         {
-                                            Manager.YuzuMarkerManager.Project.CreateNewImage(filePath);
+                                            Project.CreateNewImage(filePath);
                                         }
                                     }
                                     SaveProject.CommandAction.Invoke();
@@ -668,7 +658,7 @@ namespace YuzuMarker.ViewModel
                                 };
                                 if (openFileDialog.ShowDialog() == true)
                                 {
-                                    Manager.YuzuMarkerManager.Project = YuzuIO.LoadProject(openFileDialog.FileNames[0]);
+                                    Project = YuzuIO.LoadProject(openFileDialog.FileNames[0]);
                                     RaisePropertyChanged("Project");
                                     RaisePropertyChanged("Images");
                                     RaisePropertyChanged("ImageSource");
@@ -700,8 +690,8 @@ namespace YuzuMarker.ViewModel
                         {
                             try
                             {
-                                Manager.YuzuMarkerManager.Image.WriteImageNotations();
-                                YuzuIO.SaveProject(Manager.YuzuMarkerManager.Project);
+                                SelectedImageItem.WriteImageNotations();
+                                YuzuIO.SaveProject(Project);
                             }
                             catch (Exception e)
                             {
@@ -728,7 +718,7 @@ namespace YuzuMarker.ViewModel
                         {
                             try
                             {
-                                View.CreateProjectWindow window = new View.CreateProjectWindow();
+                                var window = new View.CreateProjectWindow();
                                 window.CreateProjectEvent += CreateProjectHandler;
                                 window.Show();
                             }
@@ -746,8 +736,7 @@ namespace YuzuMarker.ViewModel
         {
             try
             {
-                Manager.YuzuMarkerManager.Project = YuzuIO.CreateProject(path, fileName, projectName);
-                RaisePropertyChanged("Project");
+                Project = YuzuIO.CreateProject(path, fileName, projectName);
                 RaisePropertyChanged("Images");
                 RaisePropertyChanged("ImageSource");
                 SelectedImageItem = null;
@@ -770,13 +759,13 @@ namespace YuzuMarker.ViewModel
             var selectedImageItem = SelectedImageItem;
             var selectedNotationGroupItem = SelectedNotationGroupItem;
             // set certain fields to null to reset value in UI
-            Manager.YuzuMarkerManager.Project = null;
+            Project = null;
             SelectedImageItem = null;
             // clear properties manually
             RaisePropertyChanged("Images");
             RaisePropertyChanged("NotationGroups");
             // set back properties
-            Manager.YuzuMarkerManager.Project = project;
+            Project = project;
             SelectedImageItem = selectedImageItem;
             SelectedNotationGroupItem = selectedNotationGroupItem;
             // refresh properties again

@@ -54,7 +54,7 @@ namespace YuzuMarker.View
             long TimestampNow = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             if (ClickPoint.X == NewClickPoint.X && ClickPoint.Y == NewClickPoint.Y && TimestampNow - ClickTimestamp <= 500)
             {
-                Manager.YuzuMarkerManager.Image.CreateAndLoadNewNotationGroup((int)ClickPoint.X, (int)ClickPoint.Y, "", false);
+                ViewModel.SelectedImageItem.CreateAndLoadNewNotationGroup((int)ClickPoint.X, (int)ClickPoint.Y, "", false);
             }
             // Clear status
             ClickPoint.X = 0;
@@ -75,8 +75,8 @@ namespace YuzuMarker.View
             }
             else
             {
-                if (Manager.YuzuMarkerManager.Image.NotationGroups.IndexOf(Manager.YuzuMarkerManager.Group) ==
-                    Manager.YuzuMarkerManager.Image.NotationGroups.Count - 1) return;
+                if (ViewModel.SelectedImageItem.NotationGroups.IndexOf(ViewModel.SelectedNotationGroupItem) ==
+                    ViewModel.SelectedImageItem.NotationGroups.Count - 1) return;
                 NotationGroupListView.SelectedIndex += 1;
             }
         }
@@ -197,7 +197,7 @@ namespace YuzuMarker.View
         private void EnableSelectionMode(SelectionModeEventHandler didSelectionModeFinished)
         {
             Manager.YuzuMarkerManager.PushMessage(ViewModel, "按住 Ctrl + 鼠标左键选择工作区域，点击画布外侧区域取消，Enter键确认区域");
-            ViewModel.SelectionMaskUMat = Manager.YuzuMarkerManager.Group.CleaningNotation.CleaningMask.Clone();
+            ViewModel.SelectionMaskUMat = ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.Clone();
             ViewModel.LassoPoints = new PointCollection();
             ViewModel.RectangleShapeData = new ShapeData();
             ViewModel.OvalShapeData = new ShapeData();
