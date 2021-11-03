@@ -45,6 +45,8 @@
         <KeyBinding Command="{Binding CreateProject}" Modifiers="Ctrl" Key="N"/>
         <KeyBinding Command="{Binding LoadProject}" Modifiers="Ctrl" Key="O"/>
         <KeyBinding Command="{Binding SaveProject}" Modifiers="Ctrl" Key="S"/>
+        <KeyBinding Command="{Binding UndoStep}" Modifiers="Ctrl" Key="Z"/>
+        <KeyBinding Command="{Binding RedoStep}" Modifiers="Ctrl+Shift" Key="Z"/>
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -65,7 +67,12 @@
                 <MenuItem Command="{Binding SaveProject}" Header="保存项目" InputGestureText="Ctrl+S" 
                           IsEnabled="{Binding Project, Mode=OneWay, Converter={StaticResource BoolVC}}"/>
             </MenuItem>
-            <MenuItem Header="编辑"/>
+            <MenuItem Header="编辑">
+                <MenuItem Command="{Binding UndoStep}" Header="撤销" InputGestureText="Ctrl+Z"
+                          IsEnabled="{Binding SelectedImageItem, Mode=OneWay, Converter={StaticResource BoolVC}}"/>
+                <MenuItem Command="{Binding RedoStep}" Header="重做" InputGestureText="Shift+Ctrl+Z"
+                          IsEnabled="{Binding SelectedImageItem, Mode=OneWay, Converter={StaticResource BoolVC}}"/>
+            </MenuItem>
         </Menu>
         <GridSplitter HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1"/>
         <GridSplitter HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="3"/>
