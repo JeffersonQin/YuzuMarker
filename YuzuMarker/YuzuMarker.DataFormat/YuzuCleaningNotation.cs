@@ -14,7 +14,13 @@ namespace YuzuMarker.DataFormat
         public YuzuCleaningNotationType CleaningNotationType
         {
             get => _cleaningNotationType;
-            set => SetProperty(ref _cleaningNotationType, value);
+            set => SetProperty(ref _cleaningNotationType, value, beforeChanged: () =>
+            {
+                UndoRedoManager.PushRecord(CleaningNotationType, (o) =>
+                {
+                    CleaningNotationType = (YuzuCleaningNotationType)o;
+                }, () => CleaningNotationType);
+            });
         }
 
         public UMat CleaningMask;
