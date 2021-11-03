@@ -85,6 +85,7 @@ namespace YuzuMarker.ViewModel
                 RaisePropertyChanged("ImageSource");
                 RaisePropertyChanged("NotationGroups");
                 RaisePropertyChanged("SelectedNotationGroupItem");
+                UndoRedoManager.Clear();
             }
         }
         #endregion
@@ -102,8 +103,13 @@ namespace YuzuMarker.ViewModel
             get => _selectedNotationGroupItem;
             set
             {
-                SetProperty(ref _selectedNotationGroupItem, value);
-                RaisePropertyChanged("SelectedNotationGroupText");
+                SetProperty(ref _selectedNotationGroupItem, value, beforeChanged: () =>
+                {
+                    UndoRedoManager.PushRecord(SelectedNotationGroupItem, (o) =>
+                    {
+                        SelectedNotationGroupItem = (YuzuNotationGroup)o;
+                    }, () => SelectedNotationGroupItem);
+                });
             }
         }
         #endregion
@@ -114,7 +120,13 @@ namespace YuzuMarker.ViewModel
         public bool LabelMode
         {
             get => _labelMode;
-            set => SetProperty(ref _labelMode, value);
+            set => SetProperty(ref _labelMode, value, beforeChanged: () =>
+            {
+                UndoRedoManager.PushRecord(LabelMode, (o) =>
+                {
+                    LabelMode = (bool)o;
+                }, () => LabelMode);
+            });
         }
         #endregion
 
@@ -123,15 +135,14 @@ namespace YuzuMarker.ViewModel
 
         public bool SelectionModeEnabled
         {
-            get
+            get => _selectionModeEnabled;
+            set => SetProperty(ref _selectionModeEnabled, value, beforeChanged: () =>
             {
-                return _selectionModeEnabled;
-            }
-            set
-            {
-                _selectionModeEnabled = value;
-                RaisePropertyChanged("SelectionModeEnabled");
-            }
+                UndoRedoManager.PushRecord(SelectionModeEnabled, (o) =>
+                {
+                    SelectionModeEnabled = (bool)o;
+                }, () => SelectionModeEnabled);
+            });
         }
         #endregion
         
@@ -210,6 +221,11 @@ namespace YuzuMarker.ViewModel
                             break;
                     }
                     
+                    UndoRedoManager.PushRecord(SelectionMaskUMat.Clone(), o =>
+                    {
+                        SelectionMaskUMat = (UMat)o;
+                    }, () => SelectionMaskUMat, disposeAction: o => ((UMat)o).Dispose());
+                    
                     switch (SelectionMode)
                     {
                         case SelectionMode.New:
@@ -248,7 +264,13 @@ namespace YuzuMarker.ViewModel
         public SelectionType SelectionType
         {
             get => _selectionType;
-            set => SetProperty(ref _selectionType, value);
+            set => SetProperty(ref _selectionType, value, beforeChanged: () =>
+            {
+                UndoRedoManager.PushRecord(SelectionType, o =>
+                {
+                    SelectionType = (SelectionType)o;
+                }, () => SelectionType);
+            });
         }
         #endregion
 
@@ -258,7 +280,13 @@ namespace YuzuMarker.ViewModel
         public SelectionMode SelectionMode
         {
             get => _selectionMode;
-            set => SetProperty(ref _selectionMode, value);
+            set => SetProperty(ref _selectionMode, value, beforeChanged: () =>
+            {
+                UndoRedoManager.PushRecord(SelectionMode, o =>
+                {
+                    SelectionMode = (SelectionMode)o;
+                }, () => SelectionMode);
+            });
         }
         #endregion
         
@@ -386,8 +414,21 @@ namespace YuzuMarker.ViewModel
                         {
                             try
                             {
+                                var removedItem = SelectedNotationGroupItem;
+                                var removedIndex = NotationGroups.IndexOf(removedItem);
                                 SelectedImageItem.RemoveAndUnloadNotationGroup(SelectedNotationGroupItem);
                                 RefreshImageList();
+                                UndoRedoManager.PushRecord(null, value => { }, () => null, value =>
+                                {
+                                    removedItem.LoadNotationResource();
+                                    NotationGroups.Insert(removedIndex, removedItem);
+                                    RefreshImageList();
+                                }, value =>
+                                {
+                                    removedItem.UnloadNotationResource();
+                                    NotationGroups.Remove(removedItem);
+                                    RefreshImageList();
+                                });
                             }
                             catch (Exception e)
                             {
@@ -417,6 +458,15 @@ namespace YuzuMarker.ViewModel
                             {
                                 NotationGroups.Move(index, index - 1);
                                 RefreshImageList();
+                                UndoRedoManager.PushRecord(null, value => { }, () => null, value =>
+                                {
+                                    NotationGroups.Move(index - 1, index);
+                                    RefreshImageList();
+                                }, value =>
+                                {
+                                    NotationGroups.Move(index, index - 1);
+                                    RefreshImageList();
+                                });
                             }
                         }
                     };
@@ -442,6 +492,15 @@ namespace YuzuMarker.ViewModel
                             {
                                 NotationGroups.Move(index, index + 1);
                                 RefreshImageList();
+                                UndoRedoManager.PushRecord(null, value => { }, () => null, value =>
+                                {
+                                    NotationGroups.Move(index + 1, index);
+                                    RefreshImageList();
+                                }, value =>
+                                {
+                                    NotationGroups.Move(index, index + 1);
+                                    RefreshImageList();
+                                });
                             }
                         }
                     };
@@ -731,12 +790,64 @@ namespace YuzuMarker.ViewModel
             }
         }
         #endregion
+        
+        #region Command: Undo Step
+        private DelegateCommand _undoStep;
+
+        public DelegateCommand UndoStep
+        {
+            get
+            {
+                return _undoStep ??= new DelegateCommand
+                {
+                    CommandAction = () =>
+                    {
+                        try
+                        {
+                            UndoRedoManager.Undo();
+                        }
+                        catch (Exception e)
+                        {
+                            Utils.ExceptionHandler.ShowExceptionMessage(e);
+                        }
+                    }
+                };
+            }
+        }
+        #endregion
+        
+        #region Command: Redo Step
+        private DelegateCommand _redoStep;
+
+        public DelegateCommand RedoStep
+        {
+            get
+            {
+                return _redoStep ??= new DelegateCommand
+                {
+                    CommandAction = () =>
+                    {
+                        try
+                        {
+                            UndoRedoManager.Redo();
+                        }
+                        catch (Exception e)
+                        {
+                            Utils.ExceptionHandler.ShowExceptionMessage(e);
+                        }
+                    }
+                };
+            }
+        }
+        #endregion
 
         #region Refresh children attributes (which are not notify objects), also used for refreshing notationGroup, because it is converted as a whole
         private bool _refreshingImageList = false;
         
         public void RefreshImageList()
         {
+            var ignoreTemp = UndoRedoManager.IgnoreOtherRecording;
+            UndoRedoManager.IgnoreOtherRecording = true;
             _refreshingImageList = true;
             // Backup properties
             var project = Project;
@@ -756,6 +867,7 @@ namespace YuzuMarker.ViewModel
             RaisePropertyChanged("Images");
             RaisePropertyChanged("NotationGroups");
             _refreshingImageList = false;
+            UndoRedoManager.IgnoreOtherRecording = ignoreTemp;
         }
         #endregion
     }

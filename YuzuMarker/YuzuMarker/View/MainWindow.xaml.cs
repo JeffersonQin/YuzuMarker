@@ -13,10 +13,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using OpenCvSharp;
+using YuzuMarker.Common;
 using YuzuMarker.DataFormat;
 using YuzuMarker.Model;
 using YuzuMarker.Utils;
 using YuzuMarker.ViewModel;
+using Point = System.Windows.Point;
+using Window = System.Windows.Window;
 
 namespace YuzuMarker.View
 {
@@ -54,7 +58,17 @@ namespace YuzuMarker.View
             long TimestampNow = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
             if (ClickPoint.X == NewClickPoint.X && ClickPoint.Y == NewClickPoint.Y && TimestampNow - ClickTimestamp <= 500)
             {
+                UndoRedoManager.IgnoreOtherRecording = true;
                 ViewModel.SelectedImageItem.CreateAndLoadNewNotationGroup((int)ClickPoint.X, (int)ClickPoint.Y, "", false);
+                UndoRedoManager.IgnoreOtherRecording = false;
+                var newGroup = ViewModel.SelectedImageItem.NotationGroups[^1];
+                UndoRedoManager.PushRecord(null, value => { }, () => null, (o) =>
+                {
+                    ViewModel.SelectedImageItem.NotationGroups.RemoveAt(ViewModel.SelectedImageItem.NotationGroups.Count - 1);
+                }, o =>
+                {
+                    ViewModel.SelectedImageItem.NotationGroups.Add(newGroup);
+                });
             }
             // Clear status
             ClickPoint.X = 0;
@@ -174,7 +188,9 @@ namespace YuzuMarker.View
         // Cancel Selection
         private void ShadeMouseDown(object sender, MouseButtonEventArgs e)
         {
+            UndoRedoManager.StartContinuousRecording();
             DisableSelectionMode();
+            UndoRedoManager.StopContinuousRecording();
         }
 
         // Finish Selection
@@ -182,8 +198,12 @@ namespace YuzuMarker.View
         {
             if (!ViewModel.SelectionModeEnabled) return;
             if (e.Key != Key.Enter) return;
+            UndoRedoManager.StartContinuousRecording();
+            
             DidSelectionModeFinished?.Invoke();
             DisableSelectionMode();
+            
+            UndoRedoManager.StopContinuousRecording();
         }
         #endregion
 
@@ -196,12 +216,35 @@ namespace YuzuMarker.View
         #region Selection Enable / Finish Wrapping
         private void EnableSelectionMode(SelectionModeEventHandler didSelectionModeFinished)
         {
+            UndoRedoManager.StartContinuousRecording();
+            
             Manager.YuzuMarkerManager.PushMessage(ViewModel, "按住 Ctrl + 鼠标左键选择工作区域，点击画布外侧区域取消，Enter键确认区域");
+            var message = "";
+            UndoRedoManager.PushRecord(null, value => { }, () => null, value =>
+            {
+                message = Manager.YuzuMarkerManager.PopMessage(ViewModel);
+            }, value =>
+            {
+                Manager.YuzuMarkerManager.PushMessage(ViewModel, message);
+            });
+
+            UndoRedoManager.PushRecord(ViewModel.SelectionMaskUMat, value =>
+            {
+                ViewModel.SelectionMaskUMat = (UMat)value;
+                ViewModel.RefreshImageList();
+            }, () => ViewModel.SelectionMaskUMat, disposeAction: value => ((UMat)value).Dispose());
+            if (ViewModel.SelectionMaskUMat != null)
+                if (!ViewModel.SelectionMaskUMat.IsDisposed)
+                    ViewModel.SelectionMaskUMat.Dispose();
             ViewModel.SelectionMaskUMat = ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.Clone();
+
             ViewModel.LassoPoints = new PointCollection();
             ViewModel.RectangleShapeData = new ShapeData();
             ViewModel.OvalShapeData = new ShapeData();
             ViewModel.SelectionModeEnabled = true;
+            
+            UndoRedoManager.StopContinuousRecording();
+            
             DidSelectionModeFinished = didSelectionModeFinished;
         }
 
@@ -209,14 +252,37 @@ namespace YuzuMarker.View
         {
             ViewModel.SelectionDrawing = false;
             ViewModel.SelectionModeEnabled = false;
+
+            UMat recordValue = null;
+            if (ViewModel.SelectionMaskUMat != null)
+                if (!ViewModel.SelectionMaskUMat.IsDisposed)
+                    recordValue = ViewModel.SelectionMaskUMat.Clone();
+            UndoRedoManager.PushRecord(recordValue, value =>
+            {
+                ViewModel.SelectionMaskUMat = (UMat)value;
+                ViewModel.RefreshImageList();
+            }, () => ViewModel.SelectionMaskUMat, disposeAction: value => ((UMat)value).Dispose());
             ViewModel.SelectionMaskUMat.Dispose();
-            Manager.YuzuMarkerManager.PopMessage(ViewModel);
+            
+            var message = Manager.YuzuMarkerManager.PopMessage(ViewModel);
+            UndoRedoManager.PushRecord(null, value => { }, () => null, value =>
+            {
+                Manager.YuzuMarkerManager.PushMessage(ViewModel, message);
+            }, value =>
+            {
+                Manager.YuzuMarkerManager.PopMessage(ViewModel);
+            });
         }
         #endregion
 
         #region Selection CheckBox Group Handling
         private void didSelectionModeFinishedForCustomCleaning()
         {
+            UndoRedoManager.PushRecord(ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.Clone(), value =>
+            {
+                ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask = (UMat)value;
+                ViewModel.RefreshImageList();
+            }, () => ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask, disposeAction: value => ((UMat)value).Dispose());
             ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.Dispose();
             ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask = ViewModel.SelectionMaskUMat.Clone();
             ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType = YuzuCleaningNotationType.Custom;
@@ -232,6 +298,11 @@ namespace YuzuMarker.View
 
         private void didSelectionModeFinishedForNormalCleaning()
         {
+            UndoRedoManager.PushRecord(ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.Clone(), value =>
+            {
+                ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask = (UMat)value;
+                ViewModel.RefreshImageList();
+            }, () => ViewModel.SelectedNotationGroupItem?.CleaningNotation.CleaningMask, disposeAction: value => ((UMat)value).Dispose());
             ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.Dispose();
             ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask = ViewModel.SelectionMaskUMat.Clone();
             ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType = YuzuCleaningNotationType.Normal;
