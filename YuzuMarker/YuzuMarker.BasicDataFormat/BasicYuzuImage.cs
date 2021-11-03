@@ -28,7 +28,13 @@ namespace YuzuMarker.BasicDataFormat
         public bool IsFinished
         {
             get => _isFinished;
-            set => SetProperty(ref _isFinished, value);
+            set => SetProperty(ref _isFinished, value, beforeChanged: () =>
+            {
+                UndoRedoManager.PushRecord(IsFinished, (o) =>
+                {
+                    IsFinished = (bool)o;
+                }, () => IsFinished);
+            });
         }
 
         private ObservableCollection<BasicYuzuNotationGroup> _notationGroups;

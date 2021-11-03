@@ -20,7 +20,13 @@ namespace YuzuMarker.BasicDataFormat
         public long Timestamp
         {
             get => _timestamp;
-            set => SetProperty(ref _timestamp, value);
+            set => SetProperty(ref _timestamp, value, beforeChanged: () =>
+            {
+                UndoRedoManager.PushRecord(Timestamp, (o) =>
+                {
+                    Timestamp = (long)o;
+                }, () => Timestamp);
+            });
         }
 
         private int _x;
@@ -28,7 +34,13 @@ namespace YuzuMarker.BasicDataFormat
         public int X
         {
             get => _x;
-            set => SetProperty(ref _x, value);
+            set => SetProperty(ref _x, value, beforeChanged: () =>
+            {
+                UndoRedoManager.PushRecord(X, (o) =>
+                {
+                    X = (int)o;
+                }, () => X);
+            });
         }
 
         private int _y;
@@ -36,7 +48,13 @@ namespace YuzuMarker.BasicDataFormat
         public int Y
         {
             get => _y;
-            set => SetProperty(ref _y, value);
+            set => SetProperty(ref _y, value, beforeChanged: () =>
+            {
+                UndoRedoManager.PushRecord(Y, (o) =>
+                {
+                    Y = (int)o;
+                }, () => Y);
+            });
         }
 
         private string _text;
@@ -44,7 +62,13 @@ namespace YuzuMarker.BasicDataFormat
         public string Text
         {
             get => _text;
-            set => SetProperty(ref _text, value);
+            set => SetProperty(ref _text, value, beforeChanged: () =>
+            {
+                UndoRedoManager.PushRecord(Text, (o) =>
+                {
+                    Text = (string)o;
+                }, () => Text);
+            });
         }
 
         private bool _isFinished;
@@ -52,7 +76,13 @@ namespace YuzuMarker.BasicDataFormat
         public bool IsFinished
         {
             get => _isFinished;
-            set => SetProperty(ref _isFinished, value);
+            set => SetProperty(ref _isFinished, value, beforeChanged: () =>
+            {
+                UndoRedoManager.PushRecord(IsFinished, (o) =>
+                {
+                    IsFinished = (bool)o;
+                }, () => IsFinished);
+            });
         }
 
         public BasicYuzuNotationGroup(BasicYuzuImage parentImage, int x, int y, string text, bool finished)
