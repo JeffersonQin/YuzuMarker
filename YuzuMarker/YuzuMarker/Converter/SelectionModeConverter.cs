@@ -16,7 +16,8 @@ namespace YuzuMarker.Converter
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (SelectionMode)int.Parse(parameter.ToString());
+            if ((bool)value) return (SelectionMode)int.Parse(parameter.ToString());
+            return null;
         }
     }
 }
