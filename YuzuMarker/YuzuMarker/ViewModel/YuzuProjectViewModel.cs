@@ -313,22 +313,6 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
-        #region Property: SelectedNotationGroupText
-        public string SelectedNotationGroupText
-        {
-            get
-            {
-                if (SelectedNotationGroupItem == null) return null;
-                return SelectedNotationGroupItem.Text;
-            }
-            set
-            {
-                SelectedNotationGroupItem.Text = value;
-                RaisePropertyChanged("SelectedNotationGroupText");
-            }
-        }
-        #endregion
-
         #region Command: Export Custom Cleaning Mask to Photoshop
 
         private DelegateCommand _ExportCustomCleaningMaskToPhotoshop;

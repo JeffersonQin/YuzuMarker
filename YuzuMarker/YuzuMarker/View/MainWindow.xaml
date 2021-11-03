@@ -286,7 +286,7 @@
                             </StackPanel>
                             <TextBox Grid.Row="1" KeyDown="TextAreaOnKeyDown"
                                      AcceptsTab="True" AcceptsReturn="True"
-                                     Text="{Binding SelectedNotationGroupText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                     Text="{Binding SelectedNotationGroupItem.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <TextBox.Style>
                                     <Style TargetType="{x:Type TextBox}">
                                         <Style.Triggers>
