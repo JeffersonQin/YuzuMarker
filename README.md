@@ -34,8 +34,14 @@
   * ✅ 文字录入界面
   * 🚧 特殊符号 / 罗马字工具箱
 * 🚧 涂白部分
-  * ✅ 涂白界面
+  * ✅ 框选界面
+  * 🚧 模型结果选择界面
   * 🚧 文字块自动识别
+    * ✅ FindContours
+    * 🚧 RCNN
+  * 🚧 多种涂白方式
+    * 🚧 自动识别颜色
+    * 🚧 Impainting
 * 🚧 嵌字部分
   * 🚧 嵌字界面
   * 🚧 [字体自动识别](https://github.com/JeffersonQin/YuzuMarker.FontDetection)
