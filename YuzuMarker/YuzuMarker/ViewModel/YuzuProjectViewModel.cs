@@ -733,7 +733,7 @@ namespace YuzuMarker.ViewModel
                         {
                             try
                             {
-                                SelectedImageItem.WriteImageNotations();
+                                SelectedImageItem?.WriteImageNotations();
                                 YuzuIO.SaveProject(Project);
                             }
                             catch (Exception e)
