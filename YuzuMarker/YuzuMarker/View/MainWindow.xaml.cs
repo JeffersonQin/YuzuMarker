@@ -233,9 +233,7 @@ namespace YuzuMarker.View
                 ViewModel.SelectionMaskUMat = (UMat)value;
                 ViewModel.RefreshImageList();
             }, () => ViewModel.SelectionMaskUMat, disposeAction: value => ((UMat)value).Dispose());
-            if (ViewModel.SelectionMaskUMat != null)
-                if (!ViewModel.SelectionMaskUMat.IsDisposed)
-                    ViewModel.SelectionMaskUMat.Dispose();
+            ViewModel.SelectionMaskUMat.SafeDispose();
             ViewModel.SelectionMaskUMat = ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.Clone();
 
             ViewModel.LassoPoints = new PointCollection();
@@ -252,12 +250,8 @@ namespace YuzuMarker.View
         {
             ViewModel.SelectionDrawing = false;
             ViewModel.SelectionModeEnabled = false;
-
-            UMat recordValue = null;
-            if (ViewModel.SelectionMaskUMat != null)
-                if (!ViewModel.SelectionMaskUMat.IsDisposed)
-                    recordValue = ViewModel.SelectionMaskUMat.Clone();
-            UndoRedoManager.PushRecord(recordValue, value =>
+            
+            UndoRedoManager.PushRecord(ViewModel.SelectionMaskUMat.Clone(), value =>
             {
                 ViewModel.SelectionMaskUMat = (UMat)value;
                 ViewModel.RefreshImageList();
