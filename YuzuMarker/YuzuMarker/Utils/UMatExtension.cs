@@ -53,5 +53,13 @@ namespace YuzuMarker.Utils
             umat.Dispose();
             return true;
         }
+
+        public static UMat SafeClone(this UMat umat)
+        {
+            if (umat == null) return null;
+            if (umat.IsDisposed) return null;
+            if (umat.CvPtr == IntPtr.Zero) return null;
+            return umat.Clone();
+        }
     }
 }
