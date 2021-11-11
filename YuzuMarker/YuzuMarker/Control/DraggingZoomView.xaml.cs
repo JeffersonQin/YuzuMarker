@@ -14,9 +14,9 @@ using System.Windows.Shapes;
 namespace YuzuMarker.Control
 {
     /// <summary>
-    /// ZoomView.xaml 的交互逻辑
+    /// DraggingZoomView.xaml 的交互逻辑
     /// </summary>
-    public partial class ZoomView : UserControl
+    public partial class DraggingZoomView : UserControl
     {
         public int ContentWidth
         {
@@ -26,7 +26,7 @@ namespace YuzuMarker.Control
 
         // Using a DependencyProperty as the backing store for ContentWidth.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ContentWidthProperty =
-            DependencyProperty.Register("ContentWidth", typeof(int), typeof(ZoomView), new PropertyMetadata(0));
+            DependencyProperty.Register("ContentWidth", typeof(int), typeof(DraggingZoomView), new PropertyMetadata(0));
 
 
 
@@ -38,7 +38,7 @@ namespace YuzuMarker.Control
 
         // Using a DependencyProperty as the backing store for ContentHeight.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ContentHeightProperty =
-            DependencyProperty.Register("ContentHeight", typeof(int), typeof(ZoomView), new PropertyMetadata(0));
+            DependencyProperty.Register("ContentHeight", typeof(int), typeof(DraggingZoomView), new PropertyMetadata(0));
 
 
 
@@ -50,7 +50,7 @@ namespace YuzuMarker.Control
 
         // Using a DependencyProperty as the backing store for ContainerContent.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ContainerContentProperty =
-            DependencyProperty.Register("ContainerContent", typeof(UIElement), typeof(ZoomView), new PropertyMetadata(null));
+            DependencyProperty.Register("ContainerContent", typeof(UIElement), typeof(DraggingZoomView), new PropertyMetadata(null));
 
 
 
@@ -62,7 +62,7 @@ namespace YuzuMarker.Control
 
         // Using a DependencyProperty as the backing store for ContentBackground.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ContentBackgroundProperty =
-            DependencyProperty.Register("ContentBackground", typeof(Brush), typeof(ZoomView), new PropertyMetadata(null));
+            DependencyProperty.Register("ContentBackground", typeof(Brush), typeof(DraggingZoomView), new PropertyMetadata(null));
 
 
 
@@ -77,7 +77,7 @@ namespace YuzuMarker.Control
 
         // Using a DependencyProperty as the backing store for CustomMouseMoveEvent.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CustomMouseMoveEventProperty =
-            DependencyProperty.Register("CustomMouseMoveEvent", typeof(MouseEventHandler), typeof(ZoomView), new PropertyMetadata(null));
+            DependencyProperty.Register("CustomMouseMoveEvent", typeof(MouseEventHandler), typeof(DraggingZoomView), new PropertyMetadata(null));
 
 
 
@@ -89,7 +89,7 @@ namespace YuzuMarker.Control
 
         // Using a DependencyProperty as the backing store for CanCustomMouseMoveEvent.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CanCustomMouseMoveEventProperty =
-            DependencyProperty.Register("CanCustomMouseMoveEvent", typeof(CanMouseEventHandler), typeof(ZoomView), new PropertyMetadata(null));
+            DependencyProperty.Register("CanCustomMouseMoveEvent", typeof(CanMouseEventHandler), typeof(DraggingZoomView), new PropertyMetadata(null));
 
 
 
@@ -101,11 +101,11 @@ namespace YuzuMarker.Control
 
         // Using a DependencyProperty as the backing store for CanDefaultMouseMoveEvent.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CanDefaultMouseMoveEventProperty =
-            DependencyProperty.Register("CanDefaultMouseMoveEvent", typeof(CanMouseEventHandler), typeof(ZoomView), new PropertyMetadata(null));
+            DependencyProperty.Register("CanDefaultMouseMoveEvent", typeof(CanMouseEventHandler), typeof(DraggingZoomView), new PropertyMetadata(null));
 
 
 
-        public ZoomView()
+        public DraggingZoomView()
         {
             InitializeComponent();
             DataContext = this;

@@ -117,13 +117,13 @@
             </Grid>
             <Rectangle Fill="#7F000000" Visibility="{Binding SelectionModeEnabled, Converter={StaticResource Boolean2Visibility}}" MouseDown="ShadeMouseDown"/>
         </Grid>
-        <!--这里的数据绑定的DataContext是ZoomView, 所以定义了一个BindingProxy来将DataContext换为祖先-->
+        <!--这里的数据绑定的DataContext是DraggingZoomView, 所以定义了一个BindingProxy来将DataContext换为祖先-->
         <Grid Grid.Row="1" Grid.Column="2" ClipToBounds="True">
-            <uc:ZoomView CanDefaultMouseMoveEvent="CanDefaultMouseMoveEventHappen" CustomMouseMoveEvent="CustomMouseMoveEvent" CanCustomMouseMoveEvent="CanCustomMouseMoveEventHappen"
+            <uc:DraggingZoomView CanDefaultMouseMoveEvent="CanDefaultMouseMoveEventHappen" CustomMouseMoveEvent="CustomMouseMoveEvent" CanCustomMouseMoveEvent="CanCustomMouseMoveEventHappen"
                 ContentHeight="{Binding Data.ImageSource.Height, Source={StaticResource BindingProxy}}" 
                 ContentWidth="{Binding Data.ImageSource.Width, Source={StaticResource BindingProxy}}" 
                 ContentBackground="#FFDAD5D5">
-                <uc:ZoomView.ContainerContent>
+                <uc:DraggingZoomView.ContainerContent>
                     <Grid ClipToBounds="True" MouseDown="ImageAreaMouseDown" MouseUp="ImageAreaMouseUp">
                         <Image Source="{Binding Data.ImageSource, Mode=OneWay, Source={StaticResource BindingProxy}}"></Image>
                         <ItemsControl ItemsSource="{Binding Data.NotationGroups, Mode=OneWay, Source={StaticResource BindingProxy}}">
@@ -183,8 +183,8 @@
                                      StrokeThickness="{Binding Source={x:Static p:Settings.Default}, Path=UIPolygonStrokeThickness}"/>
                         </Canvas>
                     </Grid>
-                </uc:ZoomView.ContainerContent>
-            </uc:ZoomView>
+                </uc:DraggingZoomView.ContainerContent>
+            </uc:DraggingZoomView>
             <StackPanel Margin="25">
                 <StackPanel.Visibility>
                     <MultiBinding Converter="{StaticResource SelectionControllerVisibility}">
