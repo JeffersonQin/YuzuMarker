@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -39,7 +40,84 @@ namespace YuzuMarker.View
             ViewModel = DataContext as YuzuProjectViewModel;
         }
         #endregion
+
+        #region Horizontal Scroll of Trackpad
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            var source = PresentationSource.FromVisual(this);
+            ((HwndSource) source)?.AddHook(Hook);
+        }
         
+        const int WM_MOUSEHWHEEL = 0x020E;
+
+        private IntPtr Hook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            switch (msg)
+            {
+                case WM_MOUSEHWHEEL:
+                    int tilt = HIWORD(wParam);
+                    OnMouseTilt(tilt);
+                    return (IntPtr) 1;
+            }
+            return IntPtr.Zero;
+        }
+
+        /// <summary>
+        /// 取指针所在高位数值。
+        /// </summary>
+        private static int HIWORD(IntPtr ptr)
+        {
+            unchecked
+            {
+                if (Environment.Is64BitOperatingSystem)
+                {
+                    var val64 = ptr.ToInt64();
+                    return (short) ((val64 >> 16) & 0xFFFF);
+                }
+                var val32 = ptr.ToInt32();
+                return (short) ((val32 >> 16) & 0xFFFF);   
+            }
+        }
+
+        /// <summary>
+        /// 取指针所在低位数值。
+        /// </summary>
+        private static int LOWORD(IntPtr ptr)
+        {
+            unchecked
+            {
+                if (Environment.Is64BitOperatingSystem)
+                {
+                    var val64 = ptr.ToInt64();
+                    return (short)(val64 & 0xFFFF);
+                }
+
+                var val32 = ptr.ToInt32();
+                return (short)(val32 & 0xFFFF);
+            }
+        }
+        
+        private void OnMouseTilt(double tilt)
+        {
+            if (!(Mouse.DirectlyOver is UIElement element)) return;
+            var scrollViewer = element is ScrollViewer viewer ? viewer : FindParent<ScrollViewer>(element);
+            scrollViewer?.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset + tilt);
+        }
+
+        public static T FindParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            var parentObject = VisualTreeHelper.GetParent(child);
+
+            return parentObject switch
+            {
+                null => null,
+                T parent => parent,
+                _ => FindParent<T>(parentObject)
+            };
+        }
+        #endregion
+
         #region Image Button Operation
         private Point ClickPoint = new Point(0, 0);
         private long ClickTimestamp = 0;
