@@ -131,6 +131,24 @@ namespace YuzuMarker.Control
                 ZoomScrollViewer.ScrollToVerticalOffset(ZoomScrollViewer.VerticalOffset + deltaY);
         }
 
+        protected override void OnManipulationDelta(ManipulationDeltaEventArgs e)
+        {
+            if (ContentWidth == 0 || ContentHeight == 0)
+                return;
+
+            double lastScale = Scale;
+            Scale *= e.DeltaManipulation.Scale.X;
+            SetScale();
+
+            Point scaleOrigin = e.ManipulationOrigin;
+            double deltaX = scaleOrigin.X * (Scale - lastScale) - e.DeltaManipulation.Translation.X;
+            double deltaY = scaleOrigin.Y * (Scale - lastScale) - e.DeltaManipulation.Translation.Y;
+            if (deltaX != 0)
+                ZoomScrollViewer.ScrollToHorizontalOffset(ZoomScrollViewer.HorizontalOffset + deltaX);
+            if (deltaY != 0)
+                ZoomScrollViewer.ScrollToVerticalOffset(ZoomScrollViewer.VerticalOffset + deltaY);
+        }
+
         public void SetScale()
         {
             ContentControlInstance.LayoutTransform = new ScaleTransform(Scale, Scale);

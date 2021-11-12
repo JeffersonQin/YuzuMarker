@@ -13,7 +13,8 @@
     <local:ConditionalScrollScrollViewer x:Name="ZoomScrollViewer"
                   HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
                   MouseWheel="MouseWheelHandler" MouseMove="MouseMoveHandler" 
-                  Background="{Binding ContentBackground}">
+                  Background="{Binding ContentBackground}"
+                  IsManipulationEnabled="True">
         <ContentControl x:Name="ContentControlInstance" Width="{Binding ContentWidth}" Height="{Binding ContentHeight}">
             <ContentPresenter Content="{Binding ContainerContent}"></ContentPresenter>
         </ContentControl>
