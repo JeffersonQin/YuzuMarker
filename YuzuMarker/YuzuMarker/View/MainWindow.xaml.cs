@@ -119,39 +119,24 @@ namespace YuzuMarker.View
         #endregion
 
         #region Image Button Operation
-        private Point ClickPoint = new Point(0, 0);
-        private long ClickTimestamp = 0;
 
         private void ImageAreaMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (!ViewModel.LabelMode) return;
-            ClickPoint = e.GetPosition((IInputElement) sender);
-            ClickTimestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-        }
-
-        private void ImageAreaMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (!ViewModel.LabelMode) return;
-            Point NewClickPoint = e.GetPosition((IInputElement) sender);
-            long TimestampNow = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-            if (ClickPoint.X == NewClickPoint.X && ClickPoint.Y == NewClickPoint.Y && TimestampNow - ClickTimestamp <= 500)
+            if (ViewModel.SelectionModeEnabled) return;
+            Point clickPoint = e.GetPosition((IInputElement) sender);
+            
+            UndoRedoManager.IgnoreOtherRecording = true;
+            ViewModel.SelectedImageItem.CreateAndLoadNewNotationGroup((int)clickPoint.X, (int)clickPoint.Y, "", false);
+            UndoRedoManager.IgnoreOtherRecording = false;
+            var newGroup = ViewModel.SelectedImageItem.NotationGroups[^1];
+            UndoRedoManager.PushRecord(null, value => { }, () => null, (o) =>
             {
-                UndoRedoManager.IgnoreOtherRecording = true;
-                ViewModel.SelectedImageItem.CreateAndLoadNewNotationGroup((int)ClickPoint.X, (int)ClickPoint.Y, "", false);
-                UndoRedoManager.IgnoreOtherRecording = false;
-                var newGroup = ViewModel.SelectedImageItem.NotationGroups[^1];
-                UndoRedoManager.PushRecord(null, value => { }, () => null, (o) =>
-                {
-                    ViewModel.SelectedImageItem.NotationGroups.RemoveAt(ViewModel.SelectedImageItem.NotationGroups.Count - 1);
-                }, o =>
-                {
-                    ViewModel.SelectedImageItem.NotationGroups.Add(newGroup);
-                });
-            }
-            // Clear status
-            ClickPoint.X = 0;
-            ClickPoint.Y = 0;
-            ClickTimestamp = 0;
+                ViewModel.SelectedImageItem.NotationGroups.RemoveAt(ViewModel.SelectedImageItem.NotationGroups.Count - 1);
+            }, o =>
+            {
+                ViewModel.SelectedImageItem.NotationGroups.Add(newGroup);
+            });
         }
         #endregion
 

@@ -124,7 +124,7 @@
                 ContentWidth="{Binding Data.ImageSource.Width, Source={StaticResource BindingProxy}}" 
                 ContentBackground="#FFDAD5D5">
                 <uc:CommonZoomView.ContainerContent>
-                    <Grid ClipToBounds="True" MouseDown="ImageAreaMouseDown" MouseUp="ImageAreaMouseUp">
+                    <Grid ClipToBounds="True" MouseDown="ImageAreaMouseDown">
                         <Image Source="{Binding Data.ImageSource, Mode=OneWay, Source={StaticResource BindingProxy}}"></Image>
                         <ItemsControl ItemsSource="{Binding Data.NotationGroups, Mode=OneWay, Source={StaticResource BindingProxy}}">
                             <ItemsControl.ItemsPanel>
