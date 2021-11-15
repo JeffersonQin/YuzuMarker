@@ -140,9 +140,12 @@ namespace YuzuMarker.Control
             Scale *= e.DeltaManipulation.Scale.X;
             SetScale();
 
-            Point scaleOrigin = e.ManipulationOrigin;
-            double deltaX = scaleOrigin.X * (Scale - lastScale) - e.DeltaManipulation.Translation.X;
-            double deltaY = scaleOrigin.Y * (Scale - lastScale) - e.DeltaManipulation.Translation.Y;
+            var scaleOrigin = e.ManipulationOrigin;
+            var deltaX = (scaleOrigin.X + ZoomScrollViewer.HorizontalOffset) 
+                / lastScale * (Scale - lastScale) - e.DeltaManipulation.Translation.X;
+            var deltaY = (scaleOrigin.Y + ZoomScrollViewer.VerticalOffset) 
+                / lastScale * (Scale - lastScale) - e.DeltaManipulation.Translation.Y;
+
             if (deltaX != 0)
                 ZoomScrollViewer.ScrollToHorizontalOffset(ZoomScrollViewer.HorizontalOffset + deltaX);
             if (deltaY != 0)
