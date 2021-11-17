@@ -221,29 +221,29 @@ namespace YuzuMarker.ViewModel
                             break;
                     }
                     
-                    UndoRedoManager.PushRecord(SelectionMaskUMat.Clone(), o =>
+                    UndoRedoManager.PushRecord(SelectionMaskUMat.SafeClone(), o =>
                     {
                         SelectionMaskUMat = (UMat)o;
-                    }, () => SelectionMaskUMat, disposeAction: o => ((UMat)o).Dispose());
+                    }, () => SelectionMaskUMat, disposeAction: o => ((UMat)o).SafeDispose());
                     
                     switch (SelectionMode)
                     {
                         case SelectionMode.New:
-                            SelectionMaskUMat.Dispose();
+                            SelectionMaskUMat.SafeDispose();
                             SelectionMaskUMat = newUMat;
                             break;
                         case SelectionMode.Add:
                             Cv2.BitwiseOr(SelectionMaskUMat, newUMat, SelectionMaskUMat);
-                            newUMat.Dispose();
+                            newUMat.SafeDispose();
                             break;
                         case SelectionMode.Subtract:
                             Cv2.BitwiseNot(newUMat, newUMat);
                             Cv2.BitwiseAnd(SelectionMaskUMat, newUMat, SelectionMaskUMat);
-                            newUMat.Dispose();
+                            newUMat.SafeDispose();
                             break;
                         case SelectionMode.Intersect:
                             Cv2.BitwiseAnd(SelectionMaskUMat, newUMat, SelectionMaskUMat);
-                            newUMat.Dispose();
+                            newUMat.SafeDispose();
                             break;
                     }
                     

@@ -260,9 +260,9 @@ namespace YuzuMarker.View
             {
                 ViewModel.SelectionMaskUMat = (UMat)value;
                 ViewModel.RefreshImageList();
-            }, () => ViewModel.SelectionMaskUMat, disposeAction: value => ((UMat)value).Dispose());
+            }, () => ViewModel.SelectionMaskUMat, disposeAction: value => ((UMat)value).SafeDispose());
             ViewModel.SelectionMaskUMat.SafeDispose();
-            ViewModel.SelectionMaskUMat = ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.Clone();
+            ViewModel.SelectionMaskUMat = ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.SafeClone();
 
             ViewModel.LassoPoints = new PointCollection();
             ViewModel.RectangleShapeData = new ShapeData();
@@ -279,12 +279,12 @@ namespace YuzuMarker.View
             ViewModel.SelectionDrawing = false;
             ViewModel.SelectionModeEnabled = false;
             
-            UndoRedoManager.PushRecord(ViewModel.SelectionMaskUMat.Clone(), value =>
+            UndoRedoManager.PushRecord(ViewModel.SelectionMaskUMat.SafeClone(), value =>
             {
                 ViewModel.SelectionMaskUMat = (UMat)value;
                 ViewModel.RefreshImageList();
-            }, () => ViewModel.SelectionMaskUMat, disposeAction: value => ((UMat)value).Dispose());
-            ViewModel.SelectionMaskUMat.Dispose();
+            }, () => ViewModel.SelectionMaskUMat, disposeAction: value => ((UMat)value).SafeDispose());
+            ViewModel.SelectionMaskUMat.SafeDispose();
             
             var message = Manager.YuzuMarkerManager.PopMessage(ViewModel);
             UndoRedoManager.PushRecord(null, value => { }, () => null, value =>
@@ -300,13 +300,13 @@ namespace YuzuMarker.View
         #region Selection CheckBox Group Handling
         private void didSelectionModeFinishedForCustomCleaning()
         {
-            UndoRedoManager.PushRecord(ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.Clone(), value =>
+            UndoRedoManager.PushRecord(ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.SafeClone(), value =>
             {
                 ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask = (UMat)value;
                 ViewModel.RefreshImageList();
-            }, () => ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask, disposeAction: value => ((UMat)value).Dispose());
-            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.Dispose();
-            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask = ViewModel.SelectionMaskUMat.Clone();
+            }, () => ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask, disposeAction: value => ((UMat)value).SafeDispose());
+            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.SafeDispose();
+            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask = ViewModel.SelectionMaskUMat.SafeClone();
             ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType = YuzuCleaningNotationType.Custom;
             ViewModel.RefreshImageList();
         }
@@ -320,13 +320,13 @@ namespace YuzuMarker.View
 
         private void didSelectionModeFinishedForNormalCleaning()
         {
-            UndoRedoManager.PushRecord(ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.Clone(), value =>
+            UndoRedoManager.PushRecord(ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.SafeClone(), value =>
             {
                 ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask = (UMat)value;
                 ViewModel.RefreshImageList();
-            }, () => ViewModel.SelectedNotationGroupItem?.CleaningNotation.CleaningMask, disposeAction: value => ((UMat)value).Dispose());
-            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.Dispose();
-            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask = ViewModel.SelectionMaskUMat.Clone();
+            }, () => ViewModel.SelectedNotationGroupItem?.CleaningNotation.CleaningMask, disposeAction: value => ((UMat)value).SafeDispose());
+            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask.SafeDispose();
+            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningMask = ViewModel.SelectionMaskUMat.SafeClone();
             ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType = YuzuCleaningNotationType.Normal;
             ViewModel.RefreshImageList();
         }
