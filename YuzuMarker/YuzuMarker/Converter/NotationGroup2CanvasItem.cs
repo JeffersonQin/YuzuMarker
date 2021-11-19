@@ -25,6 +25,7 @@ namespace YuzuMarker.Converter
             YuzuNotationGroup notationGroup = (YuzuNotationGroup)value;
             if (notationGroup == null) return null;
             
+            // TODO: refactor: 重写 cleaning 的渲染
             // TODO: 如果 YuzuManager.NotationGroup == notationGroup, 用特殊颜色显示，settings里加一下
             Scalar color = default;
             if (notationGroup.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Normal)

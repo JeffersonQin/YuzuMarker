@@ -297,6 +297,9 @@ namespace YuzuMarker.View
         }
         #endregion
 
+        // TODO: refactor: 
+        // 1. 保留一个按钮, 做 selection
+        // 2. checkbox 处理 type 的事情
         #region Selection CheckBox Group Handling
         private void didSelectionModeFinishedForCustomCleaning()
         {

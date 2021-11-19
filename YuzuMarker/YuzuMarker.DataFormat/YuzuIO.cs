@@ -57,6 +57,7 @@ namespace YuzuMarker.DataFormat
                     var cleaningMaskTargetPath = Path.Combine(notationGroup.ParentImage.GetImageNotationPath(), "./" + notationGroup.Timestamp + "-cleaning-mask.png");
                     File.Copy(tempCleaningMaskPath, cleaningMaskTargetPath, true);
                 }
+                // TODO: refactor: 这里增加读取 impainting 文件
                 var cleaningJson = new JObject();
                 cleaningJson["type"] = (int)notationGroup.CleaningNotation.CleaningNotationType;
                 File.WriteAllText(Path.Combine(notationGroup.ParentImage.GetImageNotationPath(), "./" + notationGroup.Timestamp + "-cleaning.json"), cleaningJson.ToString());

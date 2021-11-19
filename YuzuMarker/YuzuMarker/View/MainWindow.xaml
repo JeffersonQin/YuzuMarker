@@ -318,6 +318,18 @@
                         </Grid>
                     </TabItem>
                     <TabItem Header="背景处理">
+                        <!--
+                            TODO: refactor: 全部重构掉
+                            1. selection, 单独按钮
+                            2. 不同 checkbox 选择 color / impainting
+                                2.1 color 内部选择 color
+                                2.2 impainting 内部选择不同的算法
+                            3. 一排按钮搞区域放大 / 缩小 / 清空 / 全选 / 反选
+                            4. 按钮：导出当前 xxx 到 Photoshop, 检测有没有, 有了就提示
+                            5. 按钮：增加当前区域的自定义图层（需要首先导出）
+                            6. 按钮：定位到自动导出图层（检测有没有）
+                            7. 按钮：定位到当前区域的自定义图层（检测有没有）
+                        -->
                         <GroupBox Header="选项" Grid.Row="0">
                             <StackPanel>
                                 <TextBlock Text="{Binding SelectedNotationGroupItem, Converter={StaticResource NotationGroup2CleaningStatusString}}" 

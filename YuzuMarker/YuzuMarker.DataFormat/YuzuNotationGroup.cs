@@ -9,6 +9,7 @@ namespace YuzuMarker.DataFormat
 {
     public class YuzuNotationGroup : BasicYuzuNotationGroup
     {
+        // TODO: refactor: 删掉这个 ResourcesTracker
         public ResourcesTracker NotationResourcesTracker;
         
         public YuzuCleaningNotation CleaningNotation { get; set; }
@@ -23,6 +24,7 @@ namespace YuzuMarker.DataFormat
             CleaningNotation = new YuzuCleaningNotation(YuzuCleaningNotationType.Normal);
         }
         
+        // TODO: refactor: 把这个方法的实现放到 YuzuCleaningNotation (和各个子类) 中
         public void LoadNotationResource()
         {
             NotationResourcesTracker = new ResourcesTracker();
