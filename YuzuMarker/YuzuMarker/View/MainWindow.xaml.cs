@@ -90,10 +90,11 @@ namespace YuzuMarker.View
             if (!ViewModel.LabelMode) return;
             if (ViewModel.SelectionModeEnabled) return;
             Point clickPoint = e.GetPosition((IInputElement) sender);
-            
+
+            var lastIgnoreStatus = UndoRedoManager.IgnoreOtherRecording;
             UndoRedoManager.IgnoreOtherRecording = true;
             ViewModel.SelectedImageItem.CreateAndLoadNewNotationGroup((int)clickPoint.X, (int)clickPoint.Y, "", false);
-            UndoRedoManager.IgnoreOtherRecording = false;
+            UndoRedoManager.IgnoreOtherRecording = lastIgnoreStatus;
             var newGroup = ViewModel.SelectedImageItem.NotationGroups[^1];
             UndoRedoManager.PushRecord(null, value => { }, () => null, (o) =>
             {
