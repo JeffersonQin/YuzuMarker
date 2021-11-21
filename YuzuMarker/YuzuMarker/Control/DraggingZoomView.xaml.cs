@@ -108,7 +108,6 @@ namespace YuzuMarker.Control
         public DraggingZoomView()
         {
             InitializeComponent();
-            DataContext = this;
         }
 
         public double Scale = 1;

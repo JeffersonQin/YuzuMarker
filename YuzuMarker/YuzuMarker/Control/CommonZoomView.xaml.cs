@@ -98,7 +98,6 @@ namespace YuzuMarker.Control
         public CommonZoomView()
         {
             InitializeComponent();
-            DataContext = this;
             ZoomScrollViewer.ShouldScrollEventHandler = (e) =>
                 !(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl));
         }
