@@ -28,12 +28,17 @@ namespace YuzuMarker.BasicDataFormat
         public bool IsFinished
         {
             get => _isFinished;
-            set => SetProperty(ref _isFinished, value, beforeChanged: () =>
+            set => UndoRedoManager.PushAndPerformRecord(o =>
             {
-                UndoRedoManager.PushRecord(IsFinished, (o) =>
-                {
-                    IsFinished = (bool)o;
-                }, () => IsFinished);
+                var nowValue = IsFinished;
+                SetProperty(ref _isFinished, (bool)o);
+                return nowValue;
+            }, o =>
+            {
+                var nowValue = IsFinished;
+                o ??= value;
+                SetProperty(ref _isFinished, (bool)o);
+                return nowValue;
             });
         }
 

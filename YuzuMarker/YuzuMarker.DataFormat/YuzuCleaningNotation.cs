@@ -20,12 +20,17 @@ namespace YuzuMarker.DataFormat
         public YuzuCleaningNotationType CleaningNotationType
         {
             get => _cleaningNotationType;
-            set => SetProperty(ref _cleaningNotationType, value, beforeChanged: () =>
+            set => UndoRedoManager.PushAndPerformRecord(o =>
             {
-                UndoRedoManager.PushRecord(CleaningNotationType, (o) =>
-                {
-                    CleaningNotationType = (YuzuCleaningNotationType)o;
-                }, () => CleaningNotationType);
+                var nowValue = CleaningNotationType;
+                SetProperty(ref _cleaningNotationType, (YuzuCleaningNotationType)o);
+                return nowValue;
+            }, o =>
+            {
+                var nowValue = CleaningNotationType;
+                o ??= value;
+                SetProperty(ref _cleaningNotationType, (YuzuCleaningNotationType)o);
+                return nowValue;
             });
         }
 

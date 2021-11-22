@@ -20,12 +20,17 @@ namespace YuzuMarker.BasicDataFormat
         public long Timestamp
         {
             get => _timestamp;
-            set => SetProperty(ref _timestamp, value, beforeChanged: () =>
+            set => UndoRedoManager.PushAndPerformRecord(o =>
             {
-                UndoRedoManager.PushRecord(Timestamp, (o) =>
-                {
-                    Timestamp = (long)o;
-                }, () => Timestamp);
+                var nowValue = Timestamp;
+                SetProperty(ref _timestamp, (long)o);
+                return nowValue;
+            }, o =>
+            {
+                var nowValue = Timestamp;
+                o ??= value;
+                SetProperty(ref _timestamp, (long)o);
+                return nowValue;
             });
         }
 
@@ -34,12 +39,17 @@ namespace YuzuMarker.BasicDataFormat
         public int X
         {
             get => _x;
-            set => SetProperty(ref _x, value, beforeChanged: () =>
+            set => UndoRedoManager.PushAndPerformRecord(o =>
             {
-                UndoRedoManager.PushRecord(X, (o) =>
-                {
-                    X = (int)o;
-                }, () => X);
+                var nowValue = X;
+                SetProperty(ref _x, (int)o);
+                return nowValue;
+            }, o =>
+            {
+                var nowValue = X;
+                o ??= value;
+                SetProperty(ref _x, (int)o);
+                return nowValue;
             });
         }
 
@@ -48,12 +58,17 @@ namespace YuzuMarker.BasicDataFormat
         public int Y
         {
             get => _y;
-            set => SetProperty(ref _y, value, beforeChanged: () =>
+            set => UndoRedoManager.PushAndPerformRecord(o =>
             {
-                UndoRedoManager.PushRecord(Y, (o) =>
-                {
-                    Y = (int)o;
-                }, () => Y);
+                var nowValue = Y;
+                SetProperty(ref _y, (int)o);
+                return nowValue;
+            }, o =>
+            {
+                var nowValue = Y;
+                o ??= value;
+                SetProperty(ref _y, (int)o);
+                return nowValue;
             });
         }
 
@@ -62,12 +77,17 @@ namespace YuzuMarker.BasicDataFormat
         public string Text
         {
             get => _text;
-            set => SetProperty(ref _text, value, beforeChanged: () =>
+            set => UndoRedoManager.PushAndPerformRecord(o =>
             {
-                UndoRedoManager.PushRecord(Text, (o) =>
-                {
-                    Text = (string)o;
-                }, () => Text);
+                var nowValue = Text;
+                SetProperty(ref _text, (string)o);
+                return nowValue;
+            }, o =>
+            {
+                var nowValue = Text;
+                o ??= value;
+                SetProperty(ref _text, (string)o);
+                return nowValue;
             });
         }
 
@@ -76,12 +96,17 @@ namespace YuzuMarker.BasicDataFormat
         public bool IsFinished
         {
             get => _isFinished;
-            set => SetProperty(ref _isFinished, value, beforeChanged: () =>
+            set => UndoRedoManager.PushAndPerformRecord(o =>
             {
-                UndoRedoManager.PushRecord(IsFinished, (o) =>
-                {
-                    IsFinished = (bool)o;
-                }, () => IsFinished);
+                var nowValue = IsFinished;
+                SetProperty(ref _isFinished, (bool)o);
+                return nowValue;
+            }, o =>
+            {
+                var nowValue = IsFinished;
+                o ??= value;
+                SetProperty(ref _isFinished, (bool)o);
+                return nowValue;
             });
         }
 

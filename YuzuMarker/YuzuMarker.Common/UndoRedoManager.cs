@@ -30,6 +30,13 @@ namespace YuzuMarker.Common
             else UndoStack[_head] = records;
         }
 
+        public static void PushAndPerformRecord(List<UndoRedoRecord> records)
+        {
+            PushRecord(records);
+            foreach (var record in records)
+                record.Value = record.RedoAction(null);
+        }
+
         public static void PushRecord(UndoRedoRecord record)
         {
             if (ContinuousRecording)
@@ -37,14 +44,26 @@ namespace YuzuMarker.Common
             else PushRecord(new List<UndoRedoRecord> { record });
         }
 
-        public static void PushRecord(object value,
-            UndoRedoRecord.DelegateActionWithValue setValueAction,
-            UndoRedoRecord.DelegateActionReturnValue getValueAction, 
-            UndoRedoRecord.DelegateActionWithValue undoAction = null, 
-            UndoRedoRecord.DelegateActionWithValue redoAction = null, 
+        public static void PushAndPerformRecord(UndoRedoRecord record)
+        {
+            PushRecord(record);
+            record.Value = record.RedoAction(null);
+        }
+
+        public static void PushRecord(
+            UndoRedoRecord.DelegateActionWithAndReturnValue undoAction, 
+            UndoRedoRecord.DelegateActionWithAndReturnValue redoAction, 
             UndoRedoRecord.DelegateActionWithValue disposeAction = null)
         {
-            PushRecord(new UndoRedoRecord(value, setValueAction, getValueAction, undoAction, redoAction, disposeAction));
+            PushRecord(new UndoRedoRecord(undoAction, redoAction, disposeAction));
+        }
+
+        public static void PushAndPerformRecord(
+            UndoRedoRecord.DelegateActionWithAndReturnValue undoAction, 
+            UndoRedoRecord.DelegateActionWithAndReturnValue redoAction, 
+            UndoRedoRecord.DelegateActionWithValue disposeAction = null)
+        {
+            PushAndPerformRecord(new UndoRedoRecord(undoAction, redoAction, disposeAction));
         }
         
         public static void StartContinuousRecording()
@@ -61,32 +80,23 @@ namespace YuzuMarker.Common
         public static void Undo()
         {
             if (_head < 0) return;
+            var lastIgnoreStatus = IgnoreOtherRecording;
             IgnoreOtherRecording = true;
             for (var i = UndoStack[_head].Count - 1; i >= 0; i --)
-            {
-                var record = UndoStack[_head][i];
-                var value = record.GetValueAction?.Invoke();
-                record.SetValueAction(record.Value);
-                record.UndoAction?.Invoke(record.Value);
-                record.Value = value;
-            }
+                UndoStack[_head][i].Value = UndoStack[_head][i].UndoAction?.Invoke(UndoStack[_head][i].Value);
             _head --;
-            IgnoreOtherRecording = false;
+            IgnoreOtherRecording = lastIgnoreStatus;
         }
 
         public static void Redo()
         {
             if (_head == _max) return;
+            var lastIgnoreStatus = IgnoreOtherRecording;
             IgnoreOtherRecording = true;
             _head ++;
             foreach (var record in UndoStack[_head])
-            {
-                var value = record.GetValueAction?.Invoke();
-                record.SetValueAction(record.Value);
-                record.RedoAction?.Invoke(record.Value);
-                record.Value = value;
-            }
-            IgnoreOtherRecording = false;
+                record.Value = record.RedoAction?.Invoke(record.Value);
+            IgnoreOtherRecording = lastIgnoreStatus;
         }
 
         public static void Clear()

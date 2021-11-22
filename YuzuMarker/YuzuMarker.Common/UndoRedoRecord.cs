@@ -5,25 +5,18 @@
         public object Value;
 
         public delegate void DelegateActionWithValue(object value);
-
-        public delegate object DelegateActionReturnValue();
-
+        
         public delegate object DelegateActionWithAndReturnValue(object value);
 
-        public DelegateActionWithValue DisposeAction, SetValueAction, UndoAction, RedoAction;
+        public DelegateActionWithValue DisposeAction;
 
-        public DelegateActionReturnValue GetValueAction;
+        public DelegateActionWithAndReturnValue UndoAction, RedoAction;
 
-        public UndoRedoRecord(object value, 
-            DelegateActionWithValue setValueAction,
-            DelegateActionReturnValue getValueAction, 
-            DelegateActionWithValue undoAction = null, 
-            DelegateActionWithValue redoAction = null, 
+        public UndoRedoRecord(
+            DelegateActionWithAndReturnValue undoAction, 
+            DelegateActionWithAndReturnValue redoAction, 
             DelegateActionWithValue disposeAction = null)
         {
-            Value = value;
-            SetValueAction = setValueAction;
-            GetValueAction = getValueAction;
             UndoAction = undoAction;
             RedoAction = redoAction;
             DisposeAction = disposeAction;
