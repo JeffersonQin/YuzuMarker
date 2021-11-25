@@ -26,7 +26,7 @@ namespace YuzuMarker.DataFormat
             foreach (var basicYuzuNotationGroup in NotationGroups)
             {
                 var notationGroup = basicYuzuNotationGroup as YuzuNotationGroup;
-                notationGroup?.LoadNotationResource();
+                notationGroup?.Load();
             }
         }
 
@@ -35,7 +35,7 @@ namespace YuzuMarker.DataFormat
             foreach (var basicYuzuNotationGroup in NotationGroups)
             {
                 var notationGroup = basicYuzuNotationGroup as YuzuNotationGroup;
-                notationGroup?.WriteNotationResource();
+                notationGroup?.Write();
             }
         }
 
@@ -44,20 +44,20 @@ namespace YuzuMarker.DataFormat
             foreach (var basicYuzuNotationGroup in NotationGroups)
             {
                 var notationGroup = basicYuzuNotationGroup as YuzuNotationGroup;
-                notationGroup?.UnloadNotationResource();
+                notationGroup?.Unload();
             }
         }
 
         public void CreateAndLoadNewNotationGroup(int x, int y, string text, bool finished)
         {
             var notationGroup = new YuzuNotationGroup(this, x, y, text, finished);
-            notationGroup.LoadNotationResource();
+            notationGroup.Load();
             NotationGroups.Add(notationGroup);
         }
 
         public void RemoveAndUnloadNotationGroup(YuzuNotationGroup notationGroup)
         {
-            notationGroup.UnloadNotationResource();
+            notationGroup.Unload();
             NotationGroups.Remove(notationGroup);
         }
     }
