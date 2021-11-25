@@ -453,7 +453,6 @@ namespace YuzuMarker.ViewModel
                                 {
                                     var removedItem = ((List<object>)o)[0] as YuzuNotationGroup;
                                     var removedIndex = ((List<object>)o)[1] as int? ?? 0;
-                                    removedItem?.LoadNotationResource();
                                     NotationGroups.Insert(removedIndex, removedItem);
                                     RefreshImageList();
                                     return o;
@@ -465,10 +464,13 @@ namespace YuzuMarker.ViewModel
                                         NotationGroups.IndexOf(SelectedNotationGroupItem)
                                     };
                                     var removedItem = ((List<object>)o)[0] as YuzuNotationGroup;
-                                    removedItem?.UnloadNotationResource();
                                     NotationGroups.Remove(removedItem);
                                     RefreshImageList();
                                     return o;
+                                }, o =>
+                                {
+                                    var removedItem = ((List<object>)o)[0] as YuzuNotationGroup;
+                                    removedItem?.Dispose();
                                 });
                             }
                             catch (Exception e)
