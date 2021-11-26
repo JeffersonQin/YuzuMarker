@@ -12,7 +12,7 @@ namespace YuzuMarker.BasicDataFormat
         public BasicYuzuProject ParentProject
         {
             get => _parentProject;
-            set => SetProperty(ref _parentProject, value);
+            set => SetProperty(value);
         }
         
         private string _imageName;
@@ -20,26 +20,16 @@ namespace YuzuMarker.BasicDataFormat
         public string ImageName
         {
             get => _imageName;
-            set => SetProperty(ref _imageName, value);
+            set => SetProperty(value);
         }
 
         private bool _isFinished;
 
+        [Undoable]
         public bool IsFinished
         {
             get => _isFinished;
-            set => UndoRedoManager.PushAndPerformRecord(o =>
-            {
-                var nowValue = IsFinished;
-                SetProperty(ref _isFinished, (bool)o);
-                return nowValue;
-            }, o =>
-            {
-                var nowValue = IsFinished;
-                o ??= value;
-                SetProperty(ref _isFinished, (bool)o);
-                return nowValue;
-            });
+            set => SetProperty(value);
         }
 
         private ObservableCollection<BasicYuzuNotationGroup> _notationGroups;
@@ -47,7 +37,7 @@ namespace YuzuMarker.BasicDataFormat
         public ObservableCollection<BasicYuzuNotationGroup> NotationGroups
         {
             get => _notationGroups;
-            set => SetProperty(ref _notationGroups, value);
+            set => SetProperty(value);
         }
 
         public BasicYuzuImage(BasicYuzuProject parentProject, string imageName, bool finished)

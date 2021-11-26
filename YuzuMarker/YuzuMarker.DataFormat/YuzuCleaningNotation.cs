@@ -17,21 +17,11 @@ namespace YuzuMarker.DataFormat
     {
         private YuzuCleaningNotationType _cleaningNotationType;
 
+        [Undoable]
         public YuzuCleaningNotationType CleaningNotationType
         {
             get => _cleaningNotationType;
-            set => UndoRedoManager.PushAndPerformRecord(o =>
-            {
-                var nowValue = CleaningNotationType;
-                SetProperty(ref _cleaningNotationType, (YuzuCleaningNotationType)o);
-                return nowValue;
-            }, o =>
-            {
-                var nowValue = CleaningNotationType;
-                o ??= value;
-                SetProperty(ref _cleaningNotationType, (YuzuCleaningNotationType)o);
-                return nowValue;
-            });
+            set => SetProperty(value);
         }
 
         public UMat CleaningMask;

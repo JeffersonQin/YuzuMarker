@@ -32,7 +32,7 @@ namespace YuzuMarker.ViewModel
         public YuzuProject Project
         {
             get => _project;
-            set => SetProperty(ref _project, value);
+            set => SetProperty(value);
         }
         #endregion
 
@@ -73,12 +73,12 @@ namespace YuzuMarker.ViewModel
             {
                 if (_selectedImageItem == null)
                 {
-                    SetProperty(ref _selectedImageItem, value);
+                    SetProperty(value);
                     goto EndSection;
                 }
                 if (!_refreshingImageList)
                     _selectedImageItem.UnloadImageNotations();
-                SetProperty(ref _selectedImageItem, Project == null ? null : value);
+                SetProperty(Project == null ? null : value);
             EndSection:
                 if (!_refreshingImageList)
                     value?.LoadImageNotations();
@@ -98,63 +98,33 @@ namespace YuzuMarker.ViewModel
         #region Property: SelectedNotationGroupItem
         private YuzuNotationGroup _selectedNotationGroupItem;
         
+        [Undoable]
         public YuzuNotationGroup SelectedNotationGroupItem
         {
             get => _selectedNotationGroupItem;
-            set => UndoRedoManager.PushAndPerformRecord(o =>
-            {
-                var nowValue = SelectedNotationGroupItem;
-                SetProperty(ref _selectedNotationGroupItem, (YuzuNotationGroup)o);
-                return nowValue;
-            }, o =>
-            {
-                var nowValue = SelectedNotationGroupItem;
-                o ??= value;
-                SetProperty(ref _selectedNotationGroupItem, (YuzuNotationGroup)o);
-                return nowValue;
-            });
+            set => SetProperty(value);
         }
         #endregion
 
         #region Property: LabelMode
         private bool _labelMode = false;
 
+        [Undoable]
         public bool LabelMode
         {
             get => _labelMode;
-            set => UndoRedoManager.PushAndPerformRecord(o =>
-            {
-                var nowValue = LabelMode;
-                SetProperty(ref _labelMode, (bool)o);
-                return nowValue;
-            }, o =>
-            {
-                var nowValue = LabelMode;
-                o ??= value;
-                SetProperty(ref _labelMode, (bool)o);
-                return nowValue;
-            });
+            set => SetProperty(value);
         }
         #endregion
 
         #region Property: SelectionModeEnabled
         private bool _selectionModeEnabled = false;
 
+        [Undoable]
         public bool SelectionModeEnabled
         {
             get => _selectionModeEnabled;
-            set => UndoRedoManager.PushAndPerformRecord(o =>
-            {
-                var nowValue = SelectionModeEnabled;
-                SetProperty(ref _selectionModeEnabled, (bool)o);
-                return nowValue;
-            }, o =>
-            {
-                var nowValue = SelectionModeEnabled;
-                o ??= value;
-                SetProperty(ref _selectionModeEnabled, (bool)o);
-                return nowValue;
-            });
+            set => SetProperty(value);
         }
         #endregion
         
@@ -286,42 +256,22 @@ namespace YuzuMarker.ViewModel
         #region Property: SelectionType
         private SelectionType _selectionType = SelectionType.Lasso;
 
+        [Undoable]
         public SelectionType SelectionType
         {
             get => _selectionType;
-            set => UndoRedoManager.PushAndPerformRecord(o =>
-            {
-                var nowValue = SelectionType;
-                SetProperty(ref _selectionType, (SelectionType)o);
-                return nowValue;
-            }, o =>
-            {
-                var nowValue = SelectionType;
-                o ??= value;
-                SetProperty(ref _selectionType, (SelectionType)o);
-                return nowValue;
-            });
+            set => SetProperty(value);
         }
         #endregion
 
         #region Property: SelectionMode
         private SelectionMode _selectionMode = SelectionMode.New;
 
+        [Undoable]
         public SelectionMode SelectionMode
         {
             get => _selectionMode;
-            set => UndoRedoManager.PushAndPerformRecord(o =>
-            {
-                var nowValue = SelectionMode;
-                SetProperty(ref _selectionMode, (SelectionMode)o);
-                return nowValue;
-            }, o =>
-            {
-                var nowValue = SelectionMode;
-                o ??= value;
-                SetProperty(ref _selectionMode, (SelectionMode)o);
-                return nowValue;
-            });
+            set => SetProperty(value);
         }
         #endregion
         
@@ -348,7 +298,7 @@ namespace YuzuMarker.ViewModel
         public ShapeData RectangleShapeData
         {
             get => _rectangleShapeData;
-            set => SetProperty(ref _rectangleShapeData, value);
+            set => SetProperty(value);
         }
         #endregion
 
@@ -358,7 +308,7 @@ namespace YuzuMarker.ViewModel
         public ShapeData OvalShapeData
         {
             get => _ovalShapeData;
-            set => SetProperty(ref _ovalShapeData, value);
+            set => SetProperty(value);
         }
         #endregion
 
