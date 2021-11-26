@@ -23,10 +23,21 @@ namespace YuzuMarker.Common
             return true;
         }
 
-        public bool SetProperty<T>(T value, [CallerMemberName] string propertyName = "",
+        public bool SetProperty<T>(T value, [CallerMemberName] string propertyName = "", 
+            BackingNamingStyle backingNamingStyle = BackingNamingStyle.UnderscoreAndLowerCase,
             Action beforeChanged = null, Action onChanged = null)
         {
-            var backingName = "_" + propertyName[0].ToString().ToLower() + propertyName.Substring(1);
+            var backingName = "";
+            switch (backingNamingStyle)
+            {
+                case BackingNamingStyle.LowerCase:
+                    backingName = propertyName[0].ToString().ToLower() + propertyName.Substring(1);
+                    break;
+                case BackingNamingStyle.UnderscoreAndLowerCase:
+                    backingName = "_" + propertyName[0].ToString().ToLower() + propertyName.Substring(1);
+                    break;
+            }
+            
             Type type = null;
             FieldInfo backingInstance = null;
             do
