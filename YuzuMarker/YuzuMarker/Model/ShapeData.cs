@@ -9,7 +9,7 @@ namespace YuzuMarker.Model
         public float X
         {
             get => _x;
-            set => SetProperty(ref _x, value);
+            set => SetProperty(value);
         }
         
         private float _y;
@@ -17,7 +17,7 @@ namespace YuzuMarker.Model
         public float Y
         {
             get => _y;
-            set => SetProperty(ref _y, value);
+            set => SetProperty(value);
         }
         
         private float _width;
@@ -25,7 +25,7 @@ namespace YuzuMarker.Model
         public float Width
         {
             get => _width;
-            set => SetProperty(ref _width, value);
+            set => SetProperty(value);
         }
         
         private float _height;
@@ -33,7 +33,7 @@ namespace YuzuMarker.Model
         public float Height
         {
             get => _height;
-            set => SetProperty(ref _height, value);
+            set => SetProperty(value);
         }
 
         public ShapeData()

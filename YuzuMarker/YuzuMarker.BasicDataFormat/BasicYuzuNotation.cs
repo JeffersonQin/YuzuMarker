@@ -9,7 +9,7 @@ namespace YuzuMarker.BasicDataFormat
         public BasicYuzuNotationGroup ParentNotationGroup
         {
             get => _parentNotationGroup;
-            set => SetProperty(ref _parentNotationGroup, value);
+            set => SetProperty(value);
         }
 
         public BasicYuzuNotation(BasicYuzuNotationGroup parentNotationGroup)

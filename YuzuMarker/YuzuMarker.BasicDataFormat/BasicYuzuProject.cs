@@ -16,7 +16,7 @@ namespace YuzuMarker.BasicDataFormat
             {
                 if (!IOUtils.JudgeFilePath(value))
                     throw new Exception("Invalid Yuzu Project Path");
-                SetProperty(ref _path, value);
+                SetProperty(value);
             }
         }
 
@@ -25,7 +25,7 @@ namespace YuzuMarker.BasicDataFormat
         public string ProjectName
         {
             get => _projectName;
-            set => SetProperty(ref _projectName, value);
+            set => SetProperty(value);
         }
         
         private string _fileName;
@@ -37,7 +37,7 @@ namespace YuzuMarker.BasicDataFormat
             {
                 if (!IOUtils.JudgeFileName(value))
                     throw new Exception("Invalid Yuzu Project file name");
-                SetProperty(ref _fileName, value);
+                SetProperty(value);
             }
         }
 
@@ -46,7 +46,7 @@ namespace YuzuMarker.BasicDataFormat
         public ObservableCollection<BasicYuzuImage> Images
         {
             get => _images;
-            set => SetProperty(ref _images, value);
+            set => SetProperty(value);
         }
         
         public void EnsureImageFolderExist()

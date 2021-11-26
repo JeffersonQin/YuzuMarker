@@ -12,102 +12,52 @@ namespace YuzuMarker.BasicDataFormat
         public BasicYuzuImage ParentImage
         {
             get => _parentImage;
-            set => SetProperty(ref _parentImage, value);
+            set => SetProperty(value);
         }
         
         private long _timestamp;
 
+        [Undoable]
         public long Timestamp
         {
             get => _timestamp;
-            set => UndoRedoManager.PushAndPerformRecord(o =>
-            {
-                var nowValue = Timestamp;
-                SetProperty(ref _timestamp, (long)o);
-                return nowValue;
-            }, o =>
-            {
-                var nowValue = Timestamp;
-                o ??= value;
-                SetProperty(ref _timestamp, (long)o);
-                return nowValue;
-            });
+            set => SetProperty(value);
         }
 
         private int _x;
 
+        [Undoable]
         public int X
         {
             get => _x;
-            set => UndoRedoManager.PushAndPerformRecord(o =>
-            {
-                var nowValue = X;
-                SetProperty(ref _x, (int)o);
-                return nowValue;
-            }, o =>
-            {
-                var nowValue = X;
-                o ??= value;
-                SetProperty(ref _x, (int)o);
-                return nowValue;
-            });
+            set => SetProperty(value);
         }
 
         private int _y;
 
+        [Undoable]
         public int Y
         {
             get => _y;
-            set => UndoRedoManager.PushAndPerformRecord(o =>
-            {
-                var nowValue = Y;
-                SetProperty(ref _y, (int)o);
-                return nowValue;
-            }, o =>
-            {
-                var nowValue = Y;
-                o ??= value;
-                SetProperty(ref _y, (int)o);
-                return nowValue;
-            });
+            set => SetProperty(value);
         }
 
         private string _text;
 
+        [Undoable]
         public string Text
         {
             get => _text;
-            set => UndoRedoManager.PushAndPerformRecord(o =>
-            {
-                var nowValue = Text;
-                SetProperty(ref _text, (string)o);
-                return nowValue;
-            }, o =>
-            {
-                var nowValue = Text;
-                o ??= value;
-                SetProperty(ref _text, (string)o);
-                return nowValue;
-            });
+            set => SetProperty(value);
         }
 
         private bool _isFinished;
 
+        [Undoable]
         public bool IsFinished
         {
             get => _isFinished;
-            set => UndoRedoManager.PushAndPerformRecord(o =>
-            {
-                var nowValue = IsFinished;
-                SetProperty(ref _isFinished, (bool)o);
-                return nowValue;
-            }, o =>
-            {
-                var nowValue = IsFinished;
-                o ??= value;
-                SetProperty(ref _isFinished, (bool)o);
-                return nowValue;
-            });
+            set => SetProperty(value);
         }
 
         public BasicYuzuNotationGroup(BasicYuzuImage parentImage, int x, int y, string text, bool finished)

@@ -102,8 +102,10 @@ namespace YuzuMarker.View
                 return newGroup;
             }, newGroup =>
             {
-                newGroup ??= ViewModel.SelectedImageItem.NotationGroups[^1];
-                ViewModel.SelectedImageItem.NotationGroups.Add(newGroup as YuzuNotationGroup);
+                if (newGroup == null)
+                    newGroup = ViewModel.SelectedImageItem.NotationGroups[^1];
+                else
+                    ViewModel.SelectedImageItem.NotationGroups.Add(newGroup as YuzuNotationGroup);
                 return newGroup;
             });
         }
