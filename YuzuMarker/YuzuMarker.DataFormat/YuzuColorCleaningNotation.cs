@@ -14,23 +14,13 @@ namespace YuzuMarker.DataFormat
             CleaningNotationColor = color;
         }
 
-        private Color _cleaningNotationColor;
+        private Color _cleaningNotationColor = Color.White;
 
+        [Undoable]
         public Color CleaningNotationColor
         {
             get => _cleaningNotationColor;
-            set => UndoRedoManager.PushAndPerformRecord(o =>
-            {
-                var nowValue = CleaningNotationColor;
-                SetProperty(ref _cleaningNotationColor, (Color)o);
-                return nowValue;
-            }, o =>
-            {
-                var nowValue = CleaningNotationColor;
-                o ??= value;
-                SetProperty(ref _cleaningNotationColor, (Color)o);
-                return nowValue;
-            });
+            set => SetProperty(value);
         }
     }
 }
