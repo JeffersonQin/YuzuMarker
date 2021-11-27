@@ -30,7 +30,17 @@ namespace YuzuMarker.DataFormat
                 // Cleaning Notation
                 var cleaningText = File.ReadAllText(Path.Combine(image.GetImageNotationPath(), "./" + timestamp + "-cleaning.json"));
                 var cleaningJson = JObject.Parse(cleaningText);
-                notationGroup.CleaningNotation = new YuzuCleaningNotation((YuzuCleaningNotationType)int.Parse(cleaningJson["type"].ToString()));
+                switch ((YuzuCleaningNotationType)int.Parse(cleaningJson["type"].ToString()))
+                {
+                    case YuzuCleaningNotationType.Color:
+                        var colorCleaningNotation = new YuzuColorCleaningNotation(notationGroup);
+                        colorCleaningNotation.CleaningNotationColor = Color.FromArgb(int.Parse(cleaningJson["color"]?.ToString() ?? "0"));
+                        notationGroup.CleaningNotation = colorCleaningNotation;
+                        break;
+                    case YuzuCleaningNotationType.Impainting:
+                        notationGroup.CleaningNotation = new YuzuImpaintingCleaningNotation(notationGroup);
+                        break;
+                }
                 
                 // Other Notations
 
@@ -57,9 +67,24 @@ namespace YuzuMarker.DataFormat
                     var cleaningMaskTargetPath = Path.Combine(notationGroup.ParentImage.GetImageNotationPath(), "./" + notationGroup.Timestamp + "-cleaning-mask.png");
                     File.Copy(tempCleaningMaskPath, cleaningMaskTargetPath, true);
                 }
-                // TODO: refactor: 这里增加读取 impainting 文件
                 var cleaningJson = new JObject();
                 cleaningJson["type"] = (int)notationGroup.CleaningNotation.CleaningNotationType;
+                
+                switch (notationGroup.CleaningNotation.CleaningNotationType)
+                {
+                    case YuzuCleaningNotationType.Color:
+                        cleaningJson["color"] = ((YuzuColorCleaningNotation)notationGroup.CleaningNotation).CleaningNotationColor.ToArgb();
+                        break;
+                    case YuzuCleaningNotationType.Impainting:
+                        var tempImpaintingFilePath = Path.Combine(notationGroup.ParentImage.GetImageTempPath(), "./" + notationGroup.Timestamp + "-impainting.png");
+                        if (File.Exists(tempImpaintingFilePath))
+                        {
+                            var impaintingFileTargetPath = Path.Combine(notationGroup.ParentImage.GetImageNotationPath(), "./" + notationGroup.Timestamp + "-impainting.png");
+                            File.Copy(tempImpaintingFilePath, impaintingFileTargetPath, true);
+                        }
+                        break;
+                }
+                
                 File.WriteAllText(Path.Combine(notationGroup.ParentImage.GetImageNotationPath(), "./" + notationGroup.Timestamp + "-cleaning.json"), cleaningJson.ToString());
 
                 // Other Notations
