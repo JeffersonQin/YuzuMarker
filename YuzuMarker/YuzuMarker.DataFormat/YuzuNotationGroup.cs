@@ -12,21 +12,11 @@ namespace YuzuMarker.DataFormat
     {
         private YuzuCleaningNotation _cleaningNotation;
 
+        [Undoable]
         public YuzuCleaningNotation CleaningNotation
         {
             get => _cleaningNotation;
-            set => UndoRedoManager.PushAndPerformRecord(o =>
-            {
-                var nowValue = CleaningNotation;
-                SetProperty(ref _cleaningNotation, (YuzuCleaningNotation)o);
-                return nowValue;
-            }, o =>
-            {
-                var nowValue = CleaningNotation;
-                o ??= value;
-                SetProperty(ref _cleaningNotation, (YuzuCleaningNotation)o);
-                return nowValue;
-            }, o => ((YuzuCleaningNotation)o).Dispose());
+            set => SetProperty(value, disposeAction: o => ((YuzuCleaningNotation)o).Dispose());
         }
         
         // Other kinds of notations
