@@ -40,6 +40,7 @@
         <vc:ShapeData2LeftConverter x:Key="ShapeData2LeftConverter"/>
         <vc:ShapeData2TopConverter x:Key="ShapeData2TopConverter"/>
         <vc:NegativeLengthDataConverter x:Key="NegativeLengthDataConverter"/>
+        <vc:Standard2WindowsColorConverter x:Key="Standard2WindowsColorConverter"/>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Command="{Binding CreateProject}" Modifiers="Ctrl" Key="N"/>
@@ -330,40 +331,67 @@
                             6. 按钮：定位到自动导出图层（检测有没有）
                             7. 按钮：定位到当前区域的自定义图层（检测有没有）
                         -->
-                        <GroupBox Header="选项" Grid.Row="0">
-                            <StackPanel>
-                                <TextBlock Text="{Binding SelectedNotationGroupItem, Converter={StaticResource NotationGroup2CleaningStatusString}}" 
+                        <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                            <StackPanel Orientation="Vertical">
+                                <!--区域选择模块-->
+                                <TextBlock Margin="5">区域选择</TextBlock>
+                                <TextBlock Margin="2" Text="{Binding SelectedNotationGroupItem, Converter={StaticResource NotationGroup2CleaningStatusString}}" 
                                            Background="{Binding SelectedNotationGroupItem, Converter={StaticResource NotationGroup2CleaningStatusColor}}" HorizontalAlignment="Center"/>
+                                <Button Margin="2">选择区域</Button>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Margin="2" Grid.Column="0">放大</Button>
+                                    <Button Margin="2" Grid.Column="1">缩小</Button>
+                                    <Button Margin="2" Grid.Column="2">清空</Button>
+                                    <Button Margin="2" Grid.Column="3">全选</Button>
+                                    <Button Margin="2" Grid.Column="4">反选</Button>
+                                </Grid>
+                                <Separator Margin="2 2 2 2"/>
+                                <!--模式选择模块-->
+                                <TextBlock Margin="5">模式选择</TextBlock>
                                 <RadioButton x:Name="NormalCleaningRadioButton" GroupName="CleaningGroup" Margin="5" Checked="CleaningNormalChecked"
-                                             IsChecked="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource NotationGroup2Boolean4NormalCleaning}}">
-                                    <RadioButton.Content>
-                                        <StackPanel>
-                                            <TextBlock>正常涂白</TextBlock>
-                                            <WrapPanel IsEnabled="{Binding ElementName=NormalCleaningRadioButton, Path=IsChecked}">
-                                                <Button Margin="2" Click="CleaningNormalSelectionModeButtonClicked">套索选择</Button>
-                                                <Button Margin="2">选择自动识别的气泡</Button>
-                                                <Button Margin="2">缩小区域1单位</Button>
-                                                <Button Margin="2">放大区域1单位</Button>
-                                            </WrapPanel>
-                                        </StackPanel>
-                                    </RadioButton.Content>
+                                             IsChecked="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource NotationGroup2Boolean4ColorCleaning}}">
+                                    Color Mode
                                 </RadioButton>
+                                <StackPanel Margin="25 2 5 2" IsEnabled="{Binding ElementName=NormalCleaningRadioButton, Path=IsChecked}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Margin="2" VerticalAlignment="Center">设置颜色</TextBlock>
+                                        <uc:CustomPortableColorPicker Margin="2" Grid.Column="1" ColorPickingStartedEventHandler="ColorPickingStarted" ColorPickingFinishedEventHandler="ColorPickingFinished" ColorChanged="PickerControlBase_OnColorChanged"
+                                             SelectedColor="{Binding SelectedNotationGroupItem.CleaningNotation.CleaningNotationColor, Mode=TwoWay, Converter={StaticResource Standard2WindowsColorConverter}}"/>
+                                    </Grid>
+                                    <WrapPanel>
+                                        <Button Margin="2">自动提取背景颜色</Button>
+                                    </WrapPanel>
+                                </StackPanel>
+                                <Separator Margin="25 2 5 2"/>
                                 <RadioButton x:Name="CustomCleaningRadioButton" GroupName="CleaningGroup" Margin="5" Checked="CleaningCustomChecked"
-                                             IsChecked="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource NotationGroup2Boolean4CustomCleaning}}">
-                                    <RadioButton.Content>
-                                        <StackPanel>
-                                            <TextBlock>Photoshop 自定义蒙版</TextBlock>
-                                            <Button IsEnabled="{Binding ElementName=CustomCleaningRadioButton, Path=IsChecked}"
-                                                    Command="{Binding ExportCustomCleaningMaskToPhotoshop}">
-                                                <StackPanel>
-                                                    <TextBlock Margin="2">导出此蒙版到 Photoshop <LineBreak/>(若已导出将定位到该图层)</TextBlock>
-                                                </StackPanel>
-                                            </Button>
-                                        </StackPanel>
-                                    </RadioButton.Content>
+                                             IsChecked="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource NotationGroup2Boolean4ImpaintingCleaning}}">
+                                    Impainting Mode
                                 </RadioButton>
+                                <WrapPanel Margin="25 2 5 2" IsEnabled="{Binding ElementName=CustomCleaningRadioButton, Path=IsChecked}">
+                                    <Button Margin="2">清除修复</Button>
+                                </WrapPanel>
+                                <Separator Margin="2 2 2 2"/>
+                                <!--Photoshop模块-->
+                                <TextBlock Margin="5">Photoshop相关</TextBlock>
+                                <WrapPanel Margin="2">
+                                    <Button Margin="2">导出当前图层到 Photoshop</Button>
+                                    <Button Margin="2">增加当前区域的自定义图层</Button>
+                                    <Button Margin="2">定位到自动导出图层</Button>
+                                    <Button Margin="2">定位到当前区域的自定义图层</Button>
+                                </WrapPanel>
                             </StackPanel>
-                        </GroupBox>
+                        </ScrollViewer>
                     </TabItem>
                     <TabItem Header="嵌字">
 

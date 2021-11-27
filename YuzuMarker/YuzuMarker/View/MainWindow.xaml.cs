@@ -385,5 +385,51 @@ namespace YuzuMarker.View
             EnableSelectionMode(didSelectionModeFinishedForNormalCleaning);
         }
         #endregion
+
+        private bool _lastIgnoringStatus = false;
+
+        private void ColorPickingStarted(object sender, RoutedEventArgs e)
+        {
+            UndoRedoManager.StartContinuousRecording();
+            UndoRedoManager.PushAndPerformRecord(o =>
+            {
+                var nowValue = ((YuzuColorCleaningNotation)(ViewModel.SelectedNotationGroupItem.CleaningNotation)).CleaningNotationColor;
+                ((YuzuColorCleaningNotation)(ViewModel.SelectedNotationGroupItem.CleaningNotation)).CleaningNotationColor = (System.Drawing.Color)o;
+                return nowValue;
+            }, o =>
+            {
+                var nowValue = ((YuzuColorCleaningNotation)(ViewModel.SelectedNotationGroupItem.CleaningNotation)).CleaningNotationColor;
+                o ??= nowValue;
+                ((YuzuColorCleaningNotation)(ViewModel.SelectedNotationGroupItem.CleaningNotation)).CleaningNotationColor = (System.Drawing.Color)o;
+                return nowValue;
+            });
+            _lastIgnoringStatus = UndoRedoManager.IgnoreOtherRecording;
+            UndoRedoManager.IgnoreOtherRecording = true;
+        }
+        
+        private void ColorPickingFinished(object sender, RoutedEventArgs e)
+        {
+
+            UndoRedoManager.IgnoreOtherRecording = _lastIgnoringStatus;
+            UndoRedoManager.PushAndPerformRecord(o =>
+            {
+                var nowValue = ((YuzuColorCleaningNotation)(ViewModel.SelectedNotationGroupItem.CleaningNotation)).CleaningNotationColor;
+                ((YuzuColorCleaningNotation)(ViewModel.SelectedNotationGroupItem.CleaningNotation)).CleaningNotationColor = (System.Drawing.Color)o;
+                return nowValue;
+            }, o =>
+            {
+                var nowValue = ((YuzuColorCleaningNotation)(ViewModel.SelectedNotationGroupItem.CleaningNotation)).CleaningNotationColor;
+                o ??= nowValue;
+                ((YuzuColorCleaningNotation)(ViewModel.SelectedNotationGroupItem.CleaningNotation)).CleaningNotationColor = (System.Drawing.Color)o;
+                return nowValue;
+            });
+            UndoRedoManager.StopContinuousRecording();
+        }
+
+        private void PickerControlBase_OnColorChanged(object sender, RoutedEventArgs e)
+        {
+            if (!ViewModel.RefreshingImageList)
+                ViewModel.RefreshImageList();
+        }
     }
 }
