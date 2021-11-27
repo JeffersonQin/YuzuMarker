@@ -25,7 +25,10 @@ namespace YuzuMarker.Common
 
         public bool SetProperty<T>(T value, [CallerMemberName] string propertyName = "", 
             BackingNamingStyle backingNamingStyle = BackingNamingStyle.UnderscoreAndLowerCase,
-            Action beforeChanged = null, Action onChanged = null)
+            Action beforeChanged = null, Action onChanged = null,
+            UndoRedoRecord.DelegateActionWithAndReturnValue undoAction = null,
+            UndoRedoRecord.DelegateActionWithAndReturnValue redoAction = null,
+            UndoRedoRecord.DelegateActionWithValue disposeAction = null)
         {
             var backingName = "";
             switch (backingNamingStyle)
@@ -60,20 +63,20 @@ namespace YuzuMarker.Common
             }
             else
             {
-                UndoRedoManager.PushAndPerformRecord(attribute.UndoAction ?? (o =>
+                UndoRedoManager.PushAndPerformRecord(undoAction ?? (o =>
                 {
                     var nowValue = backingInstance.GetValue(this);
                     backingInstance.SetValue(this, o);
                     RaisePropertyChanged(propertyName);
                     return nowValue;
-                }), attribute.RedoAction ?? (o =>
+                }), redoAction ?? (o =>
                 {
                     var nowValue = backingInstance.GetValue(this);
                     o ??= value;
                     backingInstance.SetValue(this, o);
                     RaisePropertyChanged(propertyName);
                     return nowValue;
-                }), attribute.DisposeAction);
+                }), disposeAction);
             }
             
             return true;
