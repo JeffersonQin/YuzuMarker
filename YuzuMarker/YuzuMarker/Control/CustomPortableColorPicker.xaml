@@ -1,0 +1,63 @@
+﻿<!--Modified from: https://github.com/PixiEditor/ColorPicker/blob/master/src/ColorPicker/PortableColorPicker.xaml.cs-->
+<colorpicker:DualPickerControlBase x:Class="YuzuMarker.Control.CustomPortableColorPicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker"
+             xmlns:local="clr-namespace:YuzuMarker.Control" 
+             xmlns:cv="clr-namespace:YuzuMarker.Converter"
+             mc:Ignorable="d"
+             d:DesignHeight="20" d:DesignWidth="180" x:Name="uc">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <SolidColorBrush x:Key="AccentColor" Color="#2d2d30" />
+            <Style TargetType="ToggleButton" x:Key="ColorToggleButtonStyle">
+                <Setter Property="OverridesDefaultStyle" Value="True" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ToggleButton">
+                            <Border BorderThickness="0" Background="{TemplateBinding Background}">
+                                <ContentPresenter Content="{TemplateBinding Content}" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <cv:Boolean2Reverse x:Key="BoolToInvertedBoolConverter" />
+            <cv:Color2Brush x:Key="ColorToBrushConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Border BorderThickness="1" BorderBrush="Black" Panel.ZIndex="0" Padding="0" Margin="10 0 10 0">
+            <Border.Background>
+                <ImageBrush ImageSource="/ColorPicker;component/Images/transparentbg_mini.png" Stretch="UniformToFill">
+                    <!--<ImageBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleX="6" ScaleY="6" />
+                            <SkewTransform CenterY="0.5" CenterX="0.5" />
+                            <RotateTransform CenterY="0.5" CenterX="0.5" />
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </ImageBrush.RelativeTransform>-->
+                </ImageBrush>
+            </Border.Background>
+            <ToggleButton Style="{StaticResource ColorToggleButtonStyle}" Padding="0" Margin="0"
+                          IsEnabled="{Binding Path=IsOpen, ElementName=popup, Converter={StaticResource BoolToInvertedBoolConverter}}"
+                          x:Name="toggleButton" BorderThickness="0" Panel.ZIndex="1"
+                          Background="{Binding Path=SelectedColor, ElementName=uc, Converter={StaticResource ColorToBrushConverter}}"
+                          Checked="toggleButton_OnChecked" Unchecked="toggleButton_Unchecked">
+                <Border BorderThickness="0" BorderBrush="Transparent" Background="Transparent" />
+            </ToggleButton>
+        </Border>
+        <Popup Name="popup" StaysOpen="False" IsOpen="{Binding Path=IsChecked, ElementName=toggleButton, Mode=TwoWay}">
+            <Border BorderThickness="1" BorderBrush="Black" Background="White">
+                <colorpicker:StandardColorPicker ColorState="{Binding ElementName=uc, Path=ColorState, Mode=TwoWay}" x:Name="test"
+                   SecondColorState="{Binding ElementName=uc, Path=SecondColorState, Mode=TwoWay}" 
+                   SmallChange="{Binding ElementName=uc, Path=SmallChange}" Width="200" Height="380"
+                   ShowAlpha="{Binding ElementName=uc, Path=ShowAlpha}"
+                   PickerType="{Binding ElementName=uc, Path=PickerType}"/>
+            </Border>
+        </Popup>
+    </Grid>
+</colorpicker:DualPickerControlBase>
