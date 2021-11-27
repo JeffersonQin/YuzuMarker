@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using YuzuMarker.Common;
 using YuzuMarker.DataFormat;
 using YuzuMarker.Properties;
 
@@ -20,6 +21,7 @@ namespace YuzuMarker
             base.OnStartup(e);
             CoreSettings.PhotoshopBridgeType = (PSBridgeType)Settings.Default.PhotoshopBridgeType;
             CoreSettings.PhotoshopExtensionHTTPServerPort = Settings.Default.PhotoshopExtensionHTTPServerPort;
+            UndoRedoManager.StopRecording();
         }
 
         protected override void OnExit(ExitEventArgs e)

@@ -76,16 +76,19 @@ namespace YuzuMarker.ViewModel
                     SetProperty(value);
                     goto EndSection;
                 }
-                if (!_refreshingImageList)
+                if (!RefreshingImageList)
                     _selectedImageItem.UnloadImageNotations();
                 SetProperty(Project == null ? null : value);
             EndSection:
-                if (!_refreshingImageList)
-                    value?.LoadImageNotations();
+                if (!RefreshingImageList && value != null)
+                {
+                    value.LoadImageNotations();
+                    UndoRedoManager.Clear();
+                    UndoRedoManager.StartRecording();
+                }
                 RaisePropertyChanged("ImageSource");
                 RaisePropertyChanged("NotationGroups");
                 RaisePropertyChanged("SelectedNotationGroupItem");
-                UndoRedoManager.Clear();
             }
         }
         #endregion
@@ -831,13 +834,13 @@ namespace YuzuMarker.ViewModel
         #endregion
 
         #region Refresh children attributes (which are not notify objects), also used for refreshing notationGroup, because it is converted as a whole
-        private bool _refreshingImageList = false;
+        public bool RefreshingImageList = false;
         
         public void RefreshImageList()
         {
             var ignoreTemp = UndoRedoManager.IgnoreOtherRecording;
             UndoRedoManager.IgnoreOtherRecording = true;
-            _refreshingImageList = true;
+            RefreshingImageList = true;
             // Backup properties
             var project = Project;
             var selectedImageItem = SelectedImageItem;
@@ -855,7 +858,7 @@ namespace YuzuMarker.ViewModel
             // refresh properties again
             RaisePropertyChanged("Images");
             RaisePropertyChanged("NotationGroups");
-            _refreshingImageList = false;
+            RefreshingImageList = false;
             UndoRedoManager.IgnoreOtherRecording = ignoreTemp;
         }
         #endregion
