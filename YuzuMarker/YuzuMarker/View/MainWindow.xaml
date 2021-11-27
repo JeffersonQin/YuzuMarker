@@ -78,42 +78,42 @@
         <GridSplitter HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="3"/>
         <Grid Grid.Row="1" Grid.Column="0" ClipToBounds="True">
             <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0" 
-                        Orientation="Horizontal">
-                        <Button Margin="2" Command="{Binding AddImages}"
-                        IsEnabled="{Binding Project, Mode=OneWay, Converter={StaticResource BoolVC}}"> + </Button>
-                        <Button Margin="2" Command="{Binding DeleteImage}"
-                        IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> - </Button>
-                        <Button Margin="2" Command="{Binding MoveSelectedImageUp}"
-                        IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↑ </Button>
-                        <Button Margin="2" Command="{Binding MoveSelectedImageDown}"
-                        IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↓ </Button>
-                        <Button Margin="2" Command="{Binding SetImageFinishStatus}"
-                        IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"
-                        Background="{Binding SelectedImageItem.IsFinished, Mode=OneWay, Converter={StaticResource ColorStatus}}"> √ </Button>
-                    </StackPanel>
-                    <ListView Grid.Row="1" x:Name="FileListView"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" 
+                    Orientation="Horizontal">
+                    <Button Margin="2" Command="{Binding AddImages}"
+                    IsEnabled="{Binding Project, Mode=OneWay, Converter={StaticResource BoolVC}}"> + </Button>
+                    <Button Margin="2" Command="{Binding DeleteImage}"
+                    IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> - </Button>
+                    <Button Margin="2" Command="{Binding MoveSelectedImageUp}"
+                    IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↑ </Button>
+                    <Button Margin="2" Command="{Binding MoveSelectedImageDown}"
+                    IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↓ </Button>
+                    <Button Margin="2" Command="{Binding SetImageFinishStatus}"
+                    IsEnabled="{Binding ImageSource, Mode=OneWay, Converter={StaticResource BoolVC}}"
+                    Background="{Binding SelectedImageItem.IsFinished, Mode=OneWay, Converter={StaticResource ColorStatus}}"> √ </Button>
+                </StackPanel>
+                <ListView Grid.Row="1" x:Name="FileListView"
                       ItemsSource="{Binding Images, Mode=OneWay}" 
                       SelectedItem="{Binding SelectedImageItem, Mode=TwoWay}">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="图片列表">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Grid>
-                                                <TextBlock Text="{Binding ImageName}" 
-                                                   Foreground="{Binding IsFinished, Converter={StaticResource ColorStatus}}"/>
-                                            </Grid>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="图片列表">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <TextBlock Text="{Binding ImageName}" 
+                                               Foreground="{Binding IsFinished, Converter={StaticResource ColorStatus}}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </Grid>
             <Rectangle Fill="#7F000000" Visibility="{Binding SelectionModeEnabled, Converter={StaticResource Boolean2Visibility}}" MouseDown="ShadeMouseDown"/>
         </Grid>
