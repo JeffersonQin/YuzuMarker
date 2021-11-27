@@ -39,6 +39,7 @@ namespace YuzuMarker.Common
 
         public static void PushRecord(UndoRedoRecord record)
         {
+            if (IgnoreOtherRecording) return;
             if (ContinuousRecording)
                 UndoStack[_head].Add(record);
             else PushRecord(new List<UndoRedoRecord> { record });
