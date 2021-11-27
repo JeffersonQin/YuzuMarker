@@ -43,8 +43,11 @@ namespace YuzuMarker.Common
         public static void PushAndPerformRecord(List<UndoRedoRecord> records)
         {
             PushRecord(records);
+            var lastIgnoreStatus = IgnoreOtherRecording;
+            IgnoreOtherRecording = true;
             foreach (var record in records)
                 record.Value = record.RedoAction(null);
+            IgnoreOtherRecording = lastIgnoreStatus;
         }
 
         public static void PushRecord(UndoRedoRecord record)
@@ -58,7 +61,10 @@ namespace YuzuMarker.Common
         public static void PushAndPerformRecord(UndoRedoRecord record)
         {
             PushRecord(record);
+            var lastIgnoreStatus = IgnoreOtherRecording;
+            IgnoreOtherRecording = true;
             record.Value = record.RedoAction(null);
+            IgnoreOtherRecording = lastIgnoreStatus;
         }
 
         public static void PushRecord(
