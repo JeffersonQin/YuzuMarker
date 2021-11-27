@@ -9,9 +9,14 @@ namespace YuzuMarker.Utils
         {
             if (umat == null) return true;
             if (umat.IsDisposed) return true;
-            if (umat.CvPtr != IntPtr.Zero)
+            if (umat.CvPtr == IntPtr.Zero) return true;
+            if (umat.Channels() == 1)
                 return Cv2.CountNonZero(umat) == 0;
-            return true;
+            UMat singleChannelMat = new UMat();
+            Cv2.CvtColor(umat, singleChannelMat, ColorConversionCodes.BGR2GRAY);
+            bool isEmpty = Cv2.CountNonZero(singleChannelMat) == 0;
+            singleChannelMat.Dispose();
+            return isEmpty;
         }
 
         public static bool SafeDispose(this UMat umat)
