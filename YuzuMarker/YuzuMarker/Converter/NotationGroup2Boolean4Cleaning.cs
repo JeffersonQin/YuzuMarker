@@ -8,12 +8,12 @@ using YuzuMarker.DataFormat;
 
 namespace YuzuMarker.Converter
 {
-    public class NotationGroup2Boolean4NormalCleaning : IValueConverter
+    public class NotationGroup2Boolean4ColorCleaning : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null) return false;
-            if (((YuzuNotationGroup)value).CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Normal)
+            if (((YuzuNotationGroup)value).CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Color)
                 return true;
             return false;
         }
@@ -24,12 +24,12 @@ namespace YuzuMarker.Converter
         }
     }
     
-    public class NotationGroup2Boolean4CustomCleaning : IValueConverter
+    public class NotationGroup2Boolean4ImpaintingCleaning : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null) return false;
-            if (((YuzuNotationGroup)value).CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Custom)
+            if (((YuzuNotationGroup)value).CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Impainting)
                 return true;
             return false;
         }

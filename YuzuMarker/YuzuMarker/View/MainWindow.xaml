@@ -28,8 +28,8 @@
         </vc:ValueConverterGroup>
         <vc:NotationGroup2Index x:Key="NotationGroup2Index"/>
         <vc:NotationGroup2CanvasItem x:Key="NotationGroup2CanvasItem"/>
-        <vc:NotationGroup2Boolean4CustomCleaning x:Key="NotationGroup2Boolean4CustomCleaning"/>
-        <vc:NotationGroup2Boolean4NormalCleaning x:Key="NotationGroup2Boolean4NormalCleaning"/>
+        <vc:NotationGroup2Boolean4ImpaintingCleaning x:Key="NotationGroup2Boolean4ImpaintingCleaning"/>
+        <vc:NotationGroup2Boolean4ColorCleaning x:Key="NotationGroup2Boolean4ColorCleaning"/>
         <vc:NotationGroup2CleaningStatusString x:Key="NotationGroup2CleaningStatusString"/>
         <vc:NotationGroup2CleaningStatusColor x:Key="NotationGroup2CleaningStatusColor"/>
         <vc:Cleaning2StatusString x:Key="Cleaning2StatusString"/>

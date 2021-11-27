@@ -28,10 +28,11 @@ namespace YuzuMarker.Converter
             // TODO: refactor: 重写 cleaning 的渲染
             // TODO: 如果 YuzuManager.NotationGroup == notationGroup, 用特殊颜色显示，settings里加一下
             Scalar color = default;
-            if (notationGroup.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Normal)
-                color = Settings.Default.NormalCleaningFillColor.ToScalar();
-            if (notationGroup.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Custom)
+            if (notationGroup.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Color)
+                color = ((YuzuColorCleaningNotation)notationGroup.CleaningNotation).CleaningNotationColor.ToScalar();
+            if (notationGroup.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Impainting)
                 color = Settings.Default.CustomCleaningFillColor.ToScalar();
+            // TODO: 实现边缘获取
             container.Children.Add(new OpaqueClickableImage
             {
                 Source = notationGroup.CleaningNotation.CleaningMask.To4ChannelImage(color)

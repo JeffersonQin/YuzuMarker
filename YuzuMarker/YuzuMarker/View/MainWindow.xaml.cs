@@ -340,14 +340,14 @@ namespace YuzuMarker.View
                 return nowValue;
             }, o => ((UMat)o).SafeDispose());
             
-            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType = YuzuCleaningNotationType.Custom;
+            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType = YuzuCleaningNotationType.Impainting;
             ViewModel.RefreshImageList();
         }
 
         private void CleaningCustomChecked(object sender, RoutedEventArgs e)
         {
             // Judge whether this is triggered by data binding
-            if (ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Custom) return;
+            if (ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Impainting) return;
             EnableSelectionMode(didSelectionModeFinishedForCustomCleaning);
         }
 
@@ -368,15 +368,15 @@ namespace YuzuMarker.View
                 return nowValue;
             }, o => ((UMat)o).SafeDispose());
             
-            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType = YuzuCleaningNotationType.Normal;
+            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType = YuzuCleaningNotationType.Color;
             ViewModel.RefreshImageList();
         }
         
         private void CleaningNormalChecked(object sender, RoutedEventArgs e)
         {
             // Judge whether this is triggered by data binding
-            if (ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Normal) return;
-            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType = YuzuCleaningNotationType.Normal;
+            if (ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Color) return;
+            ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType = YuzuCleaningNotationType.Color;
             ViewModel.RefreshImageList();
         }
 
