@@ -19,7 +19,7 @@ namespace YuzuMarker.Converter
             YuzuNotationGroup notationGroup = (YuzuNotationGroup)value;
             if (notationGroup == null) return null;
 
-            if (notationGroup.CleaningNotation.IsEmpty()) return " [ 未选区域 ] ";
+            if (notationGroup.CleaningNotation.CleaningMask.IsEmpty()) return " [ 未选区域 ] ";
             return " [ 已选区域 ] ";
         }
 

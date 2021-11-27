@@ -81,15 +81,6 @@ namespace YuzuMarker.DataFormat
             Write();
             Dispose();
         }
-        
-        public bool IsEmpty()
-        {
-            if (CleaningMask != null)
-                if (!CleaningMask.IsDisposed)
-                    if (CleaningMask.CvPtr != IntPtr.Zero)
-                        return Cv2.CountNonZero(CleaningMask) == 0;
-            return true;
-        }
 
         public static void ConvertTo(ref YuzuCleaningNotation notation, YuzuCleaningNotationType type)
         {
