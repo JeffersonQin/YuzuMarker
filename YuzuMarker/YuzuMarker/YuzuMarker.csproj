@@ -11,6 +11,7 @@
     <ProjectReference Include="..\YuzuMarker.DataFormat\YuzuMarker.DataFormat.csproj" />
     <ProjectReference Include="..\YuzuMarker.Properties\YuzuMarker.Properties.csproj" />
     <ProjectReference Include="..\YuzuMarker.PSBridge\YuzuMarker.PSBridge.csproj" />
+    <ProjectReference Include="..\YuzuMarker.Utils\YuzuMarker.Utils.csproj" />
   </ItemGroup>
 
   <ItemGroup>
