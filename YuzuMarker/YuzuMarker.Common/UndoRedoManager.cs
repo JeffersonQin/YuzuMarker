@@ -14,6 +14,16 @@ namespace YuzuMarker.Common
         
         public static List<List<UndoRedoRecord>> UndoStack = new List<List<UndoRedoRecord>>();
 
+        public static void StartRecording()
+        {
+            IgnoreOtherRecording = false;
+        }
+
+        public static void StopRecording()
+        {
+            IgnoreOtherRecording = true;
+        }
+        
         public static void PushRecord(List<UndoRedoRecord> records)
         {
             if (IgnoreOtherRecording) return;
