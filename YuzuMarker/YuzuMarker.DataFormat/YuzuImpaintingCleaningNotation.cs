@@ -1,17 +1,26 @@
 ﻿using System.IO;
 using OpenCvSharp;
 using YuzuMarker.Common;
+using YuzuMarker.Utils;
 
 namespace YuzuMarker.DataFormat
 {
     [AncestorNotifiableMarker("ParentNotationGroup")]
     public class YuzuImpaintingCleaningNotation : YuzuCleaningNotation
     {
+        private UMat _impaintingImage;
+        
+        [ChainNotifiable]
+        [Undoable]
+        public UMat ImpaintingImage
+        {
+            get => _impaintingImage;
+            set => SetProperty(value, disposeAction: o => ((UMat)o).SafeDispose());
+        }
+        
         public YuzuImpaintingCleaningNotation(YuzuNotationGroup parentNotationGroup) : 
             base(parentNotationGroup, YuzuCleaningNotationType.Impainting) {}
 
-        public UMat ImpaintingImage;
-        
         public override void Load()
         {
             base.Load();
@@ -58,12 +67,12 @@ namespace YuzuMarker.DataFormat
                 "./" + ParentNotationGroup.Timestamp + "-impainting.png");
             var writeMat = ImpaintingImage.GetMat(AccessFlag.READ);
             Cv2.ImWrite(tempImpaintingImagePath, writeMat);
-            writeMat.Dispose();
+            writeMat.SafeDispose();
         }
 
         public override void Dispose()
         {
-            ImpaintingImage.Dispose();
+            ImpaintingImage.SafeDispose();
             base.Dispose();
         }
 

@@ -5,6 +5,7 @@ using System.Text;
 using OpenCvSharp;
 using YuzuMarker.BasicDataFormat;
 using YuzuMarker.Common;
+using YuzuMarker.Utils;
 
 namespace YuzuMarker.DataFormat
 {
@@ -21,12 +22,20 @@ namespace YuzuMarker.DataFormat
             set => SetProperty(value);
         }
 
+        private UMat _cleaningMask;
+        
+        [ChainNotifiable]
+        [Undoable]
+        public UMat CleaningMask
+        {
+            get => _cleaningMask;
+            set => SetProperty(value, disposeAction: o => ((UMat)o).SafeDispose());
+        }
+
         public YuzuCleaningNotation(YuzuNotationGroup parentNotationGroup, YuzuCleaningNotationType type) : base(parentNotationGroup)
         {
             CleaningNotationType = type;
         }
-
-        public UMat CleaningMask;
 
         public virtual void Load()
         {
@@ -66,7 +75,7 @@ namespace YuzuMarker.DataFormat
                 "./" + ParentNotationGroup.Timestamp + "-cleaning-mask.png");
             var writeMat = CleaningMask.GetMat(AccessFlag.READ);
             Cv2.ImWrite(tempMaskImagePath, writeMat);
-            writeMat.Dispose();
+            writeMat.SafeDispose();
         }
         
         public virtual void CustomWrite()
@@ -75,7 +84,7 @@ namespace YuzuMarker.DataFormat
 
         public virtual void Dispose()
         {
-            CleaningMask.Dispose();
+            CleaningMask.SafeDispose();
         }
         
         public virtual void Unload()
@@ -84,23 +93,26 @@ namespace YuzuMarker.DataFormat
             Dispose();
         }
 
-        public static void ConvertTo(ref YuzuCleaningNotation notation, YuzuCleaningNotationType type)
+        public YuzuCleaningNotation ConvertTo(YuzuCleaningNotationType type)
         {
+            var lastIgnoringState = UndoRedoManager.IgnoreOtherRecording;
+            UndoRedoManager.IgnoreOtherRecording = true;
             YuzuCleaningNotation newNotation;
             switch (type)
             {
                 case YuzuCleaningNotationType.Color:
-                    newNotation = new YuzuColorCleaningNotation(notation.ParentNotationGroup as YuzuNotationGroup);
+                    newNotation = new YuzuColorCleaningNotation(ParentNotationGroup as YuzuNotationGroup);
                     break;
                 case YuzuCleaningNotationType.Impainting:
-                    newNotation = new YuzuImpaintingCleaningNotation(notation.ParentNotationGroup as YuzuNotationGroup);
+                    newNotation = new YuzuImpaintingCleaningNotation(ParentNotationGroup as YuzuNotationGroup);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
-            newNotation.CleaningMask = notation.CleaningMask.Clone();
+            newNotation.CleaningMask = CleaningMask.SafeClone();
             newNotation.CustomLoad();
-            notation = newNotation;
+            UndoRedoManager.IgnoreOtherRecording = lastIgnoringState;
+            return newNotation;
         }
     }
 }
