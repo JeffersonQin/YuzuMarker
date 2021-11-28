@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\YuzuMarker.BasicDataFormat\YuzuMarker.BasicDataFormat.csproj" />
+    <ProjectReference Include="..\YuzuMarker.Utils\YuzuMarker.Utils.csproj" />
   </ItemGroup>
 
 </Project>
