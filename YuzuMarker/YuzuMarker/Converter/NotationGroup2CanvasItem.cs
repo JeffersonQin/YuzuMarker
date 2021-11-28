@@ -16,13 +16,13 @@ using YuzuMarker.Utils;
 
 namespace YuzuMarker.Converter
 {
-    public class NotationGroup2CanvasItem : IValueConverter
+    public class NotationGroup2CanvasItem : IMultiValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             Grid container =  new Grid();
 
-            YuzuNotationGroup notationGroup = (YuzuNotationGroup)value;
+            YuzuNotationGroup notationGroup = (YuzuNotationGroup)values[0];
             if (notationGroup == null) return null;
             
             // TODO: refactor: 重写 cleaning 的渲染
@@ -41,7 +41,7 @@ namespace YuzuMarker.Converter
             return container;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
