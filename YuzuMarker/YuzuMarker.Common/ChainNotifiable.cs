@@ -3,5 +3,5 @@
 namespace YuzuMarker.Common
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class SelfNotifiable : Attribute {}
+    public class ChainNotifiable : Attribute {}
 }
