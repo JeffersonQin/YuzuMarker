@@ -135,7 +135,14 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <ContentPresenter MouseDown="NotationRenderItemClicked" Content="{Binding Converter={StaticResource NotationGroup2CanvasItem}}"/>
+                                    <ContentPresenter MouseDown="NotationRenderItemClicked">
+                                        <ContentPresenter.Content>
+                                            <MultiBinding Converter="{StaticResource NotationGroup2CanvasItem}">
+                                                <Binding/>
+                                                <Binding Path="DummyObject"/>
+                                            </MultiBinding>
+                                        </ContentPresenter.Content>
+                                    </ContentPresenter>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
@@ -366,7 +373,7 @@
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Margin="2" VerticalAlignment="Center">设置颜色</TextBlock>
-                                        <uc:CustomPortableColorPicker Margin="2" Grid.Column="1" ColorPickingStartedEventHandler="ColorPickingStarted" ColorPickingFinishedEventHandler="ColorPickingFinished" ColorChanged="PickerControlBase_OnColorChanged"
+                                        <uc:CustomPortableColorPicker Margin="2" Grid.Column="1" ColorPickingStartedEventHandler="ColorPickingStarted" ColorPickingFinishedEventHandler="ColorPickingFinished"
                                              SelectedColor="{Binding SelectedNotationGroupItem.CleaningNotation.CleaningNotationColor, Mode=TwoWay, Converter={StaticResource Standard2WindowsColorConverter}}"/>
                                     </Grid>
                                     <WrapPanel>

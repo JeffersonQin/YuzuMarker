@@ -425,11 +425,5 @@ namespace YuzuMarker.View
             });
             UndoRedoManager.StopContinuousRecording();
         }
-
-        private void PickerControlBase_OnColorChanged(object sender, RoutedEventArgs e)
-        {
-            if (!ViewModel.RefreshingImageList)
-                ViewModel.RefreshImageList();
-        }
     }
 }
