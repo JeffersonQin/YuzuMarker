@@ -22,10 +22,6 @@
         <vc:Object2Boolean x:Key="BoolVC"/>
         <vc:Boolean2Visibility x:Key="Boolean2Visibility"/>
         <vc:Boolean2ColorBrush x:Key="ColorStatus"/>
-        <vc:ValueConverterGroup x:Key="ListViewItem2Index">
-            <vc:IndexConverter/>
-            <vc:IntPlusConverter/>
-        </vc:ValueConverterGroup>
         <vc:NotationGroup2Index x:Key="NotationGroup2Index"/>
         <vc:NotationGroup2CanvasItem x:Key="NotationGroup2CanvasItem"/>
         <vc:NotationGroup2Boolean4ImpaintingCleaning x:Key="NotationGroup2Boolean4ImpaintingCleaning"/>
@@ -161,8 +157,14 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Button Command="{Binding Data.SelectNotationGroup, Source={StaticResource BindingProxy}}"
-                                            CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"
-                                            Content="{Binding Converter={StaticResource NotationGroup2Index}}" Width="20"/>
+                                            CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Width="20">
+                                        <Button.Content>
+                                            <MultiBinding Converter="{StaticResource NotationGroup2Index}">
+                                                <Binding/>
+                                                <Binding Path="DummyObject"/>
+                                            </MultiBinding>
+                                        </Button.Content>
+                                    </Button>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
@@ -253,9 +255,13 @@
                               SelectedItem="{Binding SelectedNotationGroupItem, Mode=TwoWay}">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="编号" 
-                                    DisplayMemberBinding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, 
-                                                                    Converter={StaticResource ListViewItem2Index}, ConverterParameter=1}">
+                                <GridViewColumn Header="编号">
+                                    <GridViewColumn.DisplayMemberBinding>
+                                        <MultiBinding Converter="{StaticResource NotationGroup2CanvasItem}">
+                                            <Binding/>
+                                            <Binding Path="DummyObject"/>
+                                        </MultiBinding>
+                                    </GridViewColumn.DisplayMemberBinding>
                                 </GridViewColumn>
                                 <GridViewColumn Header="标注列表">
                                     <GridViewColumn.CellTemplate>
