@@ -8,6 +8,7 @@ using System.Windows.Data;
 namespace YuzuMarker.Converter
 {
     /// <summary>
+    /// [Deprecated]
     /// From: https://stackoverflow.com/questions/660528/how-to-display-row-numbers-in-a-listview
     /// </summary>
     public class IndexConverter : IValueConverter
