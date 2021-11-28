@@ -71,16 +71,16 @@ namespace YuzuMarker.ViewModel
             get => _selectedImageItem;
             set
             {
+                UndoRedoManager.StopRecording();
                 if (_selectedImageItem == null)
                 {
                     SetProperty(value);
                     goto EndSection;
                 }
-                if (!RefreshingImageList)
-                    _selectedImageItem.UnloadImageNotations();
+                _selectedImageItem.UnloadImageNotations();
                 SetProperty(Project == null ? null : value);
             EndSection:
-                if (!RefreshingImageList && value != null)
+                if (value != null)
                 {
                     value.LoadImageNotations();
                     UndoRedoManager.Clear();
@@ -206,46 +206,27 @@ namespace YuzuMarker.ViewModel
                             break;
                     }
 
-                    UndoRedoManager.PushAndPerformRecord(o =>
+                    var result = UMat.Zeros(SelectionMaskUMat.Rows, SelectionMaskUMat.Cols, MatType.CV_8UC1);
+                    switch (SelectionMode)
                     {
-                        var nowValue = SelectionMaskUMat;
-                        SelectionMaskUMat = (UMat)o;
-                        return nowValue;
-                    }, o =>
-                    {
-                        var nowValue = SelectionMaskUMat;
-                        if (o == null)
-                        {
-                            switch (SelectionMode)
-                            {
-                                case SelectionMode.New:
-                                    o = newUMat;
-                                    break;
-                                case SelectionMode.Add:
-                                    SelectionMaskUMat = SelectionMaskUMat.Clone();
-                                    Cv2.BitwiseOr(SelectionMaskUMat, newUMat, SelectionMaskUMat);
-                                    newUMat.SafeDispose();
-                                    o = SelectionMaskUMat;
-                                    break;
-                                case SelectionMode.Subtract:
-                                    SelectionMaskUMat = SelectionMaskUMat.Clone();
-                                    Cv2.BitwiseNot(newUMat, newUMat);
-                                    Cv2.BitwiseAnd(SelectionMaskUMat, newUMat, SelectionMaskUMat);
-                                    newUMat.SafeDispose();
-                                    o = SelectionMaskUMat;
-                                    break;
-                                case SelectionMode.Intersect:
-                                    SelectionMaskUMat = SelectionMaskUMat.Clone();
-                                    Cv2.BitwiseAnd(SelectionMaskUMat, newUMat, SelectionMaskUMat);
-                                    newUMat.SafeDispose();
-                                    o = SelectionMaskUMat;
-                                    break;
-                            }
-                        }
-                        SelectionMaskUMat = (UMat)o;
-                        RaisePropertyChanged("SelectionMaskUMat");
-                        return nowValue;
-                    }, o => ((UMat)o).SafeDispose());
+                        case SelectionMode.New:
+                            result = newUMat;
+                            break;
+                        case SelectionMode.Add:
+                            Cv2.BitwiseOr(SelectionMaskUMat, newUMat, result);
+                            newUMat.SafeDispose();
+                            break;
+                        case SelectionMode.Subtract:
+                            Cv2.BitwiseNot(newUMat, newUMat);
+                            Cv2.BitwiseAnd(SelectionMaskUMat, newUMat, result);
+                            newUMat.SafeDispose();
+                            break;
+                        case SelectionMode.Intersect:
+                            Cv2.BitwiseAnd(SelectionMaskUMat, newUMat, result);
+                            newUMat.SafeDispose();
+                            break;
+                    }
+                    SelectionMaskUMat = result;
 
                     LassoPoints = new PointCollection();
                     RectangleShapeData = new ShapeData();
@@ -279,19 +260,12 @@ namespace YuzuMarker.ViewModel
         #endregion
         
         #region Property: LassoPoints (Used for Lasso Polygon)
-        private PointCollection _LassoPoints = new PointCollection();
+        private PointCollection _lassoPoints = new PointCollection();
 
         public PointCollection LassoPoints
         {
-            get
-            {
-                return _LassoPoints;
-            }
-            set
-            {
-                _LassoPoints = value;
-                RaisePropertyChanged("LassoPoints");
-            }
+            get => _lassoPoints;
+            set => SetProperty(value);
         }
         #endregion
 
@@ -318,14 +292,11 @@ namespace YuzuMarker.ViewModel
         #region Property: SelectionMaskUMat
         private UMat _selectionMaskUMat;
 
+        [Undoable]
         public UMat SelectionMaskUMat
         {
             get => _selectionMaskUMat;
-            set
-            {
-                _selectionMaskUMat = value;
-                RaisePropertyChanged("SelectionMaskUMat");
-            }
+            set => SetProperty(value, disposeAction: o => ((UMat)o).SafeDispose());
         }
         #endregion
 
@@ -407,7 +378,7 @@ namespace YuzuMarker.ViewModel
                                     var removedItem = ((List<object>)o)[0] as YuzuNotationGroup;
                                     var removedIndex = ((List<object>)o)[1] as int? ?? 0;
                                     NotationGroups.Insert(removedIndex, removedItem);
-                                    RefreshImageList();
+                                    RaisePropertyChanged("NotationGroups");
                                     return o;
                                 }, o =>
                                 {
@@ -418,7 +389,7 @@ namespace YuzuMarker.ViewModel
                                     };
                                     var removedItem = ((List<object>)o)[0] as YuzuNotationGroup;
                                     NotationGroups.Remove(removedItem);
-                                    RefreshImageList();
+                                    RaisePropertyChanged("NotationGroups");
                                     return o;
                                 }, o =>
                                 {
@@ -454,12 +425,12 @@ namespace YuzuMarker.ViewModel
                                 UndoRedoManager.PushAndPerformRecord(o =>
                                 {
                                     NotationGroups.Move(index - 1, index);
-                                    RefreshImageList();
+                                    RaisePropertyChanged("NotationGroups");
                                     return null;
                                 }, o =>
                                 {
                                     NotationGroups.Move(index, index - 1);
-                                    RefreshImageList();
+                                    RaisePropertyChanged("NotationGroups");
                                     return null;
                                 });
                         }
@@ -486,38 +457,17 @@ namespace YuzuMarker.ViewModel
                                 UndoRedoManager.PushAndPerformRecord(o =>
                                 {
                                     NotationGroups.Move(index + 1, index);
-                                    RefreshImageList();
+                                    RaisePropertyChanged("NotationGroups");
                                     return null;
                                 }, o =>
                                 {
                                     NotationGroups.Move(index, index + 1);
-                                    RefreshImageList();
+                                    RaisePropertyChanged("NotationGroups");
                                     return null;
                                 });
                         }
                     };
                 return _MoveNotationGroupDown;
-            }
-        }
-        #endregion
-
-        #region Command: Set NotationGroup Finish Status
-        private DelegateCommand _SetNotationGroupFinishStatus;
-
-        public DelegateCommand SetNotationGroupFinishStatus
-        {
-            get
-            {
-                if (_SetNotationGroupFinishStatus == null)
-                    _SetNotationGroupFinishStatus = new DelegateCommand
-                    {
-                        CommandAction = () =>
-                        {
-                            SelectedNotationGroupItem.IsFinished = !SelectedNotationGroupItem.IsFinished;
-                            RefreshImageList();
-                        }
-                    };
-                return _SetNotationGroupFinishStatus;
             }
         }
         #endregion
@@ -830,36 +780,6 @@ namespace YuzuMarker.ViewModel
                     }
                 };
             }
-        }
-        #endregion
-
-        #region Refresh children attributes (which are not notify objects), also used for refreshing notationGroup, because it is converted as a whole
-        public bool RefreshingImageList = false;
-        
-        public void RefreshImageList()
-        {
-            var ignoreTemp = UndoRedoManager.IgnoreOtherRecording;
-            UndoRedoManager.IgnoreOtherRecording = true;
-            RefreshingImageList = true;
-            // Backup properties
-            var project = Project;
-            var selectedImageItem = SelectedImageItem;
-            var selectedNotationGroupItem = SelectedNotationGroupItem;
-            // set certain fields to null to reset value in UI
-            Project = null;
-            SelectedImageItem = null;
-            // clear properties manually
-            RaisePropertyChanged("Images");
-            RaisePropertyChanged("NotationGroups");
-            // set back properties
-            Project = project;
-            SelectedImageItem = selectedImageItem;
-            SelectedNotationGroupItem = selectedNotationGroupItem;
-            // refresh properties again
-            RaisePropertyChanged("Images");
-            RaisePropertyChanged("NotationGroups");
-            RefreshingImageList = false;
-            UndoRedoManager.IgnoreOtherRecording = ignoreTemp;
         }
         #endregion
     }

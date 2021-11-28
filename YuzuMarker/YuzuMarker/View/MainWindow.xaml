@@ -23,9 +23,10 @@
         <vc:Boolean2Visibility x:Key="Boolean2Visibility"/>
         <vc:Boolean2ColorBrush x:Key="ColorStatus"/>
         <vc:NotationGroup2Index x:Key="NotationGroup2Index"/>
+        <vc:NotationGroup2IndexString x:Key="NotationGroup2IndexString"/>
         <vc:NotationGroup2CanvasItem x:Key="NotationGroup2CanvasItem"/>
-        <vc:NotationGroup2Boolean4ImpaintingCleaning x:Key="NotationGroup2Boolean4ImpaintingCleaning"/>
-        <vc:NotationGroup2Boolean4ColorCleaning x:Key="NotationGroup2Boolean4ColorCleaning"/>
+        <vc:CleaningNotation2Boolean4Color x:Key="CleaningNotation2Boolean4Color"/>
+        <vc:CleaningNotation2Boolean4Impainting x:Key="CleaningNotation2Boolean4Impainting"/>
         <vc:NotationGroup2CleaningStatusString x:Key="NotationGroup2CleaningStatusString"/>
         <vc:NotationGroup2CleaningStatusColor x:Key="NotationGroup2CleaningStatusColor"/>
         <vc:Cleaning2StatusString x:Key="Cleaning2StatusString"/>
@@ -161,7 +162,8 @@
                                         <Button.Content>
                                             <MultiBinding Converter="{StaticResource NotationGroup2Index}">
                                                 <Binding/>
-                                                <Binding Path="DummyObject"/>
+                                                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type Window}}" 
+                                                         Path="DataContext.NotationGroups"/>
                                             </MultiBinding>
                                         </Button.Content>
                                     </Button>
@@ -246,9 +248,9 @@
                                 IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↑ </Button>
                         <Button Margin="2" Command="{Binding MoveNotationGroupDown}"
                                 IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> ↓ </Button>
-                        <Button Margin="2" Command="{Binding SetNotationGroupFinishStatus}"
-                                Background="{Binding SelectedNotationGroupItem.IsFinished, Converter={StaticResource ColorStatus}}"
-                                IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> √ </Button>
+                        <ToggleButton Margin="2" IsChecked="{Binding SelectedNotationGroupItem.IsFinished, Mode=TwoWay}"
+                                Foreground="{Binding SelectedNotationGroupItem.IsFinished, Converter={StaticResource ColorStatus}}"
+                                IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}"> √ </ToggleButton>
                     </StackPanel>
                     <ListView Grid.Row="1" x:Name="NotationGroupListView"
                               ItemsSource="{Binding NotationGroups, Mode=OneWay}"
@@ -257,9 +259,10 @@
                             <GridView>
                                 <GridViewColumn Header="编号">
                                     <GridViewColumn.DisplayMemberBinding>
-                                        <MultiBinding Converter="{StaticResource NotationGroup2CanvasItem}">
+                                        <MultiBinding Converter="{StaticResource NotationGroup2IndexString}">
                                             <Binding/>
-                                            <Binding Path="DummyObject"/>
+                                            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type Window}}" 
+                                                     Path="DataContext.NotationGroups"/>
                                         </MultiBinding>
                                     </GridViewColumn.DisplayMemberBinding>
                                 </GridViewColumn>
@@ -350,7 +353,7 @@
                                 <TextBlock Margin="5">区域选择</TextBlock>
                                 <TextBlock Margin="2" Text="{Binding SelectedNotationGroupItem, Converter={StaticResource NotationGroup2CleaningStatusString}}" 
                                            Background="{Binding SelectedNotationGroupItem, Converter={StaticResource NotationGroup2CleaningStatusColor}}" HorizontalAlignment="Center"/>
-                                <Button Margin="2">选择区域</Button>
+                                <Button Margin="2" Click="EnableSelectionMode">选择区域</Button>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
@@ -368,8 +371,8 @@
                                 <Separator Margin="2 2 2 2"/>
                                 <!--模式选择模块-->
                                 <TextBlock Margin="5">模式选择</TextBlock>
-                                <RadioButton x:Name="NormalCleaningRadioButton" GroupName="CleaningGroup" Margin="5" Checked="CleaningNormalChecked"
-                                             IsChecked="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource NotationGroup2Boolean4ColorCleaning}}">
+                                <RadioButton x:Name="NormalCleaningRadioButton" GroupName="CleaningGroup" Margin="5" Checked="CleaningColorChecked" 
+                                             IsChecked="{Binding SelectedNotationGroupItem.CleaningNotation, Mode=OneWay, Converter={StaticResource CleaningNotation2Boolean4Color}}">
                                     Color Mode
                                 </RadioButton>
                                 <StackPanel Margin="25 2 5 2" IsEnabled="{Binding ElementName=NormalCleaningRadioButton, Path=IsChecked}">
@@ -387,8 +390,8 @@
                                     </WrapPanel>
                                 </StackPanel>
                                 <Separator Margin="25 2 5 2"/>
-                                <RadioButton x:Name="CustomCleaningRadioButton" GroupName="CleaningGroup" Margin="5" Checked="CleaningCustomChecked"
-                                             IsChecked="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource NotationGroup2Boolean4ImpaintingCleaning}}">
+                                <RadioButton x:Name="CustomCleaningRadioButton" GroupName="CleaningGroup" Margin="5" Checked="CleaningImpaintingChecked"
+                                             IsChecked="{Binding SelectedNotationGroupItem.CleaningNotation, Mode=OneWay, Converter={StaticResource CleaningNotation2Boolean4Impainting}}">
                                     Impainting Mode
                                 </RadioButton>
                                 <WrapPanel Margin="25 2 5 2" IsEnabled="{Binding ElementName=CustomCleaningRadioButton, Path=IsChecked}">
