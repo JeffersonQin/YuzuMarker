@@ -30,9 +30,9 @@ namespace YuzuMarker.Utils
             // Convert rendering mat to wpf image source
             var image = outputMat.ToWriteableBitmap();
             // Dispose mat objects
-            outputMat.Dispose();
-            dstMask.Dispose();
-            c1Mask.Dispose();
+            outputMat.SafeDispose();
+            dstMask.SafeDispose();
+            c1Mask.SafeDispose();
             return image;
         }
     }
