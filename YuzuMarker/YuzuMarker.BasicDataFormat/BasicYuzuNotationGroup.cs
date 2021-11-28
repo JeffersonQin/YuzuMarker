@@ -5,7 +5,7 @@ using YuzuMarker.Common;
 
 namespace YuzuMarker.BasicDataFormat
 {
-    public class BasicYuzuNotationGroup : NotifyObject
+    public class BasicYuzuNotationGroup : ChainNotifiableObject
     {
         private BasicYuzuImage _parentImage;
 
@@ -17,6 +17,7 @@ namespace YuzuMarker.BasicDataFormat
         
         private long _timestamp;
 
+        [ChainNotifiable]
         [Undoable]
         public long Timestamp
         {
@@ -26,6 +27,7 @@ namespace YuzuMarker.BasicDataFormat
 
         private int _x;
 
+        [ChainNotifiable]
         [Undoable]
         public int X
         {
@@ -35,6 +37,7 @@ namespace YuzuMarker.BasicDataFormat
 
         private int _y;
 
+        [ChainNotifiable]
         [Undoable]
         public int Y
         {
@@ -44,6 +47,7 @@ namespace YuzuMarker.BasicDataFormat
 
         private string _text;
 
+        [ChainNotifiable]
         [Undoable]
         public string Text
         {
@@ -53,6 +57,7 @@ namespace YuzuMarker.BasicDataFormat
 
         private bool _isFinished;
 
+        [ChainNotifiable]
         [Undoable]
         public bool IsFinished
         {

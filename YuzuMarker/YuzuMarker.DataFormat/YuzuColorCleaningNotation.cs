@@ -3,6 +3,7 @@ using YuzuMarker.Common;
 
 namespace YuzuMarker.DataFormat
 {
+    [AncestorNotifiableMarker("ParentNotationGroup")]
     public class YuzuColorCleaningNotation : YuzuCleaningNotation
     {
         public YuzuColorCleaningNotation(YuzuNotationGroup parentNotationGroup) : 
@@ -16,6 +17,7 @@ namespace YuzuMarker.DataFormat
 
         private Color _cleaningNotationColor = Color.White;
 
+        [ChainNotifiable]
         [Undoable]
         public Color CleaningNotationColor
         {

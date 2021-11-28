@@ -12,6 +12,7 @@ namespace YuzuMarker.DataFormat
     {
         private YuzuCleaningNotation _cleaningNotation;
 
+        [ChainNotifiable]
         [Undoable]
         public YuzuCleaningNotation CleaningNotation
         {

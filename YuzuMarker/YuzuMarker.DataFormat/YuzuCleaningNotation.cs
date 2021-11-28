@@ -8,10 +8,12 @@ using YuzuMarker.Common;
 
 namespace YuzuMarker.DataFormat
 {
+    [AncestorNotifiableMarker("ParentNotationGroup")]
     public class YuzuCleaningNotation : BasicYuzuNotation
     {
         private YuzuCleaningNotationType _cleaningNotationType;
 
+        [ChainNotifiable]
         [Undoable]
         public YuzuCleaningNotationType CleaningNotationType
         {

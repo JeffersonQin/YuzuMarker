@@ -2,7 +2,8 @@
 
 namespace YuzuMarker.BasicDataFormat
 {
-    public class BasicYuzuNotation : NotifyObject
+    [AncestorNotifiableMarker("ParentNotationGroup")]
+    public class BasicYuzuNotation : ChainNotifiableObject
     {
         private BasicYuzuNotationGroup _parentNotationGroup;
 

@@ -1,8 +1,10 @@
 ﻿using System.IO;
 using OpenCvSharp;
+using YuzuMarker.Common;
 
 namespace YuzuMarker.DataFormat
 {
+    [AncestorNotifiableMarker("ParentNotationGroup")]
     public class YuzuImpaintingCleaningNotation : YuzuCleaningNotation
     {
         public YuzuImpaintingCleaningNotation(YuzuNotationGroup parentNotationGroup) : 
