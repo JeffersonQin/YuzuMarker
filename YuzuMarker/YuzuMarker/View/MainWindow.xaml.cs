@@ -110,25 +110,6 @@ namespace YuzuMarker.View
             });
         }
         #endregion
-
-        #region TextArea Handler (Bottom Right)
-        private void TextAreaOnKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key != Key.Enter) return;
-            if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.Right))) return;
-            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
-            {
-                if (NotationGroupListView.SelectedIndex == 0) return;
-                NotationGroupListView.SelectedIndex -= 1;
-            }
-            else
-            {
-                if (ViewModel.SelectedImageItem.NotationGroups.IndexOf(ViewModel.SelectedNotationGroupItem) ==
-                    ViewModel.SelectedImageItem.NotationGroups.Count - 1) return;
-                NotationGroupListView.SelectedIndex += 1;
-            }
-        }
-        #endregion
         
         #region Canvas Item Clicking Event
         private void NotationRenderItemClicked(object sender, MouseButtonEventArgs e)

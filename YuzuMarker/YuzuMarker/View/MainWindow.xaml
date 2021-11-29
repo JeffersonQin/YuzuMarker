@@ -300,39 +300,7 @@
                 <TabControl Grid.Row="2"
                             IsEnabled="{Binding SelectedNotationGroupItem, Mode=OneWay, Converter={StaticResource BoolVC}}">
                     <TabItem Header="录入">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <StackPanel Grid.Row="0">
-
-                            </StackPanel>
-                            <TextBox Grid.Row="1" KeyDown="TextAreaOnKeyDown"
-                                     AcceptsTab="True" AcceptsReturn="True"
-                                     Text="{Binding SelectedNotationGroupItem.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                <TextBox.Style>
-                                    <Style TargetType="{x:Type TextBox}">
-                                        <Style.Triggers>
-                                            <Trigger Property="Text" Value="">
-                                                <Setter Property="Background">
-                                                    <Setter.Value>
-                                                        <VisualBrush Stretch="None" AlignmentX="Left" AlignmentY="Top">
-                                                            <VisualBrush.Visual>
-                                                                <StackPanel>
-                                                                    <TextBlock Foreground="Gray">Ctrl + Enter: 下一个标记</TextBlock>
-                                                                    <TextBlock Foreground="Gray">Shift + Ctrl + Enter: 上一个标记</TextBlock>
-                                                                </StackPanel>
-                                                            </VisualBrush.Visual>
-                                                        </VisualBrush>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBox.Style>
-                            </TextBox>
-                        </Grid>
+                        <local:InputtingControl SelectedNotationGroupItem="{Binding SelectedNotationGroupItem, Mode=TwoWay}"/>
                     </TabItem>
                     <TabItem Header="背景处理">
                         <!--
