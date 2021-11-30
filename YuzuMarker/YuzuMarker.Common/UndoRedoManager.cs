@@ -118,7 +118,6 @@ namespace YuzuMarker.Common
 
         public static void Clear()
         {
-            if (IgnoreOtherRecording) return;
             for (var i = 0; i < _max; i ++)
                 foreach (var record in UndoStack[i])
                     record.DisposeAction?.Invoke(record.Value);
