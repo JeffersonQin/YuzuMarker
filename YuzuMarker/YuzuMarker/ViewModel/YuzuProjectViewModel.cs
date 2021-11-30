@@ -300,6 +300,109 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
+        #region Commands: Modify Selection Area
+        private DelegateCommand _zoomInSelectionArea;
+
+        public DelegateCommand ZoomInSelectionArea
+        {
+            get
+            {
+                _zoomInSelectionArea ??= new DelegateCommand()
+                {
+                    CommandAction = () =>
+                    {
+                        if (SelectedNotationGroupItem?.CleaningNotation?.CleaningMask == null) return;
+                        var newUMat = SelectedNotationGroupItem.CleaningNotation.CleaningMask.SafeClone();
+                        Cv2.Dilate(newUMat, newUMat, new UMat());
+                        SelectedNotationGroupItem.CleaningNotation.CleaningMask = newUMat;
+                    }
+                };
+                return _zoomInSelectionArea;
+            }
+        }
+        
+        private DelegateCommand _zoomOutSelectionArea;
+
+        public DelegateCommand ZoomOutSelectionArea
+        {
+            get
+            {
+                _zoomOutSelectionArea ??= new DelegateCommand()
+                {
+                    CommandAction = () =>
+                    {
+                        if (SelectedNotationGroupItem?.CleaningNotation?.CleaningMask == null) return;
+                        var newUMat = SelectedNotationGroupItem.CleaningNotation.CleaningMask.SafeClone();
+                        Cv2.Erode(newUMat, newUMat, new UMat());
+                        SelectedNotationGroupItem.CleaningNotation.CleaningMask = newUMat;
+                    }
+                };
+                return _zoomOutSelectionArea;
+            }
+        }
+        
+        private DelegateCommand _clearSelectionArea;
+
+        public DelegateCommand ClearSelectionArea
+        {
+            get
+            {
+                _clearSelectionArea ??= new DelegateCommand()
+                {
+                    CommandAction = () =>
+                    {
+                        if (SelectedNotationGroupItem?.CleaningNotation?.CleaningMask == null) return;
+                        if (SelectedNotationGroupItem.CleaningNotation.CleaningMask.IsEmpty()) return;
+                        SelectedNotationGroupItem.CleaningNotation.CleaningMask = 
+                            UMat.Zeros(SelectedNotationGroupItem.CleaningNotation.CleaningMask.Rows, 
+                                SelectedNotationGroupItem.CleaningNotation.CleaningMask.Cols, MatType.CV_8UC1);;
+                    }
+                };
+                return _clearSelectionArea;
+            }
+        }
+        
+        private DelegateCommand _checkAllSelectionArea;
+
+        public DelegateCommand CheckAllSelectionArea
+        {
+            get
+            {
+                _checkAllSelectionArea ??= new DelegateCommand()
+                {
+                    CommandAction = () =>
+                    {
+                        if (SelectedNotationGroupItem?.CleaningNotation?.CleaningMask == null) return;
+                        SelectedNotationGroupItem.CleaningNotation.CleaningMask = 
+                            new UMat(SelectedNotationGroupItem.CleaningNotation.CleaningMask.Rows, 
+                                SelectedNotationGroupItem.CleaningNotation.CleaningMask.Cols, MatType.CV_8UC1, new Scalar(255));
+                    }
+                };
+                return _checkAllSelectionArea;
+            }
+        }
+        
+        private DelegateCommand _inverseSelectionArea;
+
+        public DelegateCommand InverseSelectionArea
+        {
+            get
+            {
+                _inverseSelectionArea ??= new DelegateCommand()
+                {
+                    CommandAction = () =>
+                    {
+                        if (SelectedNotationGroupItem?.CleaningNotation?.CleaningMask == null) return;
+                        var newUMat = SelectedNotationGroupItem.CleaningNotation.CleaningMask.SafeClone();
+                        Cv2.BitwiseNot(newUMat, newUMat);
+                        SelectedNotationGroupItem.CleaningNotation.CleaningMask = newUMat;
+                    }
+                };
+                return _inverseSelectionArea;
+            }
+        }
+        #endregion
+
         #region Command: Export Custom Cleaning Mask to Photoshop
 
         private DelegateCommand _ExportCustomCleaningMaskToPhotoshop;
