@@ -208,12 +208,14 @@ PSD/
 * 使用本软件的风险需要由使用者自行承担，如果有任何违反相关国家或地方法律的行为，与作者无关；
 * 本软件适用于学习、教育、交流用途，适用于 Jetbrains Educational License 的条款。商业许可证授权的版本的开发与 JetBrains 系列 IDE 无实质性关联，为使用 Visual Studio Community 个人独立开发完成，有独立的代码库，遵守了 Visual Studio Community 的 EULA 条款。
 
+2021.11.29 Update: JetBrains 针对本 OSS 项目已经提供了免费许可证。
+
 # 感谢
 
 特别感谢@透明声彩汉化组
 
 <img src="./assets/group.png" alt="透明声彩" width=200>
 
-感谢 Jetbrains 提供的教育许可证
+感谢 Jetbrains 提供的教育许可证、OSS 许可证
 
 <img src="./assets/jb_beam.svg" alt="JetBrains Logo (Main) logo." width=200><img src="./assets/PyCharm_icon.svg" alt="PyCharm logo." width=200><img src="./assets/Rider_icon.svg" alt="Rider logo." width=200>
