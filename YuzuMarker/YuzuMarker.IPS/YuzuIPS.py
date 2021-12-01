@@ -5,7 +5,8 @@ from matplotlib import pyplot as plt
 import cv2
 import numpy as np
 from utils import cv
-
+from utils import peak
+from utils import helper
 
 host = "127.0.0.1"
 port = 1029
@@ -16,6 +17,28 @@ app = FastAPI()
 @app.get('/')
 def read_root():
     return {"Hello": "World"}
+
+
+@app.get('/detect_peak_color_bgr')
+def detect_peak_color_bgr(src: str,
+                          mask: str,
+                          thres: Optional[float] = 0.1,
+                          min_dist: Optional[int] = 1,
+                          thres_abs: Optional[bool] = False,
+                          preferred_color_bgr: Optional[list] = [255, 255, 255]):
+    try:
+        img = cv2.imread(src)
+        mask = cv2.imread(mask, cv2.IMREAD_GRAYSCALE)
+        mask = cv2.threshold(mask, 0, 255, cv2.THRESH_BINARY)[1]
+
+        ret = []
+        for i in range(3):
+            hist = cv2.calcHist([img], [i], mask, [256], [0, 256])
+            peaks = peak.indexes(hist.squeeze(), thres, min_dist, thres_abs)
+            ret.append(int(peaks[np.argmin(np.abs(peaks - preferred_color_bgr[i]))]))
+        return helper.get_server_success_message(ret)
+    except Exception as e:
+        return helper.get_server_exception_message(e)
 
 
 @app.get('/detect_text_naive')
