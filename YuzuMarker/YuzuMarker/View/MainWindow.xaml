@@ -14,7 +14,7 @@
         KeyDown="Window_KeyDown"
         KeyUp="Window_OnKeyUp"
         MouseLeftButtonUp="Window_OnMouseLeftButtonUp"
-        Title="YuzuMarker by gyro永不抽风" Height="600" Width="1000">
+        Title="YuzuMarker by gyro永不抽风" Height="860" Width="1000">
     <Window.DataContext>
         <vm:YuzuProjectViewModel/>
     </Window.DataContext>
@@ -303,18 +303,6 @@
                         <local:InputtingControl SelectedNotationGroupItem="{Binding SelectedNotationGroupItem, Mode=TwoWay}"/>
                     </TabItem>
                     <TabItem Header="背景处理">
-                        <!--
-                            TODO: refactor: 全部重构掉
-                            1. selection, 单独按钮
-                            2. 不同 checkbox 选择 color / impainting
-                                2.1 color 内部选择 color
-                                2.2 impainting 内部选择不同的算法
-                            3. 一排按钮搞区域放大 / 缩小 / 清空 / 全选 / 反选
-                            4. 按钮：导出当前 xxx 到 Photoshop, 检测有没有, 有了就提示
-                            5. 按钮：增加当前区域的自定义图层
-                            6. 按钮：定位到自动导出图层（检测有没有）
-                            7. 按钮：定位到当前区域的自定义图层（检测有没有）
-                        -->
                         <ScrollViewer VerticalScrollBarVisibility="Hidden">
                             <StackPanel Orientation="Vertical">
                                 <!--区域选择模块-->
@@ -368,11 +356,16 @@
                                 <Separator Margin="2 2 2 2"/>
                                 <!--Photoshop模块-->
                                 <TextBlock Margin="5">Photoshop相关</TextBlock>
-                                <WrapPanel Margin="2">
-                                    <Button Margin="2">导出当前图层到 Photoshop</Button>
-                                    <Button Margin="2">增加当前区域的自定义图层</Button>
+                                <WrapPanel Margin="25 2 2 2">
                                     <Button Margin="2">定位到自动导出图层</Button>
-                                    <Button Margin="2">定位到当前区域的自定义图层</Button>
+                                    <Button Margin="2">删除自动导出图层</Button>
+                                </WrapPanel>
+                                <Separator Margin="25 2 5 2"/>
+                                <CheckBox Margin="30 5 5 2" IsChecked="{Binding SelectedNotationGroupItem.CleaningNotation.DontAutoExport}">不自动导出背景</CheckBox>
+                                <WrapPanel Margin="25 2 2 2">
+                                    <Button Margin="2">导出到自定义图层</Button>
+                                    <Button Margin="2">定位到导出的的自定义图层</Button>
+                                    <Button Margin="2">删除自定义图层组</Button>
                                 </WrapPanel>
                             </StackPanel>
                         </ScrollViewer>
