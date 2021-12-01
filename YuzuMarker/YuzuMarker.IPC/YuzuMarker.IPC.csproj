@@ -5,4 +5,14 @@
     <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\YuzuMarker.Common\YuzuMarker.Common.csproj" />
+    <ProjectReference Include="..\YuzuMarker.DataFormat\YuzuMarker.DataFormat.csproj" />
+    <ProjectReference Include="..\YuzuMarker.Properties\YuzuMarker.Properties.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
 </Project>

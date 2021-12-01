@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\YuzuMarker.Common\YuzuMarker.Common.csproj" />
     <ProjectReference Include="..\YuzuMarker.Properties\YuzuMarker.Properties.csproj" />
   </ItemGroup>
 
