@@ -21,6 +21,7 @@ namespace YuzuMarker
             base.OnStartup(e);
             CoreSettings.PhotoshopBridgeType = (PSBridgeType)Settings.Default.PhotoshopBridgeType;
             CoreSettings.PhotoshopExtensionHTTPServerPort = Settings.Default.PhotoshopExtensionHTTPServerPort;
+            // TODO: add image server port
             UndoRedoManager.StopRecording();
         }
 
