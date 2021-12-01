@@ -96,7 +96,7 @@ def indexes(y, thres=0.3, min_dist=1, thres_abs=False):
         peaks = np.arange(y.size)[~rem]
 
     last_index = y.shape[0] - 1
-    if last_index not in peaks:
+    if last_index not in peaks and y[-1] > y[-2]:
         if y[-1] > thres:
             while peaks.shape[0] > 0:
                 if last_index - peaks[-1] < min_dist:
