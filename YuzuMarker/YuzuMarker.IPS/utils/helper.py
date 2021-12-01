@@ -17,7 +17,7 @@ def get_server_exception_message(exception):
 def get_server_success_message(data):
     """
     Returns the success message
-    :param data: Any
+    :param data: dict
     :return: dict
     """
     return {
