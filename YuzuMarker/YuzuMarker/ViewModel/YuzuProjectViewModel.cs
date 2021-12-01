@@ -16,6 +16,7 @@ using YuzuMarker.Common;
 using YuzuMarker.DataFormat;
 using YuzuMarker.Model;
 using YuzuMarker.Utils;
+using Color = System.Drawing.Color;
 
 namespace YuzuMarker.ViewModel
 {
@@ -297,6 +298,80 @@ namespace YuzuMarker.ViewModel
         {
             get => _selectionMaskUMat;
             set => SetProperty(value, disposeAction: o => ((UMat)o).SafeDispose());
+        }
+        #endregion
+
+        #region Property: PeakColor
+        private System.Drawing.Color _peakColor = Color.White;
+        
+        [Undoable]
+        public System.Drawing.Color PeakColor
+        {
+            get => _peakColor;
+            set => SetProperty(value);
+        }
+        #endregion
+        
+        #region Command: DetectColor
+        private DelegateCommand _detectMaxColor;
+
+        public DelegateCommand DetectMaxColor
+        {
+            get
+            {
+                _detectMaxColor ??= new DelegateCommand()
+                {
+                    CommandAction = () =>
+                    {
+                        try
+                        {
+                            var tempFileName = Path.GetTempFileName() + ".png";
+                            var writeMat =
+                                SelectedNotationGroupItem.CleaningNotation.CleaningMask.GetMat(AccessFlag.READ);
+                            Cv2.ImWrite(tempFileName, writeMat);
+                            writeMat.Dispose();
+                            ((YuzuColorCleaningNotation)SelectedNotationGroupItem.CleaningNotation).CleaningNotationColor =
+                                IPC.Invoker.DetectMaxColor(SelectedImageItem.GetImageFilePath(), tempFileName);
+                        }
+                        catch (Exception e)
+                        {
+                            Utils.ExceptionHandler.ShowExceptionMessage(e);
+                        }
+                    }
+                };
+                return _detectMaxColor;
+            }
+        }
+        
+        private DelegateCommand _detectPeakColor;
+
+        public DelegateCommand DetectPeakColor
+        {
+            get
+            {
+                _detectPeakColor ??= new DelegateCommand()
+                {
+                    CommandAction = () =>
+                    {
+                        try
+                        {
+                            var tempFileName = Path.GetTempFileName() + ".png";
+                            var writeMat =
+                                SelectedNotationGroupItem.CleaningNotation.CleaningMask.GetMat(AccessFlag.READ);
+                            Cv2.ImWrite(tempFileName, writeMat);
+                            writeMat.Dispose();
+                            ((YuzuColorCleaningNotation)SelectedNotationGroupItem.CleaningNotation).CleaningNotationColor =
+                                IPC.Invoker.DetectPeakColor(SelectedImageItem.GetImageFilePath(), tempFileName, 
+                                    preferredR: PeakColor.R, preferredG: PeakColor.G, preferredB: PeakColor.B);
+                        }
+                        catch (Exception e)
+                        {
+                            Utils.ExceptionHandler.ShowExceptionMessage(e);
+                        }
+                    }
+                };
+                return _detectPeakColor;
+            }
         }
         #endregion
 

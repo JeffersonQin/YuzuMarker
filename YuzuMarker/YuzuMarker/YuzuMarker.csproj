@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\YuzuMarker.DataFormat\YuzuMarker.DataFormat.csproj" />
+    <ProjectReference Include="..\YuzuMarker.IPC\YuzuMarker.IPC.csproj" />
     <ProjectReference Include="..\YuzuMarker.Properties\YuzuMarker.Properties.csproj" />
     <ProjectReference Include="..\YuzuMarker.PSBridge\YuzuMarker.PSBridge.csproj" />
     <ProjectReference Include="..\YuzuMarker.Utils\YuzuMarker.Utils.csproj" />

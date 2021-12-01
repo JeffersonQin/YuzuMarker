@@ -341,9 +341,16 @@
                                         <uc:CustomPortableColorPicker Margin="2" Grid.Column="1" ColorPickingStartedEventHandler="ColorPickingStarted" ColorPickingFinishedEventHandler="ColorPickingFinished"
                                              SelectedColor="{Binding SelectedNotationGroupItem.CleaningNotation.CleaningNotationColor, Mode=TwoWay, Converter={StaticResource Standard2WindowsColorConverter}}"/>
                                     </Grid>
-                                    <WrapPanel>
-                                        <Button Margin="2">自动提取背景颜色</Button>
-                                    </WrapPanel>
+                                    <Button Margin="2" Command="{Binding DetectMaxColor}">提取众色</Button>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" Margin="2" Command="{Binding DetectPeakColor}">峰值提取 [右侧设置基准色]</Button>
+                                        <uc:CustomPortableColorPicker Margin="2" Grid.Column="1" ColorPickingStartedEventHandler="ColorPickingStarted" ColorPickingFinishedEventHandler="ColorPickingFinished"
+                                            SelectedColor="{Binding PeakColor, Mode=TwoWay, Converter={StaticResource Standard2WindowsColorConverter}}"/>
+                                    </Grid>
                                 </StackPanel>
                                 <Separator Margin="25 2 5 2"/>
                                 <RadioButton x:Name="CustomCleaningRadioButton" GroupName="CleaningGroup" Margin="5" Checked="CleaningImpaintingChecked"
