@@ -11,7 +11,8 @@ namespace YuzuMarker.PSBridge.Extension
         #region [Deprecated] Old API Section
         public static bool ExistLayerSet(string layerSetName)
         {
-            JObject ret = WebUtil.GET("existLayerSet", new Dictionary<string, string>
+            JObject ret = WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "existLayerSet", new Dictionary<string, string>
             {
                 { "layerSetName", layerSetName }
             });
@@ -27,7 +28,8 @@ namespace YuzuMarker.PSBridge.Extension
 
         public static bool ExistArtLayer(string layerSetName, string artLayerName)
         {
-            JObject ret = WebUtil.GET("existArtLayer", new Dictionary<string, string>
+            JObject ret = WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "existArtLayer", new Dictionary<string, string>
             {
                 { "layerSetName", layerSetName },
                 { "artLayerName", artLayerName }
@@ -44,7 +46,8 @@ namespace YuzuMarker.PSBridge.Extension
 
         public static void CreateFile(string path)
         {
-            WebUtil.GET("createFile", new Dictionary<string, string>
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "createFile", new Dictionary<string, string>
             {
                 { "path", path }
             });
@@ -52,7 +55,8 @@ namespace YuzuMarker.PSBridge.Extension
 
         public static void AddLayerSet(string layerSetName)
         {
-            WebUtil.GET("addLayerSet", new Dictionary<string, string>
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "addLayerSet", new Dictionary<string, string>
             {
                 { "layerSetName", layerSetName }
             });
@@ -60,7 +64,8 @@ namespace YuzuMarker.PSBridge.Extension
 
         public static void AddArtLayer(string layerSetName, string artLayerName)
         {
-            WebUtil.GET("addArtLayer", new Dictionary<string, string>
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "addArtLayer", new Dictionary<string, string>
             {
                 { "layerSetName", layerSetName },
                 { "artLayerName", artLayerName }
@@ -69,7 +74,8 @@ namespace YuzuMarker.PSBridge.Extension
 
         public static void RemoveLayerSet(string layerSetName)
         {
-            WebUtil.GET("removeLayerSet", new Dictionary<string, string>
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "removeLayerSet", new Dictionary<string, string>
             {
                 { "layerSetName", layerSetName }
             });
@@ -77,7 +83,8 @@ namespace YuzuMarker.PSBridge.Extension
 
         public static void RemoveArtLayer(string layerSetName, string artLayerName)
         {
-            WebUtil.GET("removeArtLayer", new Dictionary<string, string>
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "removeArtLayer", new Dictionary<string, string>
             {
                 { "layerSetName", layerSetName },
                 { "artLayerName", artLayerName }
@@ -86,7 +93,8 @@ namespace YuzuMarker.PSBridge.Extension
 
         public static void AddTextLayer(string layerSetName, string artLayerName)
         {
-            WebUtil.GET("addTextLayer", new Dictionary<string, string>
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "addTextLayer", new Dictionary<string, string>
             {
                 { "layerSetName", layerSetName },
                 { "artLayerName", artLayerName }
@@ -95,7 +103,8 @@ namespace YuzuMarker.PSBridge.Extension
 
         public static void SetTextLayer(string layerSetName, string artLayerName)
         {
-            WebUtil.GET("setTextLayer", new Dictionary<string, string>
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "setTextLayer", new Dictionary<string, string>
             {
                 { "layerSetName", layerSetName },
                 { "artLayerName", artLayerName }
@@ -106,7 +115,8 @@ namespace YuzuMarker.PSBridge.Extension
         #region New Native Common API Section
         public static void OpenFile(string path)
         {
-            WebUtil.GET("openFile", new Dictionary<string, string>
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "openFile", new Dictionary<string, string>
             {
                 { "path", path }
             });
@@ -114,7 +124,8 @@ namespace YuzuMarker.PSBridge.Extension
 
         public static void SaveFileAs(string path)
         {
-            WebUtil.GET("saveFileAs", new Dictionary<string, string>
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "saveFileAs", new Dictionary<string, string>
             {
                 { "path", path }
             });
@@ -122,7 +133,8 @@ namespace YuzuMarker.PSBridge.Extension
         
         public static bool ExistArtLayerURI(string artLayerPath)
         {
-            JObject ret = WebUtil.GET("existArtLayerURI", new Dictionary<string, string>
+            JObject ret = WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "existArtLayerURI", new Dictionary<string, string>
             {
                 { "artLayerPath", artLayerPath }
             });
@@ -138,7 +150,8 @@ namespace YuzuMarker.PSBridge.Extension
         
         public static bool ExistLayerSetURI(string layerSetPath)
         {
-            JObject ret = WebUtil.GET("existLayerSetURI", new Dictionary<string, string>
+            JObject ret = WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "existLayerSetURI", new Dictionary<string, string>
             {
                 { "layerSetPath", layerSetPath }
             });
@@ -154,7 +167,8 @@ namespace YuzuMarker.PSBridge.Extension
 
         public static void CreateArtLayerIfNotExistByURI(string artLayerPath)
         {
-            WebUtil.GET("createArtLayerIfNotExistByURI", new Dictionary<string, string>
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "createArtLayerIfNotExistByURI", new Dictionary<string, string>
             {
                 { "artLayerPath", artLayerPath }
             });
@@ -162,7 +176,8 @@ namespace YuzuMarker.PSBridge.Extension
         
         public static void CreateLayerSetIfNotExistByURI(string layerSetPath)
         {
-            WebUtil.GET("createLayerSetIfNotExistByURI", new Dictionary<string, string>
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "createLayerSetIfNotExistByURI", new Dictionary<string, string>
             {
                 { "layerSetPath", layerSetPath }
             });
@@ -170,7 +185,8 @@ namespace YuzuMarker.PSBridge.Extension
 
         public static void ApplyMask()
         {
-            WebUtil.GET("applyMask", new Dictionary<string, string>());
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "applyMask", new Dictionary<string, string>());
         }
 
         public static void PerformSelection(List<PointF> points)
@@ -185,7 +201,8 @@ namespace YuzuMarker.PSBridge.Extension
                 });
             }
             
-            WebUtil.GET("performSelection", new Dictionary<string, string>
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "performSelection", new Dictionary<string, string>
             {
                 { "points", pointsJSON.ToString() }
             });
