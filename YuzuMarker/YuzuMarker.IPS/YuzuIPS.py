@@ -25,7 +25,33 @@ def detect_peak_color_bgr(src: str,
                           thres: Optional[float] = 0.1,
                           min_dist: Optional[int] = 1,
                           thres_abs: Optional[bool] = False,
-                          preferred_color_bgr: Optional[list] = [255, 255, 255]):
+                          preferred_r: Optional[int] = 255,
+                          preferred_g: Optional[int] = 255,
+                          preferred_b: Optional[int] = 255):
+    try:
+        img = cv2.imread(src)
+        mask = cv2.imread(mask, cv2.IMREAD_GRAYSCALE)
+        mask = cv2.threshold(mask, 0, 255, cv2.THRESH_BINARY)[1]
+
+        preferred_color_bgr = [preferred_b, preferred_g, preferred_r]
+        ret = []
+        for i in range(3):
+            hist = cv2.calcHist([img], [i], mask, [256], [0, 256])
+            peaks = peak.indexes(hist.squeeze(), thres, min_dist, thres_abs)
+            if peaks.shape[0] == 0:
+                peaks = np.array([int(np.argmax(hist.squeeze()))])
+            ret.append(int(peaks[np.argmin(np.abs(peaks - preferred_color_bgr[i]))]))
+        return helper.get_server_success_message({
+            'b': ret[0],
+            'g': ret[1],
+            'r': ret[2]
+        })
+    except Exception as e:
+        return helper.get_server_exception_message(e)
+
+
+@app.get('/detect_max_color_bgr')
+def detect_max_color_bgr(src: str, mask: str):
     try:
         img = cv2.imread(src)
         mask = cv2.imread(mask, cv2.IMREAD_GRAYSCALE)
@@ -34,9 +60,12 @@ def detect_peak_color_bgr(src: str,
         ret = []
         for i in range(3):
             hist = cv2.calcHist([img], [i], mask, [256], [0, 256])
-            peaks = peak.indexes(hist.squeeze(), thres, min_dist, thres_abs)
-            ret.append(int(peaks[np.argmin(np.abs(peaks - preferred_color_bgr[i]))]))
-        return helper.get_server_success_message(ret)
+            ret.append(int(np.argmax(hist.squeeze())))
+        return helper.get_server_success_message({
+            'b': ret[0],
+            'g': ret[1],
+            'r': ret[2]
+        })
     except Exception as e:
         return helper.get_server_exception_message(e)
 
