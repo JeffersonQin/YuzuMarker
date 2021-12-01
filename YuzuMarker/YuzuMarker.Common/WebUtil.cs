@@ -11,7 +11,7 @@ namespace YuzuMarker.PSBridge.Extension
     {
         private static WebClient webClient = new WebClient();
 
-        public static JObject GET(string requestUri, Dictionary<string, string> param)
+        public static JObject GET(int port, string requestUri, Dictionary<string, string> param)
         {
             webClient.QueryString.Clear();
             foreach (KeyValuePair<string, string> kv in param)
@@ -22,12 +22,11 @@ namespace YuzuMarker.PSBridge.Extension
             string response;
             try
             {
-                response = webClient.DownloadString("http://localhost:" +
-                    Properties.CoreSettings.PhotoshopExtensionHTTPServerPort + "/" + requestUri);
+                response = webClient.DownloadString("http://localhost:" + port + "/" + requestUri);
             }
             catch (Exception e)
             {
-                throw new Exception("YuzuMarker.PSBridge.Extension.WebUtil: communication with photoshop failed, check whether the extension was enabled. \nMessage: " + e.Message);
+                throw new Exception("YuzuMarker.Common.WebUtil: connect to server failed. \nMessage: " + e.Message);
             }
             
             JObject obj, data;
@@ -41,17 +40,17 @@ namespace YuzuMarker.PSBridge.Extension
             }
             catch (Exception e)
             {
-                throw new Exception("YuzuMarker.PSBridge.Extension.WebUtil: JSON Parsing failed. \nMessage: " + e.Message);
+                throw new Exception("YuzuMarker.Common.WebUtil: JSON Parsing failed. \nMessage: " + e.Message);
             }
 
             if (error == null || status == null)
             {
-                throw new Exception("YuzuMarker.PSBridge.Extension.WebUtil: status and error received null.");
+                throw new Exception("YuzuMarker.Common.WebUtil: status and error received null.");
             }
 
             if (status != "success")
             {
-                throw new Exception("YuzuMarker.PSBridge.Extension.WebUtil: operation failed, error: " + error);
+                throw new Exception("YuzuMarker.Common.WebUtil: operation failed, error: " + error);
             }
 
             return data;
