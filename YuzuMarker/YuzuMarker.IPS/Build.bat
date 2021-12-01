@@ -16,4 +16,4 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt --index-url https://mirrors.aliyun.com/pypi/simple
 
 :: pyinstaller 打包
-.\venv\Scripts\pyinstaller.exe -D -y --distpath %1 YuzuIPS.py
+.\venv\Scripts\pyinstaller.exe -D -y --distpath %1 YuzuIPS.py --hidden-import utils --paths .\venv\Lib\site-packages\cv2
