@@ -12,6 +12,16 @@ namespace YuzuMarker.DataFormat
     [AncestorNotifiableMarker("ParentNotationGroup")]
     public class YuzuCleaningNotation : BasicYuzuNotation
     {
+        private bool _dontAutoExport = false;
+
+        [ChainNotifiable]
+        [Undoable]
+        public bool DontAutoExport
+        {
+            get => _dontAutoExport;
+            set => SetProperty(value);
+        }
+        
         private YuzuCleaningNotationType _cleaningNotationType;
 
         [ChainNotifiable]

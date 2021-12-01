@@ -30,7 +30,7 @@ namespace YuzuMarker.DataFormat
                 // Cleaning Notation
                 var cleaningText = File.ReadAllText(Path.Combine(image.GetImageNotationPath(), "./" + timestamp + "-cleaning.json"));
                 var cleaningJson = JObject.Parse(cleaningText);
-                switch ((YuzuCleaningNotationType)int.Parse(cleaningJson["type"].ToString()))
+                switch ((YuzuCleaningNotationType)int.Parse(cleaningJson["type"]?.ToString() ?? "0"))
                 {
                     case YuzuCleaningNotationType.Color:
                         var colorCleaningNotation = new YuzuColorCleaningNotation(notationGroup);
@@ -41,6 +41,7 @@ namespace YuzuMarker.DataFormat
                         notationGroup.CleaningNotation = new YuzuImpaintingCleaningNotation(notationGroup);
                         break;
                 }
+                notationGroup.CleaningNotation.DontAutoExport = bool.Parse(cleaningJson["dont_auto_export"]?.ToString() ?? "false");
                 
                 // Other Notations
 
@@ -69,6 +70,7 @@ namespace YuzuMarker.DataFormat
                 }
                 var cleaningJson = new JObject();
                 cleaningJson["type"] = (int)notationGroup.CleaningNotation.CleaningNotationType;
+                cleaningJson["dont_auto_export"] = notationGroup.CleaningNotation.DontAutoExport;
                 
                 switch (notationGroup.CleaningNotation.CleaningNotationType)
                 {
