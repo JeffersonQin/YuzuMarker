@@ -266,6 +266,58 @@ namespace YuzuMarker.PSBridge
                     break;
             }
         }
+        
+        public static void DeleteArtLayerByURI(string artLayerPath) 
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.DeleteArtLayerByURI(artLayerPath);
+                    break;
+            }
+        }
+        
+        public static void DeleteLayerSetByURI(string layerSetPath) 
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.DeleteLayerSetByURI(layerSetPath);
+                    break;
+            }
+        }
+        
+        public static void SelectArtLayerByURI(string artLayerPath) 
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.SelectArtLayerByURI(artLayerPath);
+                    break;
+            }
+        }
+        
+        public static void SelectLayerSetByURI(string layerSetPath) 
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.SelectLayerSetByURI(layerSetPath);
+                    break;
+            }
+        }
         #endregion
         
         #region Wrapping Section

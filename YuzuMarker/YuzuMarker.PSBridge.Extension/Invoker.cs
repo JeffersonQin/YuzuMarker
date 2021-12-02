@@ -228,6 +228,42 @@ namespace YuzuMarker.PSBridge.Extension
                 { "newName", newName }
             });
         }
+        
+        public static void DeleteArtLayerByURI(string artLayerPath)
+        {
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "deleteArtLayerByURI", new Dictionary<string, string>
+            {
+                { "artLayerPath", artLayerPath }
+            });
+        }
+        
+        public static void DeleteLayerSetByURI(string layerSetPath)
+        {
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "deleteLayerSetByURI", new Dictionary<string, string>
+            {
+                { "layerSetPath", layerSetPath }
+            });
+        }
+        
+        public static void SelectArtLayerByURI(string artLayerPath)
+        {
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "selectArtLayerByURI", new Dictionary<string, string>
+            {
+                { "artLayerPath", artLayerPath }
+            });
+        }
+        
+        public static void SelectLayerSetByURI(string layerSetPath)
+        {
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "selectLayerSetByURI", new Dictionary<string, string>
+            {
+                { "layerSetPath", layerSetPath }
+            });
+        }
         #endregion
     }
 }
