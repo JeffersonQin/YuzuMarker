@@ -364,16 +364,16 @@
                                 <!--Photoshop模块-->
                                 <TextBlock Margin="5">Photoshop相关</TextBlock>
                                 <WrapPanel Margin="25 2 2 2">
-                                    <Button Margin="2">定位到自动导出图层</Button>
-                                    <Button Margin="2">删除自动导出图层</Button>
+                                    <Button Margin="2" Command="{Binding SelectAutoExportedLayer}">定位到自动导出图层</Button>
+                                    <Button Margin="2" Command="{Binding DeleteAutoExportedLayer}">删除自动导出图层</Button>
                                 </WrapPanel>
                                 <Separator Margin="25 2 5 2"/>
                                 <CheckBox Margin="30 5 5 2" IsChecked="{Binding SelectedNotationGroupItem.CleaningNotation.DontAutoExport}">不自动导出背景</CheckBox>
                                 <WrapPanel Margin="25 2 2 2">
                                     <Button Margin="2">导出当前选区为自定义蒙版</Button>
                                     <Button Margin="2">导出当前背景到自定义图层</Button>
-                                    <Button Margin="2">定位到导出的自定义图层组</Button>
-                                    <Button Margin="2">删除自定义图层组</Button>
+                                    <Button Margin="2" Command="{Binding SelectCustomLayerSet}">定位到导出的自定义图层组</Button>
+                                    <Button Margin="2" Command="{Binding DeleteCustomLayerSet}">删除自定义图层组</Button>
                                 </WrapPanel>
                             </StackPanel>
                         </ScrollViewer>

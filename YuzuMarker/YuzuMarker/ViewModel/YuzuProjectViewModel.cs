@@ -15,6 +15,7 @@ using YuzuMarker.BasicDataFormat;
 using YuzuMarker.Common;
 using YuzuMarker.DataFormat;
 using YuzuMarker.Model;
+using YuzuMarker.PSBridge;
 using YuzuMarker.Utils;
 using Color = System.Drawing.Color;
 
@@ -478,25 +479,22 @@ namespace YuzuMarker.ViewModel
         }
         #endregion
 
-        #region Command: Export Custom Cleaning Mask to Photoshop
+        #region Command: Photoshop Commands
+        private DelegateCommand _selectAutoExportedLayer;
 
-        private DelegateCommand _ExportCustomCleaningMaskToPhotoshop;
-
-        public DelegateCommand ExportCustomCleaningMaskToPhotoshop
+        public DelegateCommand SelectAutoExportedLayer
         {
             get
             {
-                if (_ExportCustomCleaningMaskToPhotoshop == null)
-                    _ExportCustomCleaningMaskToPhotoshop = new DelegateCommand()
+                if (_selectAutoExportedLayer == null)
+                    _selectAutoExportedLayer = new DelegateCommand()
                     {
                         CommandAction = () =>
                         {
                             try
                             {
-                                PSBridge.CommonWrapper.OpenAndInitPSDFileStructureIfNotExist(
-                                    SelectedImageItem.GetImageFilePath(), SelectedImageItem.GetImagePsdPath());
-                                
-                                // TODO: Copy Layer to specific path
+                                SelectedImageItem.OpenAndInitPSDFileStructureIfNotExist();
+                                SelectedNotationGroupItem.CleaningNotation.SelectAutoExportedLayer();
                             }
                             catch (Exception e)
                             {
@@ -504,10 +502,87 @@ namespace YuzuMarker.ViewModel
                             }
                         }
                     };
-                return _ExportCustomCleaningMaskToPhotoshop;
+                return _selectAutoExportedLayer;
             }
         }
+        
+        private DelegateCommand _deleteAutoExportedLayer;
 
+        public DelegateCommand DeleteAutoExportedLayer
+        {
+            get
+            {
+                if (_deleteAutoExportedLayer == null)
+                    _deleteAutoExportedLayer = new DelegateCommand()
+                    {
+                        CommandAction = () =>
+                        {
+                            try
+                            {
+                                SelectedImageItem.OpenAndInitPSDFileStructureIfNotExist();
+                                SelectedNotationGroupItem.CleaningNotation.DeleteAutoExportedLayer();
+                            }
+                            catch (Exception e)
+                            {
+                                Utils.ExceptionHandler.ShowExceptionMessage(e);
+                            }
+                        }
+                    };
+                return _deleteAutoExportedLayer;
+            }
+        }
+        
+        private DelegateCommand _selectCustomLayerSet;
+
+        public DelegateCommand SelectCustomLayerSet
+        {
+            get
+            {
+                if (_selectCustomLayerSet == null)
+                    _selectCustomLayerSet = new DelegateCommand()
+                    {
+                        CommandAction = () =>
+                        {
+                            try
+                            {
+                                SelectedImageItem.OpenAndInitPSDFileStructureIfNotExist();
+                                SelectedNotationGroupItem.CleaningNotation.SelectCustomLayerSet();
+                            }
+                            catch (Exception e)
+                            {
+                                Utils.ExceptionHandler.ShowExceptionMessage(e);
+                            }
+                        }
+                    };
+                return _selectCustomLayerSet;
+            }
+        }
+        
+        private DelegateCommand _deleteCustomLayerSet;
+
+        public DelegateCommand DeleteCustomLayerSet
+        {
+            get
+            {
+                if (_deleteCustomLayerSet == null)
+                    _deleteCustomLayerSet = new DelegateCommand()
+                    {
+                        CommandAction = () =>
+                        {
+                            try
+                            {
+                                SelectedImageItem.OpenAndInitPSDFileStructureIfNotExist();
+                                SelectedNotationGroupItem.CleaningNotation.DeleteCustomLayerSet();
+                            }
+                            catch (Exception e)
+                            {
+                                Utils.ExceptionHandler.ShowExceptionMessage(e);
+                            }
+                        }
+                    };
+                return _deleteCustomLayerSet;
+            }
+        }
         #endregion
 
         #region Command: Select NotationGroup
