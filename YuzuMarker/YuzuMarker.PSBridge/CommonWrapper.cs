@@ -278,14 +278,17 @@ namespace YuzuMarker.PSBridge
         public static void OpenAndInitPSDFileStructureIfNotExist(string imagePath, string psdPath)
         {
             if (!File.Exists(psdPath))
-            {
                 GeneratePSD(imagePath, psdPath);
-                /* TODO:
-                 * Rename background to Background
-                 * Add LayerSet 自定义涂白, 自动涂白, 嵌字
-                 */
-            }
             else OpenFile(psdPath);
+            
+            if (!ExistArtLayerURI("Background"))
+                RenameBackgroundTo("Background");
+            CreateLayerSetIfNotExistByURI("CustomBackground");
+            CreateLayerSetIfNotExistByURI("AutoBackground");
+            CreateLayerSetIfNotExistByURI("AutoBackground/Color");
+            CreateLayerSetIfNotExistByURI("AutoBackground/Impainting");
+            CreateLayerSetIfNotExistByURI("AutoTextItems");
+            CreateLayerSetIfNotExistByURI("CustomTextItems");
         }
         #endregion
     }
