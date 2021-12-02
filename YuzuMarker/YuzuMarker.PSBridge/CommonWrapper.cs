@@ -148,7 +148,7 @@ namespace YuzuMarker.PSBridge
             }
         }
         
-        public static void ExistArtLayerURI(string artLayerPath)
+        public static bool ExistArtLayerURI(string artLayerPath)
         {
             switch (Properties.CoreSettings.PhotoshopBridgeType)
             {
@@ -156,12 +156,13 @@ namespace YuzuMarker.PSBridge
                     throw new NotImplementedException();
                     break;
                 case Properties.PSBridgeType.Extension:
-                    Extension.Invoker.ExistArtLayerURI(artLayerPath);
+                    return Extension.Invoker.ExistArtLayerURI(artLayerPath);
                     break;
             }
+            throw new ArgumentOutOfRangeException();
         }
         
-        public static void ExistLayerSetURI(string layerSetPath)
+        public static bool ExistLayerSetURI(string layerSetPath)
         {
             switch (Properties.CoreSettings.PhotoshopBridgeType)
             {
@@ -169,9 +170,10 @@ namespace YuzuMarker.PSBridge
                     throw new NotImplementedException();
                     break;
                 case Properties.PSBridgeType.Extension:
-                    Extension.Invoker.ExistLayerSetURI(layerSetPath);
+                    return Extension.Invoker.ExistLayerSetURI(layerSetPath);
                     break;
             }
+            throw new ArgumentOutOfRangeException();
         }
         
         public static void CreateArtLayerIfNotExistByURI(string artLayerPath)
