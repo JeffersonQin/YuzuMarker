@@ -253,6 +253,19 @@ namespace YuzuMarker.PSBridge
                     break;
             }
         }
+        
+        public static void RenameBackgroundTo(string newName) 
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.RenameBackgroundTo(newName);
+                    break;
+            }
+        }
         #endregion
         
         #region Wrapping Section

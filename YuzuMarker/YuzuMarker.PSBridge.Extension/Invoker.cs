@@ -219,6 +219,15 @@ namespace YuzuMarker.PSBridge.Extension
             WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
                 "performChannelSelection", new Dictionary<string, string>());
         }
+        
+        public static void RenameBackgroundTo(string newName)
+        {
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "renameBackgroundTo", new Dictionary<string, string>
+            {
+                { "newName", newName }
+            });
+        }
         #endregion
     }
 }
