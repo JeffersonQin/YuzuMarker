@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using YuzuMarker.DataFormat;
 
 namespace YuzuMarker.PSBridge
 {
@@ -341,6 +342,67 @@ namespace YuzuMarker.PSBridge
             CreateLayerSetIfNotExistByURI("AutoBackground/Impainting");
             CreateLayerSetIfNotExistByURI("AutoTextItems");
             CreateLayerSetIfNotExistByURI("CustomTextItems");
+        }
+
+        public static void OpenAndInitPSDFileStructureIfNotExist(this YuzuImage image)
+        {
+            OpenAndInitPSDFileStructureIfNotExist(image.GetImageFilePath(), image.GetImagePsdPath());
+        }
+
+        public static void SelectAutoExportedLayer(this YuzuCleaningNotation notation)
+        {
+            switch (notation.CleaningNotationType)
+            {
+                case YuzuCleaningNotationType.Color:
+                    if (!ExistArtLayerURI("AutoBackground/Color/ColorExport"))
+                        throw new Exception("未发现颜色图层，可能是尚未导出");
+                    else SelectArtLayerByURI("AutoBackground/Color/ColorExport");
+                    break;
+                case YuzuCleaningNotationType.Impainting:
+                    if (!ExistArtLayerURI("AutoBackground/Impainting/Impainting-" + 
+                        (notation.ParentNotationGroup.ParentImage.NotationGroups.IndexOf(notation.ParentNotationGroup) + 1)))
+                        throw new Exception("未发现修复图层，可能是尚未导出或者顺序变动");
+                    else SelectArtLayerByURI("AutoBackground/Impainting/Impainting-" + 
+                        (notation.ParentNotationGroup.ParentImage.NotationGroups.IndexOf(notation.ParentNotationGroup) + 1));
+                    break;
+            }
+        }
+
+        public static void DeleteAutoExportedLayer(this YuzuCleaningNotation notation)
+        {
+            switch (notation.CleaningNotationType)
+            {
+                case YuzuCleaningNotationType.Color:
+                    if (!ExistArtLayerURI("AutoBackground/Color/ColorExport"))
+                        throw new Exception("未发现颜色图层，可能是尚未导出");
+                    else DeleteArtLayerByURI("AutoBackground/Color/ColorExport");
+                    break;
+                case YuzuCleaningNotationType.Impainting:
+                    if (!ExistArtLayerURI("AutoBackground/Impainting/Impainting-" + 
+                        (notation.ParentNotationGroup.ParentImage.NotationGroups.IndexOf(notation.ParentNotationGroup) + 1)))
+                        throw new Exception("未发现修复图层，可能是尚未导出或者顺序变动");
+                    else DeleteArtLayerByURI("AutoBackground/Impainting/Impainting-" + 
+                        (notation.ParentNotationGroup.ParentImage.NotationGroups.IndexOf(notation.ParentNotationGroup) + 1));
+                    break;
+            }
+        }
+        
+        public static void SelectCustomLayerSet(this YuzuCleaningNotation notation)
+        {
+            if (!ExistLayerSetURI("CustomBackground/Background-" + 
+                (notation.ParentNotationGroup.ParentImage.NotationGroups.IndexOf(notation.ParentNotationGroup) + 1)))
+                throw new Exception("未发现自定义图层组，可能是尚未导出或者顺序变动");
+            SelectLayerSetByURI("CustomBackground/Background-" + 
+                (notation.ParentNotationGroup.ParentImage.NotationGroups.IndexOf(notation.ParentNotationGroup) + 1));
+        }
+
+        public static void DeleteCustomLayerSet(this YuzuCleaningNotation notation)
+        {
+            if (!ExistLayerSetURI("CustomBackground/Background-" + 
+                (notation.ParentNotationGroup.ParentImage.NotationGroups.IndexOf(notation.ParentNotationGroup) + 1)))
+                throw new Exception("未发现自定义图层组，可能是尚未导出或者顺序变动");
+            DeleteLayerSetByURI("CustomBackground/Background-" + 
+                (notation.ParentNotationGroup.ParentImage.NotationGroups.IndexOf(notation.ParentNotationGroup) + 1));
         }
         #endregion
     }
