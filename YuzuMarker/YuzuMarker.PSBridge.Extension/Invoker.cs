@@ -207,6 +207,18 @@ namespace YuzuMarker.PSBridge.Extension
                 { "points", pointsJSON.ToString() }
             });
         }
+
+        public static void PerformRasterization()
+        {
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "performRasterization", new Dictionary<string, string>());
+        }
+
+        public static void PerformChannelSelection()
+        {
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "performChannelSelection", new Dictionary<string, string>());
+        }
         #endregion
     }
 }

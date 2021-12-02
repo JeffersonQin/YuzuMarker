@@ -225,6 +225,32 @@ namespace YuzuMarker.PSBridge
                     break;
             }
         }
+        
+        public static void PerformRasterization() 
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.PerformRasterization();
+                    break;
+            }
+        }
+        
+        public static void PerformChannelSelection() 
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.PerformChannelSelection();
+                    break;
+            }
+        }
         #endregion
         
         #region Wrapping Section
