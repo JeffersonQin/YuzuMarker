@@ -78,11 +78,11 @@
 (顶)
 * CustomTextItems                        # 自定义嵌字图层组
   * TextGroup-p                          # 区域 p 的自定义嵌字图层组
-	* Text                               # 区域 p 的自定义嵌字图层组的文字
-	* ... (Unmanaged Custom layers)      # 区域 p 的自定义嵌字图层组的其他图层
+    * Text                               # 区域 p 的自定义嵌字图层组的文字
+    * ... (Unmanaged Custom layers)      # 区域 p 的自定义嵌字图层组的其他图层
   * TextGroup-q                          # 区域 q 的自定义嵌字图层组
-	* Text                               # 区域 q 的自定义嵌字图层组的文字
-	* ... (Unmanaged Custom layers)      # 区域 q 的自定义嵌字图层组的其他图层
+    * Text                               # 区域 q 的自定义嵌字图层组的文字
+    * ... (Unmanaged Custom layers)      # 区域 q 的自定义嵌字图层组的其他图层
   * ...
 * AutoTextItems                          # 自动导出的嵌字图层组
   * Text-a                               # 区域 a 的自动导出的嵌字
@@ -91,15 +91,15 @@
 * AutoBackground                         # 自动导出的背景图层组
   * Impainting                           # 自动导出的背景修复图层组
     * Impainting-r                       # 区域 r 的自动导出的背景修复图层
-	* Impainting-s                       # 区域 s 的自动导出的背景修复图层
-	* ...
+    * Impainting-s                       # 区域 s 的自动导出的背景修复图层
+    * ...
   * Color                                # 自动导出的纯色填充图层组
     * ColorExport                        # 自动导出的纯色填充图层
 * CustomBackground                       # 自定义背景图层组
   * Background-c                         # 区域 c 的自定义背景图层组
 	* ...
   * Background-d                         # 区域 d 的自定义背景图层组
-  	* ...
+    * ...
   * ...
 * Background                             # 背景图层
 (底)
