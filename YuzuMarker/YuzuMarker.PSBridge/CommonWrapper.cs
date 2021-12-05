@@ -319,6 +319,45 @@ namespace YuzuMarker.PSBridge
                     break;
             }
         }
+
+        public static void ImportImage(string fileName)
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.ImportImage(fileName);
+                    break;
+            }
+        }
+
+        public static void DuplicateAndSelectArtLayerByURI(string sourcePath, string targetDir, string targetName)
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.DuplicateAndSelectArtLayerByURI(sourcePath, targetDir, targetName);
+                    break;
+            }
+        }
+
+        public static void PerformRgbChannelSelection()
+        {
+            switch (Properties.CoreSettings.PhotoshopBridgeType)
+            {
+                case Properties.PSBridgeType.COM:
+                    throw new NotImplementedException();
+                    break;
+                case Properties.PSBridgeType.Extension:
+                    Extension.Invoker.PerformRgbChannelSelection();
+                    break;
+            }
+        }
         #endregion
         
         #region Wrapping Section

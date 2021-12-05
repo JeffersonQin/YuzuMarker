@@ -264,6 +264,32 @@ namespace YuzuMarker.PSBridge.Extension
                 { "layerSetPath", layerSetPath }
             });
         }
+        
+        public static void ImportImage(string fileName) 
+        {
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "importImage", new Dictionary<string, string>
+            {
+                { "fileName", fileName }
+            });
+        }
+        
+        public static void DuplicateAndSelectArtLayerByURI(string sourcePath, string targetDir, string targetName) 
+        {
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "duplicateAndSelectArtLayerByURI", new Dictionary<string, string>
+            {
+                { "sourcePath", sourcePath },
+                { "targetDir", targetDir },
+                { "targetName", targetName }
+            });
+        }
+        
+        public static void PerformRgbChannelSelection() 
+        {
+            WebUtil.GET(Properties.CoreSettings.PhotoshopExtensionHTTPServerPort, 
+                "performRgbChannelSelection", new Dictionary<string, string>());
+        }
         #endregion
     }
 }
