@@ -583,6 +583,32 @@ namespace YuzuMarker.ViewModel
                 return _deleteCustomLayerSet;
             }
         }
+        
+        private DelegateCommand _exportMask;
+
+        public DelegateCommand ExportMask
+        {
+            get
+            {
+                if (_exportMask == null)
+                    _exportMask = new DelegateCommand()
+                    {
+                        CommandAction = () =>
+                        {
+                            try
+                            {
+                                SelectedImageItem.OpenAndInitPSDFileStructureIfNotExist();
+                                SelectedNotationGroupItem.CleaningNotation.ExportMask();
+                            }
+                            catch (Exception e)
+                            {
+                                Utils.ExceptionHandler.ShowExceptionMessage(e);
+                            }
+                        }
+                    };
+                return _exportMask;
+            }
+        }
         #endregion
 
         #region Command: Select NotationGroup
