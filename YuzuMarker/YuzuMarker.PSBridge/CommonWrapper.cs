@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using OpenCvSharp;
 using YuzuMarker.DataFormat;
 
 namespace YuzuMarker.PSBridge
@@ -442,6 +443,22 @@ namespace YuzuMarker.PSBridge
                 throw new Exception("未发现自定义图层组，可能是尚未导出或者顺序变动");
             DeleteLayerSetByURI("CustomBackground/Background-" + 
                 (notation.ParentNotationGroup.ParentImage.NotationGroups.IndexOf(notation.ParentNotationGroup) + 1));
+        }
+
+        public static void ExportMask(this YuzuCleaningNotation notation)
+        {
+            var tempFilePath = Path.GetTempFileName() + ".png";
+            var writeMat = notation.CleaningMask.GetMat(AccessFlag.READ);
+            Cv2.ImWrite(tempFilePath, writeMat);
+            writeMat.Dispose();
+            var tempFileName = Path.GetFileNameWithoutExtension(tempFilePath);
+            SelectLayerSetByURI("CustomTextItems");
+            ImportImage(tempFilePath);
+            PerformRgbChannelSelection();
+            DuplicateAndSelectArtLayerByURI("Background", "CustomBackground/Background-" + 
+                (notation.ParentNotationGroup.ParentImage.NotationGroups.IndexOf(notation.ParentNotationGroup) + 1), "Mask");
+            ApplyMask();
+            DeleteArtLayerByURI(tempFileName);
         }
         #endregion
     }
