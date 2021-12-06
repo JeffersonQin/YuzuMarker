@@ -11,8 +11,15 @@ namespace YuzuMarker.Converter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            var notationGroup = (YuzuNotationGroup)values[0];
-            return notationGroup?.ParentImage.NotationGroups.IndexOf(notationGroup) + 1;
+            try
+            {
+                var notationGroup = (YuzuNotationGroup)values[0];
+                return notationGroup?.ParentImage.NotationGroups.IndexOf(notationGroup) + 1;
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
