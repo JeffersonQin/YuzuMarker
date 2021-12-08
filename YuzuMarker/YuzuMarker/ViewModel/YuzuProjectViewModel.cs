@@ -162,77 +162,76 @@ namespace YuzuMarker.ViewModel
                                     throw new Exception("未圈选工作区域，操作失败");
                                 break;
                         }
+                        var newUMat = UMat.Zeros(SelectionMaskUMat.Rows, SelectionMaskUMat.Cols, MatType.CV_8UC1);
+
+                        switch (SelectionType)
+                        {
+                            case SelectionType.Lasso:
+                                // Photoshop style: FillConvexPoly
+                                Cv2.FillPoly(newUMat, InputArray.Create(LassoPoints.ToOpenCvPoint()), new Scalar(255));
+                                break;
+                            case SelectionType.Rectangle:
+                                if (RectangleShapeData.Width < 0)
+                                {
+                                    RectangleShapeData.Width *= -1;
+                                    RectangleShapeData.X -= RectangleShapeData.Width;
+                                }
+                                if (RectangleShapeData.Height < 0)
+                                {
+                                    RectangleShapeData.Height *= -1;
+                                    RectangleShapeData.Y -= RectangleShapeData.Height;
+                                }
+                                Cv2.Rectangle(newUMat, new OpenCvSharp.Point(RectangleShapeData.X, RectangleShapeData.Y), 
+                                new OpenCvSharp.Point(RectangleShapeData.X + RectangleShapeData.Width, RectangleShapeData.Y + RectangleShapeData.Height), 
+                                new Scalar(255), -1);
+                                break;
+                            case SelectionType.Oval:
+                                if (OvalShapeData.Width < 0)
+                                {
+                                    OvalShapeData.Width *= -1;
+                                    OvalShapeData.X -= OvalShapeData.Width;
+                                }
+                                if (OvalShapeData.Height < 0)
+                                {
+                                    OvalShapeData.Height *= -1;
+                                    OvalShapeData.Y -= OvalShapeData.Height;
+                                }
+                                Cv2.Ellipse(newUMat, new RotatedRect(
+                                    new Point2f((float)(OvalShapeData.X + OvalShapeData.Width / 2.0), (float)(OvalShapeData.Y + OvalShapeData.Height / 2.0)), 
+                                        new Size2f(OvalShapeData.Width, OvalShapeData.Height), 0), new Scalar(255), -1);
+                                break;
+                        }
+
+                        var result = UMat.Zeros(SelectionMaskUMat.Rows, SelectionMaskUMat.Cols, MatType.CV_8UC1);
+                        switch (SelectionMode)
+                        {
+                            case SelectionMode.New:
+                                result = newUMat;
+                                break;
+                            case SelectionMode.Add:
+                                Cv2.BitwiseOr(SelectionMaskUMat, newUMat, result);
+                                newUMat.SafeDispose();
+                                break;
+                            case SelectionMode.Subtract:
+                                Cv2.BitwiseNot(newUMat, newUMat);
+                                Cv2.BitwiseAnd(SelectionMaskUMat, newUMat, result);
+                                newUMat.SafeDispose();
+                                break;
+                            case SelectionMode.Intersect:
+                                Cv2.BitwiseAnd(SelectionMaskUMat, newUMat, result);
+                                newUMat.SafeDispose();
+                                break;
+                        }
+                        SelectionMaskUMat = result;
+
+                        LassoPoints = new PointCollection();
+                        RectangleShapeData = new ShapeData();
+                        OvalShapeData = new ShapeData();
                     }
                     catch (Exception ex)
                     {
                         Utils.ExceptionHandler.ShowExceptionMessage(ex);
                     }
-
-                    var newUMat = UMat.Zeros(SelectionMaskUMat.Rows, SelectionMaskUMat.Cols, MatType.CV_8UC1);
-
-                    switch (SelectionType)
-                    {
-                        case SelectionType.Lasso:
-                            // Photoshop style: FillConvexPoly
-                            Cv2.FillPoly(newUMat, InputArray.Create(LassoPoints.ToOpenCvPoint()), new Scalar(255));
-                            break;
-                        case SelectionType.Rectangle:
-                            if (RectangleShapeData.Width < 0)
-                            {
-                                RectangleShapeData.Width *= -1;
-                                RectangleShapeData.X -= RectangleShapeData.Width;
-                            }
-                            if (RectangleShapeData.Height < 0)
-                            {
-                                RectangleShapeData.Height *= -1;
-                                RectangleShapeData.Y -= RectangleShapeData.Height;
-                            }
-                            Cv2.Rectangle(newUMat, new OpenCvSharp.Point(RectangleShapeData.X, RectangleShapeData.Y), 
-                            new OpenCvSharp.Point(RectangleShapeData.X + RectangleShapeData.Width, RectangleShapeData.Y + RectangleShapeData.Height), 
-                            new Scalar(255), -1);
-                            break;
-                        case SelectionType.Oval:
-                            if (OvalShapeData.Width < 0)
-                            {
-                                OvalShapeData.Width *= -1;
-                                OvalShapeData.X -= OvalShapeData.Width;
-                            }
-                            if (OvalShapeData.Height < 0)
-                            {
-                                OvalShapeData.Height *= -1;
-                                OvalShapeData.Y -= OvalShapeData.Height;
-                            }
-                            Cv2.Ellipse(newUMat, new RotatedRect(
-                                new Point2f((float)(OvalShapeData.X + OvalShapeData.Width / 2.0), (float)(OvalShapeData.Y + OvalShapeData.Height / 2.0)), 
-                                    new Size2f(OvalShapeData.Width, OvalShapeData.Height), 0), new Scalar(255), -1);
-                            break;
-                    }
-
-                    var result = UMat.Zeros(SelectionMaskUMat.Rows, SelectionMaskUMat.Cols, MatType.CV_8UC1);
-                    switch (SelectionMode)
-                    {
-                        case SelectionMode.New:
-                            result = newUMat;
-                            break;
-                        case SelectionMode.Add:
-                            Cv2.BitwiseOr(SelectionMaskUMat, newUMat, result);
-                            newUMat.SafeDispose();
-                            break;
-                        case SelectionMode.Subtract:
-                            Cv2.BitwiseNot(newUMat, newUMat);
-                            Cv2.BitwiseAnd(SelectionMaskUMat, newUMat, result);
-                            newUMat.SafeDispose();
-                            break;
-                        case SelectionMode.Intersect:
-                            Cv2.BitwiseAnd(SelectionMaskUMat, newUMat, result);
-                            newUMat.SafeDispose();
-                            break;
-                    }
-                    SelectionMaskUMat = result;
-
-                    LassoPoints = new PointCollection();
-                    RectangleShapeData = new ShapeData();
-                    OvalShapeData = new ShapeData();
                 }
                 RaisePropertyChanged("SelectionDrawing");
             }
