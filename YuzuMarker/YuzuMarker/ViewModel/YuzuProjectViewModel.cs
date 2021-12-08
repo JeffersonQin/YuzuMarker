@@ -673,7 +673,8 @@ namespace YuzuMarker.ViewModel
                                 }, o =>
                                 {
                                     var removedItem = ((List<object>)o)[0] as YuzuNotationGroup;
-                                    removedItem?.Dispose();
+                                    if (!SelectedImageItem.NotationGroups.Contains(removedItem))
+                                        removedItem?.Dispose();
                                 });
                             }
                             catch (Exception e)
