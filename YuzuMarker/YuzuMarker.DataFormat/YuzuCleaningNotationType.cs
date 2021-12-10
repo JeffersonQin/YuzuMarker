@@ -2,6 +2,6 @@
 {
     public enum YuzuCleaningNotationType
     {
-        Color = 0, Impainting = 1
+        Color = 0, Inpainting = 1
     }
 }

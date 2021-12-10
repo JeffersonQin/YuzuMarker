@@ -30,7 +30,7 @@ namespace YuzuMarker.Converter
             Scalar color = default;
             if (notationGroup.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Color)
                 color = ((YuzuColorCleaningNotation)notationGroup.CleaningNotation).CleaningNotationColor.ToScalar();
-            if (notationGroup.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Impainting)
+            if (notationGroup.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Inpainting)
                 color = Settings.Default.CustomCleaningFillColor.ToScalar();
             // TODO: 实现边缘获取
             container.Children.Add(new OpaqueClickableImage

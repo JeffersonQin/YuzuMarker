@@ -379,7 +379,7 @@ namespace YuzuMarker.PSBridge
             CreateLayerSetIfNotExistByURI("CustomBackground");
             CreateLayerSetIfNotExistByURI("AutoBackground");
             CreateLayerSetIfNotExistByURI("AutoBackground/Color");
-            CreateLayerSetIfNotExistByURI("AutoBackground/Impainting");
+            CreateLayerSetIfNotExistByURI("AutoBackground/Inpainting");
             CreateLayerSetIfNotExistByURI("AutoTextItems");
             CreateLayerSetIfNotExistByURI("CustomTextItems");
         }
@@ -398,11 +398,11 @@ namespace YuzuMarker.PSBridge
                         throw new Exception("未发现颜色图层，可能是尚未导出");
                     else SelectArtLayerByURI("AutoBackground/Color/ColorExport");
                     break;
-                case YuzuCleaningNotationType.Impainting:
-                    if (!ExistArtLayerURI("AutoBackground/Impainting/Impainting-" + 
+                case YuzuCleaningNotationType.Inpainting:
+                    if (!ExistArtLayerURI("AutoBackground/Inpainting/Inpainting-" + 
                         (notation.ParentNotationGroup.ParentImage.NotationGroups.IndexOf(notation.ParentNotationGroup) + 1)))
                         throw new Exception("未发现修复图层，可能是尚未导出或者顺序变动");
-                    else SelectArtLayerByURI("AutoBackground/Impainting/Impainting-" + 
+                    else SelectArtLayerByURI("AutoBackground/Inpainting/Inpainting-" + 
                         (notation.ParentNotationGroup.ParentImage.NotationGroups.IndexOf(notation.ParentNotationGroup) + 1));
                     break;
             }
@@ -417,11 +417,11 @@ namespace YuzuMarker.PSBridge
                         throw new Exception("未发现颜色图层，可能是尚未导出");
                     else DeleteArtLayerByURI("AutoBackground/Color/ColorExport");
                     break;
-                case YuzuCleaningNotationType.Impainting:
-                    if (!ExistArtLayerURI("AutoBackground/Impainting/Impainting-" + 
+                case YuzuCleaningNotationType.Inpainting:
+                    if (!ExistArtLayerURI("AutoBackground/Inpainting/Inpainting-" + 
                         (notation.ParentNotationGroup.ParentImage.NotationGroups.IndexOf(notation.ParentNotationGroup) + 1)))
                         throw new Exception("未发现修复图层，可能是尚未导出或者顺序变动");
-                    else DeleteArtLayerByURI("AutoBackground/Impainting/Impainting-" + 
+                    else DeleteArtLayerByURI("AutoBackground/Inpainting/Inpainting-" + 
                         (notation.ParentNotationGroup.ParentImage.NotationGroups.IndexOf(notation.ParentNotationGroup) + 1));
                     break;
             }

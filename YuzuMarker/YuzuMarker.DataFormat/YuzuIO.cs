@@ -37,8 +37,8 @@ namespace YuzuMarker.DataFormat
                         colorCleaningNotation.CleaningNotationColor = Color.FromArgb(int.Parse(cleaningJson["color"]?.ToString() ?? "0"));
                         notationGroup.CleaningNotation = colorCleaningNotation;
                         break;
-                    case YuzuCleaningNotationType.Impainting:
-                        notationGroup.CleaningNotation = new YuzuImpaintingCleaningNotation(notationGroup);
+                    case YuzuCleaningNotationType.Inpainting:
+                        notationGroup.CleaningNotation = new YuzuInpaintingCleaningNotation(notationGroup);
                         break;
                 }
                 notationGroup.CleaningNotation.DontAutoExport = bool.Parse(cleaningJson["dont_auto_export"]?.ToString() ?? "false");
@@ -77,12 +77,12 @@ namespace YuzuMarker.DataFormat
                     case YuzuCleaningNotationType.Color:
                         cleaningJson["color"] = ((YuzuColorCleaningNotation)notationGroup.CleaningNotation).CleaningNotationColor.ToArgb();
                         break;
-                    case YuzuCleaningNotationType.Impainting:
-                        var tempImpaintingFilePath = Path.Combine(notationGroup.ParentImage.GetImageTempPath(), "./" + notationGroup.Timestamp + "-impainting.png");
-                        if (File.Exists(tempImpaintingFilePath))
+                    case YuzuCleaningNotationType.Inpainting:
+                        var tempInpaintingFilePath = Path.Combine(notationGroup.ParentImage.GetImageTempPath(), "./" + notationGroup.Timestamp + "-inpainting.png");
+                        if (File.Exists(tempInpaintingFilePath))
                         {
-                            var impaintingFileTargetPath = Path.Combine(notationGroup.ParentImage.GetImageNotationPath(), "./" + notationGroup.Timestamp + "-impainting.png");
-                            File.Copy(tempImpaintingFilePath, impaintingFileTargetPath, true);
+                            var inpaintingFileTargetPath = Path.Combine(notationGroup.ParentImage.GetImageNotationPath(), "./" + notationGroup.Timestamp + "-inpainting.png");
+                            File.Copy(tempInpaintingFilePath, inpaintingFileTargetPath, true);
                         }
                         break;
                 }

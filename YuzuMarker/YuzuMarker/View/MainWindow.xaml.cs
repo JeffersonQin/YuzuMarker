@@ -267,12 +267,12 @@ namespace YuzuMarker.View
         // 1. 保留一个按钮, 做 selection
         // 2. checkbox 处理 type 的事情
         #region Selection CheckBox Group Handling
-        private void CleaningImpaintingChecked(object sender, RoutedEventArgs e)
+        private void CleaningInpaintingChecked(object sender, RoutedEventArgs e)
         {
             // Judge whether this is triggered by data binding
-            if (ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Impainting) return;
+            if (ViewModel.SelectedNotationGroupItem.CleaningNotation.CleaningNotationType == YuzuCleaningNotationType.Inpainting) return;
             ViewModel.SelectedNotationGroupItem.CleaningNotation = 
-                ViewModel.SelectedNotationGroupItem.CleaningNotation.ConvertTo(YuzuCleaningNotationType.Impainting);
+                ViewModel.SelectedNotationGroupItem.CleaningNotation.ConvertTo(YuzuCleaningNotationType.Inpainting);
         }
 
         private void CleaningColorChecked(object sender, RoutedEventArgs e)

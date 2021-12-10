@@ -113,8 +113,8 @@ namespace YuzuMarker.DataFormat
                 case YuzuCleaningNotationType.Color:
                     newNotation = new YuzuColorCleaningNotation(ParentNotationGroup as YuzuNotationGroup);
                     break;
-                case YuzuCleaningNotationType.Impainting:
-                    newNotation = new YuzuImpaintingCleaningNotation(ParentNotationGroup as YuzuNotationGroup);
+                case YuzuCleaningNotationType.Inpainting:
+                    newNotation = new YuzuInpaintingCleaningNotation(ParentNotationGroup as YuzuNotationGroup);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);

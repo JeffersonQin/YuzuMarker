@@ -26,7 +26,7 @@
         <vc:NotationGroup2IndexString x:Key="NotationGroup2IndexString"/>
         <vc:NotationGroup2CanvasItem x:Key="NotationGroup2CanvasItem"/>
         <vc:CleaningNotation2Boolean4Color x:Key="CleaningNotation2Boolean4Color"/>
-        <vc:CleaningNotation2Boolean4Impainting x:Key="CleaningNotation2Boolean4Impainting"/>
+        <vc:CleaningNotation2Boolean4Inpainting x:Key="CleaningNotation2Boolean4Inpainting"/>
         <vc:NotationGroup2CleaningStatusString x:Key="NotationGroup2CleaningStatusString"/>
         <vc:NotationGroup2CleaningStatusColor x:Key="NotationGroup2CleaningStatusColor"/>
         <vc:Cleaning2StatusString x:Key="Cleaning2StatusString"/>
@@ -353,9 +353,9 @@
                                     </Grid>
                                 </StackPanel>
                                 <Separator Margin="25 2 5 2"/>
-                                <RadioButton x:Name="CustomCleaningRadioButton" GroupName="CleaningGroup" Margin="5" Checked="CleaningImpaintingChecked"
-                                             IsChecked="{Binding SelectedNotationGroupItem.CleaningNotation, Mode=OneWay, Converter={StaticResource CleaningNotation2Boolean4Impainting}}">
-                                    Impainting Mode
+                                <RadioButton x:Name="CustomCleaningRadioButton" GroupName="CleaningGroup" Margin="5" Checked="CleaningInpaintingChecked"
+                                             IsChecked="{Binding SelectedNotationGroupItem.CleaningNotation, Mode=OneWay, Converter={StaticResource CleaningNotation2Boolean4Inpainting}}">
+                                    Inpainting Mode
                                 </RadioButton>
                                 <WrapPanel Margin="25 2 5 2" IsEnabled="{Binding ElementName=CustomCleaningRadioButton, Path=IsChecked}">
                                     <Button Margin="2">清除修复</Button>

@@ -22,8 +22,8 @@ namespace YuzuMarker.Converter
                         statusString += "[未选色]";
                     else statusString += "[已选色]";
                     break;
-                case YuzuCleaningNotationType.Impainting:
-                    if (((YuzuImpaintingCleaningNotation)cleaningNotation).ImpaintingImage.IsEmpty())
+                case YuzuCleaningNotationType.Inpainting:
+                    if (((YuzuInpaintingCleaningNotation)cleaningNotation).InpaintingImage.IsEmpty())
                         statusString += "[未修复]";
                     else statusString += "[已修复]";
                     break;
