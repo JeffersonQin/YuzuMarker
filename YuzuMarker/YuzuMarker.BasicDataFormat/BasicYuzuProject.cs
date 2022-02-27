@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
 using YuzuMarker.Common;
 
@@ -114,8 +115,11 @@ namespace YuzuMarker.BasicDataFormat
             }
 
             var targetImagePath = System.IO.Path.Combine(Path, "./Images/", imageFileName);
-            System.IO.File.Copy(imagePath, targetImagePath);
-
+            // System.IO.File.Copy(imagePath, targetImagePath);
+            var bitmap = (Bitmap) Image.FromFile(imagePath);
+            bitmap.SetResolution(96, 96);
+            bitmap.Save(targetImagePath);
+            
             return imageFileName;
         }
         
