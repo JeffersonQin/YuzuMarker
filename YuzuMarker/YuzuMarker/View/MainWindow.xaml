@@ -123,7 +123,9 @@
                 ContentBackground="#FFDAD5D5">
                 <uc:CommonZoomView.ContainerContent>
                     <Grid ClipToBounds="True" MouseDown="ImageAreaMouseDown">
+                        <!--最底下的图片-->
                         <Image Source="{Binding Data.ImageSource, Mode=OneWay, Source={StaticResource BindingProxy}}"></Image>
+                        <!--Notation的可视化，Convert成图片-->
                         <ItemsControl ItemsSource="{Binding Data.NotationGroups, Mode=OneWay, Source={StaticResource BindingProxy}}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -143,6 +145,7 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
+                        <!--Notation的Button，上面标注编号-->
                         <ItemsControl ItemsSource="{Binding Data.NotationGroups, Mode=OneWay, Source={StaticResource BindingProxy}}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -170,10 +173,13 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
+                        <!--选择区域时的半透明背景-->
                         <Rectangle MouseDown="SelectionMouseDownEvent" Fill="{Binding Source={x:Static p:Settings.Default}, Path=LassoModeBackgroundColor}" 
                             Visibility="{Binding Data.SelectionModeEnabled, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"/>
+                        <!--选择区域时的已选择的区域，转换成图片进行渲染-->
                         <uc:NonClickableImage Visibility="{Binding Data.SelectionModeEnabled, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}"
-                            Source="{Binding Data.SelectionMaskUMat, Source={StaticResource BindingProxy}, Converter={StaticResource MaskUMat2Bitmap}}"/>
+                                              Source="{Binding Data.SelectionMaskUMat, Source={StaticResource BindingProxy}, Converter={StaticResource MaskUMat2Bitmap}}"/>
+                        <!--选择区域时的绘图对象，Lasso、Ellipse、Rectangle三种-->
                         <Canvas Visibility="{Binding Data.SelectionModeEnabled, Source={StaticResource BindingProxy}, Converter={StaticResource Boolean2Visibility}}">
                             <Rectangle Canvas.Top="{Binding Data.RectangleShapeData, Source={StaticResource BindingProxy}, Converter={StaticResource ShapeData2TopConverter}}"
                                        Canvas.Left="{Binding Data.RectangleShapeData, Source={StaticResource BindingProxy}, Converter={StaticResource ShapeData2LeftConverter}}"
